@@ -4,7 +4,7 @@ import { createUser, findUserByEmailOrCpf, updateUserPasswordAndRole } from "../
 import { DEFAULT_CATALOG_ITEMS } from "./default-catalog.js";
 import { countContracts, ensureContractSchema, listContracts } from "../contracts/repository.js";
 
-const DEFAULT_ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@prime-leiloes.local";
+const DEFAULT_ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "admin@prime-leiloes.local").trim().toLowerCase();
 const DEFAULT_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 let adminSchemaPromise;
@@ -148,6 +148,19 @@ export const ensureDefaultAdminUser = async () => {
   const passwordHash = await hashPassword(DEFAULT_ADMIN_PASSWORD);
 
   if (!admin) {
+    // Preserve the bootstrap administrator when its configured email changes.
+    // Its reserved CPF is unique and cannot be inserted for a second account.
+    const { rows: migratedAdmins } = await pool.query(
+      `update public.app_users
+       set email = $1, password_hash = $2
+       where cpf = '000.000.000-00' and role = 'admin'
+       returning *`,
+      [DEFAULT_ADMIN_EMAIL, passwordHash]
+    );
+    if (migratedAdmins[0]) {
+      return migratedAdmins[0];
+    }
+
     return createUser({
       fullName: "Administrador PRIME LEILÕES",
       email: DEFAULT_ADMIN_EMAIL,
