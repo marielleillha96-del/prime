@@ -1,1 +1,1 @@
-export { resolveSyncCallbackUrl as resolveIronCallbackUrl } from "./syncpay.js";
+export { resolveNowBankCallbackUrl as resolveIronCallbackUrl } from "./nowbank.js";

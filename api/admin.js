@@ -694,7 +694,7 @@ export default async function handler(req, res) {
       return sendJson(
         req,
         res,
-        /IronPay|SyncPay/i.test(String(error.message || "")) ? 503 : 500,
+        /NowBank|NowHubPay|IronPay|SyncPay/i.test(String(error.message || "")) ? 503 : 500,
         { message: error.message || "Erro ao gerar fatura." }
       );
     }

@@ -12,7 +12,7 @@ export const setCors = (req, res) => {
   }
 
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Signature, X-Webhook-Token, X-NowBank-Token");
   res.setHeader("Access-Control-Allow-Credentials", "true");
 };
 
@@ -35,6 +35,7 @@ export const sendJson = (req, res, statusCode, payload) => {
 
 export const readJsonBody = async (req) => {
   if (req.body && typeof req.body === "object") {
+    req.rawBody = req.rawBody || JSON.stringify(req.body);
     return req.body;
   }
 
@@ -44,6 +45,7 @@ export const readJsonBody = async (req) => {
   }
 
   const raw = Buffer.concat(chunks).toString("utf8");
+  req.rawBody = raw;
   return raw ? JSON.parse(raw) : {};
 };
 

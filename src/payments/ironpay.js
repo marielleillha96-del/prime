@@ -1,6 +1,6 @@
 export {
-  createSyncPixPayment,
-  fetchSyncTransaction,
+  createNowBankPixPayment as createSyncPixPayment,
+  fetchNowBankTransaction as fetchSyncTransaction,
   createIronPixPayment,
   fetchIronTransaction
-} from "./syncpay.js";
+} from "./nowbank.js";

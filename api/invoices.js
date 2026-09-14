@@ -100,7 +100,7 @@ export default async function handler(req, res) {
       return sendJson(
         req,
         res,
-        /IronPay|SyncPay/i.test(String(error.message || "")) ? 503 : 502,
+        /NowBank|NowHubPay|IronPay|SyncPay/i.test(String(error.message || "")) ? 503 : 502,
         { message: error.message || "Erro ao sincronizar fatura." }
       );
     }
