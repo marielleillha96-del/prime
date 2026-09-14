@@ -362,6 +362,76 @@ img {
   box-shadow: 0 14px 32px rgba(0, 124, 50, 0.08);
 }
 
+.hero-instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  max-width: min(100%, 430px);
+  margin: 0 auto 28px;
+  padding: 12px 18px 12px 12px;
+  border: 1px solid rgba(4, 30, 66, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #041e42;
+  box-shadow: 0 18px 45px rgba(4, 30, 66, 0.12);
+  text-align: left;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.hero-instagram:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 124, 50, 0.22);
+  box-shadow: 0 22px 52px rgba(4, 30, 66, 0.16);
+}
+
+.hero-instagram__icon {
+  position: relative;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #ff7a00 0%, #e1306c 48%, #6f42c1 100%);
+  box-shadow: 0 12px 24px rgba(225, 48, 108, 0.24);
+}
+
+.hero-instagram__icon::before {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  border: 3px solid #fff;
+  border-radius: 10px;
+}
+
+.hero-instagram__icon::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 8px;
+  height: 8px;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  box-shadow: 10px -10px 0 -4px #fff;
+}
+
+.hero-instagram small,
+.hero-instagram strong {
+  display: block;
+}
+
+.hero-instagram small {
+  margin-bottom: 3px;
+  color: #59677a;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.hero-instagram strong {
+  color: var(--green-700);
+  font-size: 1.08rem;
+  font-weight: 900;
+}
+
 .hero h1 {
   margin: 0 auto 20px;
   max-width: 12ch;
