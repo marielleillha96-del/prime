@@ -6059,3 +6059,35 @@ h1, h2, h3 { letter-spacing: -0.025em; }
   .home-search--wide .home-search__submit { margin-top: 16px; }
   .home-search--wide .home-search__top { font-size: .56rem; }
 }
+
+/* Participation notice. */
+.edital-home-link { display: inline-block; margin-top: 16px; padding: 14px 18px; border: 1px solid #87b69d; border-radius: 8px; color: #fff; background: #ffffff0d; font-size: .82rem; line-height: 1.6; }
+.edital-home-link:hover { background: #ffffff1c; }
+.edital-main { max-width: 960px; padding-block: 40px 72px; }
+.edital-back { color: #53677d; font-size: .85rem; }
+.edital-heading { padding: 36px 0 28px; }
+.edital-eyebrow { color: #007c32; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; }
+.edital-heading h1 { color: #041e42; font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.15; margin: 14px 0; }
+.edital-heading p { color: #596c80; line-height: 1.7; max-width: 65ch; }
+.edital-document { padding: 40px; border: 1px solid #e0e6ed; border-radius: 16px; background: #fff; color: #3e5063; line-height: 1.85; }
+.edital-document h2 { color: #041e42; font-size: 1.18rem; line-height: 1.4; margin-top: 30px; }
+.edital-document li { padding-left: 4px; margin-bottom: 10px; }
+.edital-document li::marker { color: #007c32; }
+.edital-document ul { padding-left: 22px; }
+.edital-notice { padding: 20px 24px; background: #fff8e8; border-left: 3px solid #c8952b; border-radius: 6px; }
+.edital-notice h2 { margin: 0 0 6px; color: #805b12; }
+.edital-notice p { margin: 0; }
+.edital-payment { padding: 20px 24px; margin-block: 28px; background: #edf6f0; border-radius: 8px; }
+.edital-payment h2 { margin-top: 0; color: #006429; }
+.edital-payment p:last-child { margin-bottom: 0; }
+.edital-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; border-top: 1px solid #e0e6ed; margin-top: 28px; }
+.edital-document .edital-delivery { border-top: 1px solid #e0e6ed; padding-top: 24px; margin-bottom: 0; color: #007c32; text-align: center; }
+@media (max-width: 700px) {
+  .home-page .hero-actions { display: flex; margin-top: 14px; }
+  .edital-home-link { margin-top: 12px; font-size: .76rem; }
+  .edital-main { padding-block: 24px 48px; }
+  .edital-heading { padding-top: 24px; }
+  .edital-document { padding: 22px 18px; font-size: .9rem; }
+  .edital-notice, .edital-payment { padding: 16px; }
+  .edital-info-grid { grid-template-columns: 1fr; gap: 0; }
+}
