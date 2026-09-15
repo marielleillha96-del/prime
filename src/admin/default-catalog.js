@@ -1,5 +1,414 @@
 export const DEFAULT_CATALOG_ITEMS = [
   {
+    "title": "Mercedes-Benz 1313 1977/1977",
+    "slug": "mercedes-benz-1313-1977-1977",
+    "category": "Caminhões",
+    "sections": [
+      "catalogo",
+      "destaques",
+      "relacionados"
+    ],
+    "price": 35000,
+    "location": "Sob consulta",
+    "yearLabel": "1977/1977",
+    "imageUrl": "/catalogo-assets/mercedes-benz-1313-1977-1977/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/mercedes-benz-1313-1977-1977/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Caminhões",
+    "galleryCount": 1,
+    "description": "Carroceria basculante\nConfiguração: toco\nSistema hidráulico\nDocumentação 100%, conforme o anúncio"
+  },
+  {
+    "title": "Volkswagen 23-220 2003/2003",
+    "slug": "volkswagen-23-220-2003-2003",
+    "category": "Caminhões",
+    "sections": [
+      "catalogo",
+      "destaques",
+      "relacionados"
+    ],
+    "price": 80000,
+    "location": "Sob consulta",
+    "yearLabel": "2003/2003",
+    "imageUrl": "/catalogo-assets/volkswagen-23-220-2003-2003/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/volkswagen-23-220-2003-2003/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Caminhões",
+    "galleryCount": 1,
+    "description": "Revisado\nMotor Cummins Série C\nPneus em bom estado\nCarroceria de 8,50 metros"
+  },
+  {
+    "title": "Scania P-360 2013/2013",
+    "slug": "scania-p-360-2013-2013",
+    "category": "Caminhões",
+    "sections": [
+      "catalogo",
+      "destaques",
+      "relacionados"
+    ],
+    "price": 100000,
+    "location": "Sob consulta",
+    "yearLabel": "2013/2013",
+    "imageUrl": "/catalogo-assets/scania-p-360-2013-2013/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/scania-p-360-2013-2013/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Caminhões",
+    "galleryCount": 1,
+    "description": "Configuração: 6x2 original\nCâmbio manual\nQuilometragem: 750 mil km\nBomba para caçamba"
+  },
+  {
+    "title": "Mercedes-Benz 1113 1981/1981",
+    "slug": "mercedes-benz-1113-1981-1981",
+    "category": "Caminhões",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 30000,
+    "location": "Sob consulta",
+    "yearLabel": "1981/1981",
+    "imageUrl": "/catalogo-assets/mercedes-benz-1113-1981-1981/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/mercedes-benz-1113-1981-1981/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Caminhões",
+    "galleryCount": 1,
+    "description": "Turbo\nHidráulico\nFreio a ar\nConsta baú no documento"
+  },
+  {
+    "title": "GM S10 2009/2010",
+    "slug": "gm-s10-2009-2010",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 15500,
+    "location": "Sob consulta",
+    "yearLabel": "2009/2010",
+    "imageUrl": "/catalogo-assets/gm-s10-2009-2010/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/gm-s10-2009-2010/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "ADVANTAGE S"
+  },
+  {
+    "title": "CHEVROLET S10 2025/2025",
+    "slug": "chevrolet-s10-2025-2025",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "destaques",
+      "relacionados"
+    ],
+    "price": 50000,
+    "location": "Sob consulta",
+    "yearLabel": "2025/2025",
+    "imageUrl": "/catalogo-assets/chevrolet-s10-2025-2025/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/chevrolet-s10-2025-2025/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "2.8 16V TURBO\nDIESEL\nHIGH COUNTRY\nCD 4X4 AUTOMÁTICO"
+  },
+  {
+    "title": "CHEVROLET S10 2010/2011",
+    "slug": "chevrolet-s10-2010-2011",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 16500,
+    "location": "Sob consulta",
+    "yearLabel": "2010/2011",
+    "imageUrl": "/catalogo-assets/chevrolet-s10-2010-2011/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/chevrolet-s10-2010-2011/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "2.4 MPFI EXECUTIVE\n4X2 CD 8V FLEX\n4P MANUAL"
+  },
+  {
+    "title": "TOYOTA HILUX 2022/2023",
+    "slug": "toyota-hilux-2022-2023",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "destaques",
+      "relacionados"
+    ],
+    "price": 45000,
+    "location": "Sob consulta",
+    "yearLabel": "2022/2023",
+    "imageUrl": "/catalogo-assets/toyota-hilux-2022-2023/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/toyota-hilux-2022-2023/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "2.8 D-4D TURBO DIESEL\nCD SRX 4X4 AUTOMÁTICO"
+  },
+  {
+    "title": "FORD RANGER 2018/2019",
+    "slug": "ford-ranger-2018-2019",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "destaques",
+      "relacionados"
+    ],
+    "price": 40000,
+    "location": "Sob consulta",
+    "yearLabel": "2018/2019",
+    "imageUrl": "/catalogo-assets/ford-ranger-2018-2019/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/ford-ranger-2018-2019/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "3.2 LIMITED\n4X4 CD\n20V DIESEL\n4P AUTOMÁTICO"
+  },
+  {
+    "title": "FORD RANGER 2013/2014",
+    "slug": "ford-ranger-2013-2014",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 45000,
+    "location": "Sob consulta",
+    "yearLabel": "2013/2014",
+    "imageUrl": "/catalogo-assets/ford-ranger-2013-2014/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/ford-ranger-2013-2014/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "3.2 XLT\n4X4 CD\n20V DIESEL\n4P AUTOMÁTICO"
+  },
+  {
+    "title": "MITSUBISHI L200 TRITON 2022/2023",
+    "slug": "mitsubishi-l200-triton-2022-2023",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "destaques",
+      "relacionados"
+    ],
+    "price": 45000,
+    "location": "Sob consulta",
+    "yearLabel": "2022/2023",
+    "imageUrl": "/catalogo-assets/mitsubishi-l200-triton-2022-2023/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/mitsubishi-l200-triton-2022-2023/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "2.4 16V TURBO\nDIESEL SPORT\nHPE CD 4P 4X4\nAUTOMÁTICO"
+  },
+  {
+    "title": "MITSUBISHI L200 TRITON 2012/2013",
+    "slug": "mitsubishi-l200-triton-2012-2013",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 25500,
+    "location": "Sob consulta",
+    "yearLabel": "2012/2013",
+    "imageUrl": "/catalogo-assets/mitsubishi-l200-triton-2012-2013/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/mitsubishi-l200-triton-2012-2013/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "3.2 GL 4X4CD 16V\nTURBO INTERCOLER\nDIESEL 4P MANUAL"
+  },
+  {
+    "title": "TOYOTA COROLLA CROSS 2023/2024",
+    "slug": "toyota-corolla-cross-2023-2024",
+    "category": "SUVs",
+    "sections": [
+      "catalogo",
+      "destaques",
+      "relacionados"
+    ],
+    "price": 40000,
+    "location": "Sob consulta",
+    "yearLabel": "2023/2024",
+    "imageUrl": "/catalogo-assets/toyota-corolla-cross-2023-2024/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/toyota-corolla-cross-2023-2024/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "SUVs",
+    "galleryCount": 1,
+    "description": "2.0 VVT-IE\nFLEX XRE\nDIRECT SHIFT"
+  },
+  {
+    "title": "FIAT STRADA 2022/2023",
+    "slug": "fiat-strada-2022-2023",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 14500,
+    "location": "Sob consulta",
+    "yearLabel": "2022/2023",
+    "imageUrl": "/catalogo-assets/fiat-strada-2022-2023/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/fiat-strada-2022-2023/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "1.3 FIREFLY FLEX\nFREEDOM CS MANUAL"
+  },
+  {
+    "title": "JEEP RENEGADE 2022/2023",
+    "slug": "jeep-renegade-2022-2023",
+    "category": "SUVs",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 0,
+    "location": "Sob consulta",
+    "yearLabel": "2022/2023",
+    "imageUrl": "/catalogo-assets/jeep-renegade-2022-2023/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/jeep-renegade-2022-2023/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "SUVs",
+    "galleryCount": 1,
+    "description": "1.3 T270 TURBO\nFLEX LONGITUDE AT6"
+  },
+  {
+    "title": "JEEP RENEGADE 2015/2016",
+    "slug": "jeep-renegade-2015-2016",
+    "category": "SUVs",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 25000,
+    "location": "Sob consulta",
+    "yearLabel": "2015/2016",
+    "imageUrl": "/catalogo-assets/jeep-renegade-2015-2016/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/jeep-renegade-2015-2016/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "SUVs",
+    "galleryCount": 1,
+    "description": "1.8 16V FLEX\nSPORT 4P AUTOMÁTICO"
+  },
+  {
+    "title": "JEEP COMPASS 2018/2018",
+    "slug": "jeep-compass-2018-2018",
+    "category": "SUVs",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 30000,
+    "location": "Sob consulta",
+    "yearLabel": "2018/2018",
+    "imageUrl": "/catalogo-assets/jeep-compass-2018-2018/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/jeep-compass-2018-2018/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "SUVs",
+    "galleryCount": 1,
+    "description": "2.0 16V FLEX\nLONGITUDE AUTOMÁTICO"
+  },
+  {
+    "title": "JEEP COMPASS 2022/2022",
+    "slug": "jeep-compass-2022-2022",
+    "category": "SUVs",
+    "sections": [
+      "catalogo",
+      "destaques",
+      "relacionados"
+    ],
+    "price": 40000,
+    "location": "Sob consulta",
+    "yearLabel": "2022/2022",
+    "imageUrl": "/catalogo-assets/jeep-compass-2022-2022/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/jeep-compass-2022-2022/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "SUVs",
+    "galleryCount": 1,
+    "description": "1.3 T270 TURBO\nHÍBRIDO S 4XE AT6"
+  },
+  {
+    "title": "FIAT STRADA 2015/2015",
+    "slug": "fiat-strada-2015-2015",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 14500,
+    "location": "Sob consulta",
+    "yearLabel": "2015/2015",
+    "imageUrl": "/catalogo-assets/fiat-strada-2015-2015/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/fiat-strada-2015-2015/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "ADVENTURE CD"
+  },
+  {
+    "title": "FIAT STRADA 2011/2011",
+    "slug": "fiat-strada-2011-2011",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 9500,
+    "location": "Sob consulta",
+    "yearLabel": "2011/2011",
+    "imageUrl": "/catalogo-assets/fiat-strada-2011-2011/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/fiat-strada-2011-2011/01.jpeg"
+    ],
+    "whatsapp": "5511948790154",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "ADVENTURE FLEX"
+  },
+  {
     "title": "TOYOTA HILUX 3.0 SRV 4X4 CD",
     "slug": "toyota-hilux-3-0-srv-4x4-cd",
     "category": "Picapes",
