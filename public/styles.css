@@ -6091,3 +6091,26 @@ h1, h2, h3 { letter-spacing: -0.025em; }
   .edital-notice, .edital-payment { padding: 16px; }
   .edital-info-grid { grid-template-columns: 1fr; gap: 0; }
 }
+
+.product-view-lot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #041e42;
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+.product-view-lot:hover { background: #06336b; }
+
+/* Keep both vehicle actions together, including on mobile. */
+.product-card .product-footer { flex-direction: column; align-items: stretch; }
+.product-card-actions { display: flex; align-items: center; gap: 10px; width: 100%; }
+.product-card-actions .product-view-lot { flex: 1; min-width: 0; margin-top: 0; }
+.product-card .product-card-actions .whatsapp-btn { width: 44px; height: 44px; flex: 0 0 44px; }

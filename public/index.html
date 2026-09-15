@@ -253,7 +253,10 @@
                 <div class="price-block">
                   <strong>${formatCurrency(item.price)}</strong>
                 </div>
+                <div class="product-card-actions">
+                <a class="product-view-lot" href="./detalhe.html?slug=${encodeURIComponent(item.slug)}">VER LOTE</a>
                 <a class="whatsapp-btn" href="${vehicleWhatsAppUrl(item.title)}" aria-label="Enviar mensagem pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></a>
+                </div>
               </div>
             </div>
           </article>
