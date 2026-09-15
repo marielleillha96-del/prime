@@ -6114,3 +6114,10 @@ h1, h2, h3 { letter-spacing: -0.025em; }
 .product-card-actions { display: flex; align-items: center; gap: 10px; width: 100%; }
 .product-card-actions .product-view-lot { flex: 1; min-width: 0; margin-top: 0; }
 .product-card .product-card-actions .whatsapp-btn { width: 44px; height: 44px; flex: 0 0 44px; }
+
+.hero-instagram__logo {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  object-fit: contain;
+}
