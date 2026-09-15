@@ -5951,3 +5951,76 @@ h1, h2, h3 { letter-spacing: -0.025em; }
   .home-page .hero-badge { font-size: .6rem; padding: 9px 12px; }
   .home-page .hero p { font-size: .98rem; line-height: 1.7; }
 }
+
+/* Public storefront refresh and catalog finder. */
+.home-page, .catalog-page, .about-page { background: #f5f7fa; }
+.home-page .hero { min-height: 620px; background: #071f3b; }
+.home-page .hero-overlay { background: linear-gradient(100deg, rgba(4,22,44,.98) 5%, rgba(4,22,44,.90) 50%, rgba(4,22,44,.70)); }
+.home-page .hero-gradient { background: radial-gradient(ellipse at 40% 100%, rgba(0,124,90,.2), transparent 65%); }
+.home-page .hero-content { display: grid; grid-template-columns: 1.2fr 1fr; gap: 72px; align-items: center; text-align: left; padding: 64px 0; }
+.home-page .hero h1 { color: #fff; font-size: clamp(2.5rem, 4.1vw, 4.15rem); margin: 0 0 24px; max-width: 18ch; }
+.home-page .hero h1 span { color: #7de0a6; }
+.home-page .hero-copy > p { color: #c0cedd; font-size: 1rem; max-width: 49ch; margin: 0 0 28px; line-height: 1.8; }
+.home-page .hero-actions { justify-content: flex-start; }
+.home-page .hero-actions .button { padding: 0; background: transparent; color: #fff; box-shadow: none; border: none; min-height: 36px; font-size: .9rem; }
+.home-page .hero-instagram { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.18); color: #fff; box-shadow: none; border-radius: 12px; margin-bottom: 28px; }
+.home-page .hero-instagram small { color: #c0cedd; font-size: .65rem; }
+.home-page .hero-instagram strong { color: #fff; }
+.home-search { background: #fff; color: #102b48; border: 1px solid #e3eaf0; border-radius: 20px; padding: 32px; box-shadow: 0 24px 60px #0003; min-width: 0; }
+.home-search__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: .59rem; font-weight: 700; letter-spacing: .09em; color: #007c32; }
+.home-search__status { display: inline-flex; align-items: center; gap: 6px; color: #68778a; font-weight: 500; letter-spacing: 0; white-space: nowrap; }
+.home-search__status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #008b38; box-shadow: 0 0 0 3px #e4f5ea; }
+.home-search h2 { font-size: 1.7rem; margin: 20px 0 8px; line-height: 1.2; }
+.home-page .home-search .home-search__intro { font-size: .83rem; color: #68778a; margin: 0 0 24px; }
+.home-search label { display: block; margin: 20px 0 9px; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #536477; }
+.home-search select, .home-search input { width: 100%; min-width: 0; height: 52px; border: 1px solid #dbe3eb; border-radius: 8px; background: #f8fafc; color: #102b48; padding: 0 14px; font-size: .88rem; }
+.home-search__input { position: relative; }
+.home-search__input svg { position: absolute; width: 20px; height: 20px; top: 16px; left: 14px; color: #458169; pointer-events: none; }
+.home-search__input input { padding-left: 43px; }
+.home-search__submit { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 54px; margin-top: 24px; padding: 14px 20px; border: 0; border-radius: 8px; background: #007c32; color: #fff; font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .2s; }
+.home-search__submit:hover { background: #006429; }
+#homeSearchCount { font-size: .78rem; font-weight: 400; }
+.home-search__all { display: block; text-align: center; font-size: .75rem; color: #596c80; margin-top: 18px; text-decoration: underline; text-underline-offset: 3px; }
+.home-benefits { display: grid; grid-template-columns: repeat(3,1fr); padding-block: 28px; border-bottom: 1px solid #dce4ec; gap: 28px; }
+.home-benefits > div { display: flex; align-items: center; gap: 16px; }
+.home-benefits > div > span { display: grid; place-items: center; width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px; background: #e6efeb; color: #007c32; font-size: .75rem; font-weight: 700; }
+.home-benefits p { margin: 0; color: #65758a; font-size: .75rem; line-height: 1.7; }
+.home-benefits strong { display: block; color: #102b48; font-size: .85rem; }
+:is(.home-page, .catalog-page, .about-page) .product-card { border: 1px solid #e0e6ed; border-radius: 16px; box-shadow: 0 4px 16px #102b4805; overflow: hidden; transition: transform .2s, box-shadow .2s; }
+:is(.home-page, .catalog-page, .about-page) .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px #102b4812; }
+:is(.home-page, .catalog-page) .product-body h3 { font-size: 1.02rem; line-height: 1.5; font-weight: 600; }
+.home-page .section-head h2 { font-size: clamp(1.7rem, 3vw, 2.3rem); letter-spacing: -.04em; }
+.catalog-page .filters-card { border: 1px solid #e0e6ed; border-radius: 16px; box-shadow: 0 4px 16px #102b4805; }
+@media (max-width: 1000px) {
+  .home-page .hero-content { gap: 32px; grid-template-columns: 1fr 1fr; }
+  .home-search { padding: 24px; }
+  .home-search__top { flex-wrap: wrap; }
+}
+@media (max-width: 700px) {
+  .home-page .hero-content { grid-template-columns: 1fr; padding: 30px 0 36px; gap: 28px; }
+  .home-page .hero h1 { font-size: clamp(2rem, 8vw, 3rem); max-width: 20ch; margin-bottom: 16px; }
+  .home-page .hero-copy > p { font-size: .88rem; margin-bottom: 12px; }
+  .home-page .hero-instagram { margin-bottom: 22px; padding: 10px 12px; }
+  .home-page .hero-instagram small { font-size: .57rem; }
+  .home-search { padding: 24px 20px; border-radius: 16px; }
+  .home-search h2 { font-size: 1.5rem; }
+  .home-benefits { grid-template-columns: 1fr; gap: 18px; padding-block: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.home-page, .catalog-page, .about-page) .product-card { transition: none; }
+  :is(.home-page, .catalog-page, .about-page) .product-card:hover { transform: none; }
+}
+@media (max-width: 700px) {
+  .home-page .hero-content { padding-top: 22px; gap: 20px; }
+  .home-page .hero h1 { font-size: clamp(1.85rem, 7.5vw, 2.7rem); }
+  .home-page .hero-copy > p { line-height: 1.6; margin-bottom: 0; }
+  .home-page .hero-actions { display: none; }
+  .home-page .hero-instagram { margin-bottom: 18px; }
+  .home-page .home-search { padding-block: 20px; }
+  .home-page .home-search h2 { margin-top: 16px; }
+  .home-page .home-search .home-search__intro { margin-bottom: 16px; }
+  .home-page .home-search label { margin-top: 16px; }
+  .home-page .mobile-nav { background: #fff; border-top: 1px solid #dce4ec; box-shadow: 0 -4px 20px #102b4808; }
+  .home-page .mobile-nav-item { color: #586a80; }
+  .home-page .mobile-nav-item.active { color: #064180; }
+}

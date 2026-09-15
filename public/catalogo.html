@@ -142,6 +142,7 @@
     </nav>
 
     <script src="./mobile-access.js"></script>
+    <script src="./catalog-search.js"></script>
     <script>
       const searchInput = document.getElementById("search-input");
       const categoryButtons = Array.from(document.querySelectorAll(".category-pill"));
@@ -149,7 +150,11 @@
       const catalogResultsGrid = document.getElementById("catalogResultsGrid");
 
       let catalogItems = [];
-      let selectedCategory = "all";
+      const initialFilters = new URLSearchParams(window.location.search);
+      let selectedCategory = categoryButtons.some((button) => button.dataset.category === initialFilters.get("category"))
+        ? initialFilters.get("category") : "all";
+      searchInput.value = initialFilters.get("q") || "";
+      categoryButtons.forEach((button) => button.classList.toggle("category-pill--active", button.dataset.category === selectedCategory));
 
       const formatCurrency = (value) =>
         Number(value || 0) > 0
@@ -218,14 +223,7 @@
       };
 
       const renderCatalog = () => {
-        const search = searchInput.value.trim().toLowerCase();
-        const filteredItems = catalogItems.filter((item) => {
-          const matchesCategory =
-            selectedCategory === "all" || (item.category || "").toLowerCase() === selectedCategory.toLowerCase();
-          const haystack = [item.title, item.category, item.location].filter(Boolean).join(" ").toLowerCase();
-          const matchesSearch = !search || haystack.includes(search);
-          return matchesCategory && matchesSearch;
-        });
+        const filteredItems = catalogItems.filter((item) => window.primeCatalogMatches(item, selectedCategory, searchInput.value));
 
         resultsCount.textContent = `${filteredItems.length} VEÍCULOS`;
 

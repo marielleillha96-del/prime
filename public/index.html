@@ -49,6 +49,7 @@
         </div>
 
         <div class="container hero-content">
+          <div class="hero-copy">
           <a
             class="hero-instagram"
             href="https://www.instagram.com/prime_leiloes?igsh=OHU3em1reDFwY3Js"
@@ -63,18 +64,37 @@
             </span>
           </a>
           <h1>
-            Grandes oportunidades para o seu <span>próximo passo.</span>
+            Seu próximo veículo.<br /><span>Uma nova oportunidade.</span>
           </h1>
           <p>
-            Encontre veículos, máquinas e equipamentos para seus projetos.
-            Explore as oportunidades da PRIME LEILÕES, consulte os detalhes de cada item
-            e conte com nossa equipe para orientar sua escolha.
+            De picapes a máquinas para o campo. Explore nosso catálogo,
+            encontre o que você procura e fale diretamente com a equipe PRIME.
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="./catalogo.html">Explorar oportunidades →</a>
           </div>
+          </div>
+          <form class="home-search" action="./catalogo.html" method="get" aria-labelledby="homeSearchTitle">
+            <div class="home-search__top"><span>ENCONTRE SUA OPORTUNIDADE</span><span class="home-search__status">Catálogo online</span></div>
+            <h2 id="homeSearchTitle">O que você procura?</h2>
+            <p class="home-search__intro">Sua próxima conquista começa aqui.</p>
+            <label for="homeCategory">Categoria</label>
+            <select id="homeCategory" name="category">
+              <option value="all">Todas as categorias</option>
+              <option>Caminhões</option><option>Picapes</option><option>SUVs</option><option>Implementos</option><option>Tratores</option>
+            </select>
+            <label for="homeQuery">Marca ou modelo</label>
+            <div class="home-search__input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="homeQuery" name="q" type="search" placeholder="Ex.: Hilux, S10, Scania…" maxlength="120" /></div>
+            <button class="home-search__submit" type="submit"><span>Ver oportunidades <span id="homeSearchCount" aria-live="polite"></span></span><span aria-hidden="true">→</span></button>
+            <a class="home-search__all" href="./catalogo.html">Explorar catálogo completo</a>
+          </form>
         </div>
       </section>
+      <div class="home-benefits container" aria-label="Como encontrar sua oportunidade">
+        <div><span>01</span><p><strong>Explore o catálogo</strong>Veículos, máquinas e equipamentos</p></div>
+        <div><span>02</span><p><strong>Conheça os detalhes</strong>Fotos e informações de cada item</p></div>
+        <div><span>03</span><p><strong>Fale com a PRIME</strong>Atendimento direto pelo WhatsApp</p></div>
+      </div>
 
       <section class="section section-catalogo" aria-label="Destaques do catálogo">
         <div class="container">
@@ -173,6 +193,8 @@
     </nav>
 
     <script src="./mobile-access.js"></script>
+    <script src="./catalog-search.js"></script>
+    <script src="./home-search.js" defer></script>
     <script>
       const homeFeaturedGrid = document.getElementById("homeFeaturedGrid");
 
