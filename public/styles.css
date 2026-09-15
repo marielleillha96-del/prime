@@ -6176,3 +6176,38 @@ h1, h2, h3 { letter-spacing: -0.025em; }
   .safra-cta { padding: 28px 20px; }
   .safra-cta-actions { flex-direction: column; }
 }
+
+/* Closing home section: security and buying benefits. */
+.home-trust { padding-bottom: 72px; }
+.home-trust__security { position: relative; overflow: hidden; padding: 42px 36px 38px; border-radius: 24px; background: radial-gradient(ellipse at 100% 100%, #124b49 0, transparent 50%), linear-gradient(120deg, #071b32, #132e48); box-shadow: 0 18px 40px #102b4818; color: #fff; }
+.home-trust__heading { text-align: center; margin-bottom: 36px; }
+.home-trust__heading > span { color: #8cdbb0; font-size: .65rem; letter-spacing: .16em; font-weight: 700; }
+.home-trust__heading h2 { margin: 12px 0 0; color: #fff; font-size: clamp(1.65rem, 3vw, 2.5rem); line-height: 1.25; font-weight: 600; letter-spacing: -.04em; }
+.home-trust__heading em { color: #9ce4ba; font-style: normal; }
+.home-trust__grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.trust-item { display: flex; align-items: center; gap: 15px; padding: 20px; min-width: 0; }
+.home-trust__grid .trust-item + .trust-item { border-left: 1px solid #ffffff24; }
+.trust-icon { display: grid; place-items: center; width: 46px; height: 46px; flex: 0 0 46px; border-radius: 13px; background: #8cdbb012; color: #79dda3; }
+.trust-icon svg { width: 25px; height: 25px; }
+.home-trust .trust-item h3 { font-size: .95rem; font-weight: 600; line-height: 1.4; margin: 0 0 7px; }
+.home-trust .trust-item p { font-size: .77rem; line-height: 1.65; color: #bbcad8; margin: 0; }
+.home-trust__advantages { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 20px; padding: 24px 16px; background: #fff; border: 1px solid #dce6e4; border-radius: 20px; box-shadow: 0 6px 24px #102b4806; }
+.home-trust__advantages .trust-item + .trust-item { border-left: 1px solid #e0e8ec; }
+.home-trust__advantages .trust-icon { background: #e5f5ec; color: #007c32; }
+.home-trust__advantages h3 { color: #102b48; }
+.home-trust__advantages .trust-item p { color: #65758a; }
+@media (max-width: 1050px) {
+  .home-trust__grid { grid-template-columns: repeat(2, 1fr); gap: 12px 0; }
+  .home-trust__grid .trust-item:nth-child(3) { border-left: 0; }
+  .trust-item { padding: 16px 12px; gap: 12px; }
+}
+@media (max-width: 640px) {
+  .home-trust { padding-bottom: 40px; }
+  .home-trust__security { padding: 30px 20px 18px; border-radius: 20px; }
+  .home-trust__heading { text-align: left; margin-bottom: 20px; }
+  .home-trust__grid, .home-trust__advantages { grid-template-columns: 1fr; gap: 0; }
+  .home-trust__grid .trust-item + .trust-item { border-left: 0; border-top: 1px solid #ffffff1a; }
+  .home-trust__advantages { padding: 8px 20px; }
+  .home-trust__advantages .trust-item + .trust-item { border-left: 0; border-top: 1px solid #e0e8ec; }
+  .trust-item { padding: 20px 0; }
+}
