@@ -6122,3 +6122,57 @@ h1, h2, h3 { letter-spacing: -0.025em; }
   flex: 0 0 48px;
   object-fit: contain;
 }
+
+/* Plano Safra information page. */
+.safra-home-link { display: inline-flex; align-items: center; gap: 20px; margin-top: 16px; padding: 14px 20px; border-radius: 8px; background: #bcefd2; color: #041e42; font-size: .8rem; font-weight: 700; letter-spacing: .05em; }
+.safra-home-link:hover { background: #9de2ba; }
+.safra-page { background: #fafbf9; color: #18334b; }
+.safra-credit-notice { padding: 10px 24px; background: #051629; color: #c1d2df; text-align: center; font-size: .68rem; line-height: 1.6; }
+.safra-header { background: #fff; }
+.safra-header .container { max-width: 1120px; display: flex; align-items: center; justify-content: space-between; padding-block: 14px; }
+.safra-header img { width: 110px; height: 60px; object-fit: contain; }
+.safra-back { padding: 10px 14px; background: #f1f5f9; border-radius: 7px; font-size: .82rem; }
+.safra-hero { padding: 64px 0; background: radial-gradient(#0b3943 1px, transparent 1px), #071f30; background-size: 16px 16px; text-align: center; }
+.safra-eyebrow { display: inline-block; padding: 8px 16px; background: #06453c; color: #94dbb9; border: 1px solid #14604e; border-radius: 30px; font-size: .7rem; font-weight: 700; }
+.safra-hero h1 { max-width: 850px; margin: 24px auto; color: #fff; font-size: clamp(1.7rem, 3.5vw, 2.6rem); line-height: 1.2; font-weight: 800; }
+.safra-hero h1 span { color: #8bddaf; }
+.safra-hero p { max-width: 680px; margin: 0 auto; color: #bad0df; line-height: 1.8; }
+.safra-content { max-width: 880px; display: grid; gap: 28px; padding-block: 44px; }
+.safra-card { padding: 34px; background: #fff; border: 1px solid #dfe6ed; border-radius: 16px; box-shadow: 0 2px 3px #132e4410; }
+.safra-card h2 { margin: 0 0 20px; font-size: 1.35rem; line-height: 1.4; }
+.safra-card p { color: #5c7087; font-size: .9rem; line-height: 1.75; }
+.safra-terms { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 24px; }
+.safra-terms > div { padding: 20px; border: 1px solid #e2e9f1; border-radius: 10px; background: #f7f9fc; }
+.safra-terms span { display: block; color: #007c32; font-size: .67rem; font-weight: 700; margin-bottom: 8px; }
+.safra-terms strong { display: block; font-size: .95rem; }
+.safra-terms p { font-size: .75rem; margin: 6px 0 0; }
+.safra-example { background: linear-gradient(120deg, #071a29, #102c43); color: #fff; }
+.safra-example p { color: #bfd0df; }
+.safra-example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-block: 22px; }
+.safra-example-grid > div { padding: 18px 14px; background: #ffffff19; border: 1px solid #ffffff10; border-radius: 10px; }
+.safra-example-grid span { display: block; font-size: .7rem; color: #bfd0df; margin-bottom: 8px; }
+.safra-example-grid strong { font-size: 1.05rem; }
+.safra-example-grid > div:nth-child(2) strong { color: #8bddaf; }
+.safra-example .safra-footnote { font-size: .72rem; font-style: italic; margin-bottom: 0; }
+.safra-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.safra-info-grid .safra-card { padding: 28px; }
+.safra-info-grid h2 { font-size: 1.05rem; }
+.safra-info-grid p { margin-bottom: 0; font-size: .83rem; }
+.safra-transparency { background: #f1f5f9; }
+.safra-cta { background: linear-gradient(120deg, #0ca55b, #0c8963); color: #fff; padding: 48px 32px; border-radius: 16px; text-align: center; box-shadow: 0 10px 20px #102b4814; }
+.safra-cta h2 { font-size: 1.5rem; line-height: 1.4; }
+.safra-cta p { max-width: 590px; margin: 20px auto 28px; color: #e1f5e9; font-size: .9rem; line-height: 1.75; }
+.safra-cta-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; }
+.safra-cta-actions a { padding: 16px 20px; border-radius: 9px; background: #ffffff20; font-size: .83rem; line-height: 1.5; }
+.safra-cta-actions .safra-consult { background: #041e32; }
+.safra-cta-actions a:hover { box-shadow: 0 0 0 2px #ffffff80; }
+.safra-footer { background: #051629; color: #adc1d3; padding: 30px 20px; text-align: center; font-size: .7rem; line-height: 1.7; }
+@media (max-width: 640px) {
+  .safra-hero { padding: 40px 0; }
+  .safra-hero p { font-size: .9rem; }
+  .safra-content { padding-block: 28px; gap: 20px; }
+  .safra-card, .safra-info-grid .safra-card { padding: 24px 20px; }
+  .safra-terms, .safra-info-grid, .safra-example-grid { grid-template-columns: 1fr; gap: 12px; }
+  .safra-cta { padding: 28px 20px; }
+  .safra-cta-actions { flex-direction: column; }
+}
