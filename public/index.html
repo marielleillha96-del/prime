@@ -74,21 +74,33 @@
             <a class="button button-primary" href="./catalogo.html">Explorar oportunidades →</a>
           </div>
           </div>
-          <form class="home-search" action="./catalogo.html" method="get" aria-labelledby="homeSearchTitle">
-            <div class="home-search__top"><span>ENCONTRE SUA OPORTUNIDADE</span><span class="home-search__status">Catálogo online</span></div>
-            <h2 id="homeSearchTitle">O que você procura?</h2>
-            <p class="home-search__intro">Sua próxima conquista começa aqui.</p>
+        </div>
+      </section>
+      <section class="container home-search-section" aria-label="Buscar veículos">
+          <form class="home-search home-search--wide" action="./catalogo.html" method="get" aria-labelledby="homeSearchTitle">
+            <div class="home-search__top"><span>ENCONTRE SEU LOTE</span><span class="home-search__status">Catálogo aberto</span></div>
+            <h2 id="homeSearchTitle">Qual oportunidade você procura?</h2>
+            <div class="home-search__categories" role="group" aria-label="Categorias de veículos">
+              <button type="button" class="home-search__category" data-category="all" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18M8 3v6M16 9v6M8 15v6"/></svg>Todos</button>
+              <button type="button" class="home-search__category" data-category="Caminhões" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 5h11v12H3zM14 10h4l3 4v3h-7"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>Caminhões</button>
+              <button type="button" class="home-search__category" data-category="Picapes" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 10h8V6h5l4 5h3v7H2z"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>Picapes</button>
+              <button type="button" class="home-search__category" data-category="SUVs" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m4 11 2-6h12l2 6M3 11h18v8H3zM6 15h2m8 0h2M5 19v2m14-2v2"/></svg>SUVs</button>
+              <button type="button" class="home-search__category" data-category="Implementos" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 7h15v8H3zM18 12h4M6 4v3m8-3v3"/><circle cx="7" cy="18" r="3"/><circle cx="16" cy="18" r="2"/></svg>Implementos</button>
+              <button type="button" class="home-search__category" data-category="Tratores" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="17" r="4"/><circle cx="19" cy="18" r="2"/><path d="M4 5h8v9h8v2M9 5v8m7-4v5M2 5h12"/></svg>Tratores</button>
+            </div>
+            <div class="home-search__fields"><div>
             <label for="homeCategory">Categoria</label>
             <select id="homeCategory" name="category">
               <option value="all">Todas as categorias</option>
               <option>Caminhões</option><option>Picapes</option><option>SUVs</option><option>Implementos</option><option>Tratores</option>
             </select>
+            </div><div>
             <label for="homeQuery">Marca ou modelo</label>
-            <div class="home-search__input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="homeQuery" name="q" type="search" placeholder="Ex.: Hilux, S10, Scania…" maxlength="120" /></div>
-            <button class="home-search__submit" type="submit"><span>Ver oportunidades <span id="homeSearchCount" aria-live="polite"></span></span><span aria-hidden="true">→</span></button>
-            <a class="home-search__all" href="./catalogo.html">Explorar catálogo completo</a>
+            <div class="home-search__input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="homeQuery" name="q" type="search" placeholder="Digite o que você procura" maxlength="120" /></div>
+            </div>
+            <button class="home-search__submit" type="submit"><span>Ver veículos <span id="homeSearchCount" aria-live="polite"></span></span><span aria-hidden="true">→</span></button>
+            </div>
           </form>
-        </div>
       </section>
       <div class="home-benefits container" aria-label="Como encontrar sua oportunidade">
         <div><span>01</span><p><strong>Explore o catálogo</strong>Veículos, máquinas e equipamentos</p></div>
@@ -240,7 +252,7 @@
                 <div class="price-block">
                   <strong>${formatCurrency(item.price)}</strong>
                 </div>
-                <a class="whatsapp-btn" href="${vehicleWhatsAppUrl(item.title)}" aria-label="Enviar mensagem">✦</a>
+                <a class="whatsapp-btn" href="${vehicleWhatsAppUrl(item.title)}" aria-label="Enviar mensagem pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></a>
               </div>
             </div>
           </article>

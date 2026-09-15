@@ -6024,3 +6024,38 @@ h1, h2, h3 { letter-spacing: -0.025em; }
   .home-page .mobile-nav-item { color: #586a80; }
   .home-page .mobile-nav-item.active { color: #064180; }
 }
+
+/* WhatsApp image shared by vehicle cards. */
+.product-card .whatsapp-btn::before { content: none; }
+.product-card .whatsapp-btn { background: transparent; }
+.product-card .whatsapp-btn img { width: 36px; height: 36px; object-fit: contain; }
+
+/* Full-width finder beneath the home banner. */
+.home-page .hero { min-height: 480px; }
+.home-page .hero-content { display: block; padding: 48px 0 84px; }
+.home-page .hero-copy { max-width: 760px; }
+.home-search-section { position: relative; z-index: 2; margin-top: -36px; }
+.home-search--wide { border-radius: 0; padding: 30px 28px 20px; box-shadow: 0 14px 30px #102b480d; }
+.home-search--wide h2 { margin: 12px 0 20px; font-size: 1.45rem; font-weight: 800; letter-spacing: -.045em; }
+.home-search__categories { display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 17px; border-bottom: 1px solid #d9e1e4; }
+.home-search__category { display: inline-flex; align-items: center; gap: 8px; padding: 8px 13px; min-height: 34px; background: transparent; border: 1px solid transparent; border-radius: 4px; color: #687c8d; font-size: .72rem; font-weight: 600; cursor: pointer; }
+.home-search__category svg { width: 17px; height: 17px; flex-shrink: 0; }
+.home-search__category[aria-pressed="true"] { background: #edf5ef; border-color: #b8ddc4; color: #102b48; }
+.home-search__category[aria-pressed="true"] svg { color: #007c32; }
+.home-search__category:hover { background: #edf5ef; }
+.home-search__fields { display: grid; grid-template-columns: 1.15fr 2fr auto; align-items: end; gap: 14px; }
+.home-search--wide label { margin: 22px 0 9px; font-size: .58rem; letter-spacing: .12em; }
+.home-search--wide select, .home-search--wide input { height: 49px; border-radius: 5px; background: #fafcfb; font-size: .75rem; }
+.home-search--wide .home-search__submit { min-height: 49px; margin: 0; gap: 14px; border-radius: 6px; font-size: .76rem; box-shadow: 0 0 0 5px #e4f1e8, 0 5px 12px #007c3220; }
+.home-search--wide .home-search__input svg { top: 14px; }
+@media (max-width: 700px) {
+  .home-page .hero { min-height: auto; }
+  .home-page .hero-content { padding: 26px 0 60px; }
+  .home-page .home-search--wide { padding: 24px 16px 20px; }
+  .home-search--wide h2 { font-size: 1.3rem; }
+  .home-search__categories { gap: 5px; }
+  .home-search__category { padding: 8px; font-size: .68rem; }
+  .home-search__fields { grid-template-columns: 1fr; gap: 0; }
+  .home-search--wide .home-search__submit { margin-top: 16px; }
+  .home-search--wide .home-search__top { font-size: .56rem; }
+}
