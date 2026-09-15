@@ -6116,6 +6116,7 @@ h1, h2, h3 { letter-spacing: -0.025em; }
 .product-card .product-card-actions .whatsapp-btn { width: 44px; height: 44px; flex: 0 0 44px; }
 
 .hero-instagram__logo {
+  border-radius: 27%;
   width: 48px;
   height: 48px;
   flex: 0 0 48px;
