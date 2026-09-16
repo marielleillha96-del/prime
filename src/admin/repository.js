@@ -232,12 +232,12 @@ export const getAdminDashboardData = async () => {
 
   const [users, catalogItems, drivers, yards, trackings, contracts, contractsTotal] = await Promise.all([
     pool.query(`
-      select id, full_name, email, whatsapp, cpf, city, state, role, created_at
+      select id, full_name, email, whatsapp, cpf, address, number, complement, district, cep, city, state, role, created_at
       from public.app_users
       order by created_at desc
     `),
     pool.query(`
-      select id, title, slug, category, sections, price, location, year_label, image_url, gallery_images, badge, gallery_count, is_published, created_at
+      select id, title, slug, category, sections, price, location, year_label, image_url, gallery_images, badge, gallery_count, description, is_published, created_at
       from public.app_catalog_items
       order by created_at desc
     `),

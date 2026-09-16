@@ -126,6 +126,7 @@ export const renderAcquisitionContractHtml = (contract) => {
           1. Constitui objeto do presente contrato a compra e venda do veículo abaixo identificado:
           <strong>${escapeHtml([contract.vehicleName, contract.vehicleModel, contract.vehicleYear].filter(Boolean).join(" / ") || "-")}</strong>.
         </p>
+        ${contract.vehicleDescription ? `<p class="contract-vehicle-description">${escapeHtml(contract.vehicleDescription)}</p>` : ""}
         <p>1.1. O veículo acima descrito constitui o objeto específico da presente negociação, comprometendo-se o VENDEDOR a realizar sua entrega ao COMPRADOR nas condições estabelecidas neste instrumento.</p>
       </section>
 

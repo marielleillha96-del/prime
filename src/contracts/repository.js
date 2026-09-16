@@ -23,6 +23,7 @@ const serializeContract = (row) => {
     vehicleName: row.vehicle_name,
     vehicleModel: row.vehicle_model,
     vehicleYear: row.vehicle_year,
+    vehicleDescription: row.vehicle_description,
     amountValue: Number(row.amount_value || 0),
     amountText: row.amount_text,
     paymentMethod: row.payment_method,
@@ -70,6 +71,7 @@ const persistContractChangesByPublicToken = async (publicToken, changes) => {
   pushField("vehicle_name", changes.vehicleName);
   pushField("vehicle_model", changes.vehicleModel);
   pushField("vehicle_year", changes.vehicleYear);
+  pushField("vehicle_description", changes.vehicleDescription);
   pushField("amount_value", changes.amountValue);
   pushField("amount_text", changes.amountText);
   pushField("payment_method", changes.paymentMethod);
@@ -140,6 +142,7 @@ export const ensureContractSchema = async () => {
         updated_at timestamptz not null default timezone('utc', now())
       );
 
+      alter table public.app_contracts add column if not exists vehicle_description text;
       alter table public.app_contracts add column if not exists seller_signature_hash text;
       alter table public.app_contracts add column if not exists client_signature_hash text;
 
@@ -197,6 +200,7 @@ export const createContract = async ({
   vehicleName = null,
   vehicleModel = null,
   vehicleYear = null,
+  vehicleDescription = null,
   amountValue = 0,
   amountText = null,
   paymentMethod = null,
@@ -217,13 +221,13 @@ export const createContract = async ({
         contract_type, public_token, client_user_id, client_name, client_email, client_cpf, client_address,
         vehicle_name, vehicle_model, vehicle_year, amount_value, amount_text, payment_method, payment_notes,
         delivery_date, delivery_address, seller_name, seller_signature_text, seller_signature_style, seller_signed_at,
-        seller_signature_hash, status
+        seller_signature_hash, status, vehicle_description
       )
       values (
         $1,$2,$3,$4,$5,$6,$7,
         $8,$9,$10,$11,$12,$13,$14,
         $15,$16,$17,$18,$19,timezone('utc', now()),
-        $20,$21
+        $20,$21,$22
       )
       returning *
     `,
@@ -248,7 +252,8 @@ export const createContract = async ({
       sellerSignatureText,
       sellerSignatureStyle,
       sellerSignatureHash,
-      status
+      status,
+      vehicleDescription
     ]
   );
 

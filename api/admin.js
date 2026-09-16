@@ -1,3 +1,4 @@
+import { parseBRL, fullAddress, amountWords } from "../public/shared/contract-utils.js";
 import { createUser, deleteUserById, findUserByEmailOrCpf, findUserById, saveRefreshToken, updateUser } from "../src/auth/repository.js";
 import { comparePassword, signAccessToken, signRefreshToken } from "../src/auth/security.js";
 import {
@@ -97,6 +98,7 @@ const normalizeContractPayload = (contract) => {
     vehicleName: contract.vehicleName,
     vehicleModel: contract.vehicleModel,
     vehicleYear: contract.vehicleYear,
+    vehicleDescription: contract.vehicleDescription,
     amountValue: Number(contract.amountValue || 0),
     amountText: contract.amountText,
     paymentMethod: contract.paymentMethod,
@@ -457,6 +459,7 @@ export default async function handler(req, res) {
           vehicleName,
           vehicleModel,
           vehicleYear,
+          vehicleDescription,
           amountValue,
           amountText,
           paymentMethod,
@@ -469,13 +472,13 @@ export default async function handler(req, res) {
         const client = resolvedClientUserId ? await findUserById(resolvedClientUserId) : null;
         const finalClientName = String(clientName || client?.full_name || "").trim();
         const finalClientCpf = String(clientCpf || client?.cpf || "").trim();
-        const finalClientAddress = String(clientAddress || client?.address || "").trim() || null;
+        const finalClientAddress = String(clientAddress || fullAddress(client) || "").trim() || null;
         const finalClientEmail = String(clientEmail || client?.email || "").trim() || null;
         const finalVehicleName = String(vehicleName || "").trim() || null;
         const finalVehicleModel = String(vehicleModel || "").trim() || null;
         const finalVehicleYear = String(vehicleYear || "").trim() || null;
-        const finalAmountValue = Number(amountValue || 0);
-        const finalAmountText = String(amountText || "").trim() || null;
+        const finalAmountValue = parseBRL(amountValue);
+        const finalAmountText = String(amountText || amountWords(finalAmountValue)).trim() || null;
         const finalPaymentMethod = String(paymentMethod || "").trim() || null;
         const finalPaymentNotes = String(paymentNotes || "").trim() || null;
         const finalDeliveryAddress = String(deliveryAddress || "").trim() || finalClientAddress;
@@ -514,6 +517,7 @@ export default async function handler(req, res) {
           vehicleName: finalVehicleName,
           vehicleModel: finalVehicleModel,
           vehicleYear: finalVehicleYear,
+          vehicleDescription: String(vehicleDescription || "").trim() || null,
           amountValue: finalAmountValue,
           amountText: finalAmountText,
           paymentMethod: finalPaymentMethod,

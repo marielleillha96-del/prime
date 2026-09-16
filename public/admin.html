@@ -432,7 +432,6 @@
 
                   <div class="admin-subtabs" role="tablist" aria-label="Sub abas de contratos">
                     <button class="admin-subtab is-active" type="button" data-contract-tab-target="acquisition">Contrato de Aquisição</button>
-                    <button class="admin-subtab" type="button" data-contract-tab-target="auction">Termo de Arremate</button>
                     <button class="admin-subtab" type="button" data-contract-tab-target="status">Status dos Contratos</button>
                   </div>
 
@@ -452,6 +451,7 @@
                         <span>ENDEREÇO DO CLIENTE</span>
                         <textarea name="clientAddress" id="contractClientAddress" rows="3" required></textarea>
                       </label>
+                      <label class="admin-form__full"><span>SELECIONAR VEÍCULO DO CATÁLOGO</span><select id="contractCatalogSelect"><option value="">Preencher manualmente ou selecionar veículo</option></select></label>
                       <label>
                         <span>NOME DO VEÍCULO / MÁQUINA</span>
                         <input type="text" name="vehicleName" id="contractVehicleName" required />
@@ -464,9 +464,10 @@
                         <span>ANO DE FABRICAÇÃO</span>
                         <input type="text" name="vehicleYear" id="contractVehicleYear" required />
                       </label>
+                      <label class="admin-form__full"><span>DESCRIÇÃO OPCIONAL DO VEÍCULO</span><textarea name="vehicleDescription" id="contractVehicleDescription" rows="3"></textarea></label>
                       <label>
                         <span>VALOR DO VEÍCULO</span>
-                        <input type="number" name="amountValue" id="contractAmountValue" step="0.01" min="0.01" required />
+                        <input type="text" inputmode="decimal" name="amountValue" id="contractAmountValue" placeholder="R$ 0,00" required />
                       </label>
                       <label class="admin-form__full">
                         <span>VALOR POR EXTENSO</span>
@@ -478,8 +479,13 @@
                       </label>
                       <label>
                         <span>OBSERVAÇÃO DO PAGAMENTO</span>
-                        <input type="text" name="paymentNotes" id="contractPaymentNotes" required />
+                        <select name="paymentNotes" id="contractPaymentNotes"><option value="cash">À vista</option><option value="installments">Parcelado com entrada</option></select>
                       </label>
+                      <div id="contractInstallments" class="admin-form__full admin-form--grid hidden">
+                        <label><span>VALOR DA ENTRADA</span><input id="contractDownPayment" type="text" inputmode="decimal" placeholder="R$ 0,00" /></label>
+                        <label><span>QUANTIDADE DE PARCELAS</span><input id="contractInstallmentCount" type="number" min="1" max="600" step="1" /></label>
+                        <label><span>VALOR DE CADA PARCELA</span><input id="contractInstallmentValue" type="text" inputmode="decimal" placeholder="R$ 0,00" /></label>
+                      </div>
                       <label>
                         <span>DATA DE ENTREGA</span>
                         <input type="date" name="deliveryDate" id="contractDeliveryDate" required />
@@ -493,12 +499,6 @@
                         <p class="admin-status" id="contractStatus"></p>
                       </div>
                     </form>
-                  </div>
-
-                  <div class="admin-contract-panel hidden" data-contract-panel="auction">
-                    <div class="admin-empty">
-                      O TERMO DE ARREMATE será configurado na próxima etapa.
-                    </div>
                   </div>
 
                   <div class="admin-contract-panel hidden" data-contract-panel="status">
@@ -683,7 +683,8 @@
       </div>
     </div>
 
-    <script>
+    <script type="module">
+      import {parseBRL, formatBRL, fullAddress, amountWords} from "./shared/contract-utils.js";
       const storageKey = "agro_admin_auth";
       const loginSection = document.getElementById("adminLogin");
       const dashboardSection = document.getElementById("adminDashboard");
@@ -1024,13 +1025,7 @@
         return [address, [city, state].filter(Boolean).join(" - ")].filter(Boolean).join(", ");
       };
 
-      const buildClientAddress = (user) =>
-        user
-          ? [user.address, user.number, user.district, user.city, user.state, user.cep]
-              .map((value) => String(value || "").trim())
-              .filter(Boolean)
-              .join(", ")
-          : "";
+      const buildClientAddress = fullAddress;
 
       const syncTrackingDestination = () => {
         const selectedClient = currentAdminData.users.find((user) => user.id === trackingClientSelect.value);
@@ -1555,13 +1550,56 @@
         contractClientSearch.value = user.full_name || "";
         contractClientCpf.value = user.cpf || "";
         contractClientAddress.value = buildClientAddress(user) || "";
-        if (!contractDeliveryAddress.value.trim()) {
-          contractDeliveryAddress.value = buildClientAddress(user) || "";
-        }
+        contractDeliveryAddress.value = buildClientAddress(user) || "";
       };
+
+      const catalogSelect = document.getElementById("contractCatalogSelect");
+      const vehicleDescription = document.getElementById("contractVehicleDescription");
+      const installmentFields = document.getElementById("contractInstallments");
+      const downPayment = document.getElementById("contractDownPayment");
+      const installmentCount = document.getElementById("contractInstallmentCount");
+      const installmentValue = document.getElementById("contractInstallmentValue");
+      const syncPaymentFields = () => {
+        const enabled = contractPaymentNotes.value === "installments";
+        installmentFields.classList.toggle("hidden", !enabled);
+        [downPayment, installmentCount, installmentValue].forEach(input => { input.required = enabled; input.disabled = !enabled; });
+      };
+      contractPaymentNotes.addEventListener("change", syncPaymentFields);
+      syncPaymentFields();
+      const paymentSummary = () => {
+        if (contractPaymentNotes.value === "cash") return "Pagamento à vista.";
+        const entry = parseBRL(downPayment.value), count = Number(installmentCount.value), each = parseBRL(installmentValue.value);
+        if (!Number.isFinite(entry) || entry <= 0 || !Number.isInteger(count) || count < 1 || count > 600 || !Number.isFinite(each) || each <= 0) throw new Error("Informe entrada, quantidade de parcelas e valor de cada parcela válidos.");
+        return `Entrada de ${formatBRL(entry)} e saldo em ${count} parcelas de ${formatBRL(each)} cada.`;
+      };
+      [contractAmountValue, downPayment, installmentValue].forEach(input => {
+        input.addEventListener("blur", () => {
+          const value = parseBRL(input.value);
+          if (input.value.trim() && Number.isFinite(value) && value >= 0) input.value = formatBRL(value);
+        });
+      });
+      contractAmountValue.addEventListener("input", () => { contractAmountText.value = amountWords(contractAmountValue.value); });
+      const renderContractCatalog = () => {
+        const previous = catalogSelect.value;
+        catalogSelect.replaceChildren(new Option("Preencher manualmente ou selecionar veículo", ""));
+        currentAdminData.catalogItems.forEach(item => catalogSelect.add(new Option(item.title, item.id)));
+        catalogSelect.value = previous;
+      };
+      catalogSelect.addEventListener("change", () => {
+        const item = currentAdminData.catalogItems.find(item => item.id === catalogSelect.value);
+        if (!item) return;
+        contractVehicleName.value = item.title || "";
+        contractVehicleModel.value = (item.title || "").replace(/\s*\d{4}(?:\/\d{4})?\s*$/, "").trim();
+        contractVehicleYear.value = item.year_label || item.yearLabel || "";
+        vehicleDescription.value = item.description || "";
+        contractAmountValue.value = Number(item.price) > 0 ? formatBRL(item.price) : "";
+        contractAmountText.value = Number(item.price) > 0 ? amountWords(item.price) : "";
+      });
 
       const resetContractForm = () => {
         contractForm.reset();
+        syncPaymentFields();
+        renderContractCatalog();
         contractClientUserId.value = "";
         contractStatus.textContent = "";
         contractSubmitButton.textContent = "Gerar contrato";
@@ -1637,6 +1675,7 @@
         renderStats(data);
         renderUsers(data.users);
         renderCatalog(data.catalogItems);
+        renderContractCatalog();
         renderDrivers(data.drivers);
         renderYards(data.yards);
         renderTrackings(data.trackings);
@@ -2232,10 +2271,11 @@
               vehicleName: formData.get("vehicleName"),
               vehicleModel: formData.get("vehicleModel"),
               vehicleYear: formData.get("vehicleYear"),
-              amountValue: formData.get("amountValue"),
+              vehicleDescription: formData.get("vehicleDescription"),
+              amountValue: parseBRL(formData.get("amountValue")),
               amountText: formData.get("amountText"),
               paymentMethod: formData.get("paymentMethod"),
-              paymentNotes: formData.get("paymentNotes"),
+              paymentNotes: paymentSummary(),
               deliveryDate: formData.get("deliveryDate"),
               deliveryAddress: formData.get("deliveryAddress"),
               contractType: "acquisition"

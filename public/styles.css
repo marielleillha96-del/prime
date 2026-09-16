@@ -6211,3 +6211,17 @@ h1, h2, h3 { letter-spacing: -0.025em; }
   .home-trust__advantages .trust-item + .trust-item { border-left: 0; border-top: 1px solid #e0e8ec; }
   .trust-item { padding: 20px 0; }
 }
+
+/* Legible contract signatures in preview, document and print. */
+.signature-style-cursive, .signature-style-hand, .signature-style-abbrev-cursive {
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  font-weight: 500 !important;
+  font-style: normal;
+  letter-spacing: normal;
+  text-align: left;
+  transform: none;
+}
+.contract-signature, .contract-signature p { text-align: left; word-spacing: normal; }
+.contract-signature strong, .contract-signature span { letter-spacing: normal; }
+.contract-vehicle-description { white-space: pre-line; }
+#contractInstallments { display: grid; gap: 16px; }
