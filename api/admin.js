@@ -5,6 +5,9 @@ import {
   createCatalogItem,
   createDriver,
   createTracking,
+  updateTrackingStatus,
+  findTrackingById,
+  getCustomerTrackingDashboard,
   createYard,
   deleteCatalogItem,
   ensureDefaultAdminUser,
@@ -169,6 +172,18 @@ export default async function handler(req, res) {
     const admin = await requireAdmin(req, res);
     if (!admin) {
       return;
+    }
+
+    if (action === "tracking-preview") {
+      if (req.method !== "GET") return sendJson(req, res, 405, {message: "Método não permitido."});
+      const id = String(getQueryParam(req, "id") || "");
+      if (!/^[0-9a-f-]{36}$/i.test(id)) return sendJson(req, res, 400, {message: "Rastreio inválido."});
+      const tracking = await findTrackingById(id);
+      if (!tracking) return sendJson(req, res, 404, {message: "Rastreio não encontrado."});
+      const client = tracking.client_user_id ? await findUserById(tracking.client_user_id) : tracking.client_email ? await findUserByEmailOrCpf(tracking.client_email, "") : null;
+      if (!client) return sendJson(req, res, 404, {message: "Este rastreio não possui cliente cadastrado vinculado."});
+      const trackings = await getCustomerTrackingDashboard({userId: client.id, email: client.email});
+      return sendJson(req, res, 200, {user: sanitizeUser(client), trackings});
     }
 
     if (action === "dashboard") {
@@ -399,6 +414,16 @@ export default async function handler(req, res) {
     }
 
     if (action === "trackings") {
+      if (req.method === "PUT") {
+        const { id, status } = await readJsonBody(req);
+        const allowed = ["Aguardando nota fiscal", "Em separação", "Em andamento", "Em rota de entrega", "Entregue"];
+        if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(id || "")) || !allowed.includes(status)) {
+          return sendJson(req, res, 400, { message: "Informe um rastreio e status válidos." });
+        }
+        const tracking = await updateTrackingStatus({ id, status });
+        if (!tracking) return sendJson(req, res, 404, { message: "Rastreio não encontrado." });
+        return sendJson(req, res, 200, { tracking });
+      }
       if (req.method !== "POST") {
         return sendJson(req, res, 405, { message: "Método não permitido." });
       }

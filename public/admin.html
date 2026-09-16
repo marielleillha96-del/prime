@@ -1429,9 +1429,34 @@
               <p>${tracking.item_name || "-"} • ${tracking.current_location || "Sem local atual"}</p>
               <p>Alerta: ${tracking.alert_message || tracking.status || "-"}</p>
               <p>${tracking.driver_name || "Sem motorista"} • ${tracking.yard_name || "Sem pátio"}</p>
+              <a class="button button-secondary" href="./rastreio.html?preview=${encodeURIComponent(tracking.id)}" target="_blank" rel="noopener">Ver como cliente</a>
+              <form class="admin-tracking-status-form" data-update-tracking="${tracking.id}">
+                <label><span>Alterar status</span><select name="status" aria-label="Novo status do rastreio">
+                  ${["Aguardando nota fiscal", "Em separação", "Em andamento", "Em rota de entrega", "Entregue"].map(status => `<option ${status === tracking.status ? "selected" : ""}>${status}</option>`).join("")}
+                </select></label>
+                <button class="button button-primary" type="submit">Salvar status</button>
+                <p class="admin-status" role="status"></p>
+              </form>
             </article>
           `
         );
+        trackingsList.querySelectorAll("[data-update-tracking]").forEach(form => {
+          form.addEventListener("submit", async event => {
+            event.preventDefault();
+            const button = form.querySelector("button"), message = form.querySelector(".admin-status");
+            button.disabled = true;
+            setStatus(message, "Salvando status...");
+            try {
+              const result = await adminFetch("/api/admin?action=trackings", {method: "PUT", body: JSON.stringify({id: form.dataset.updateTracking, status: form.elements.status.value})});
+              const index = currentAdminData.trackings.findIndex(item => item.id === result.tracking.id);
+              if (index >= 0) currentAdminData.trackings[index] = {...currentAdminData.trackings[index], ...result.tracking};
+              renderTrackings(currentAdminData.trackings);
+              const updatedForm = [...trackingsList.querySelectorAll("[data-update-tracking]")].find(item => item.dataset.updateTracking === result.tracking.id);
+              if (updatedForm) setStatus(updatedForm.querySelector(".admin-status"), "Status atualizado com sucesso.");
+            } catch (error) { setStatus(message, error.message, true); }
+            finally { button.disabled = false; }
+          });
+        });
       };
 
       const renderInvoices = (invoices) => {

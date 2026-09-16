@@ -321,6 +321,7 @@
     ></script>
     <script src="./mobile-access.js"></script>
     <script>
+      const previewId = new URLSearchParams(location.search).get("preview");
       const ACCESS_TOKEN_KEY = "agro_access_token";
       const REFRESH_TOKEN_KEY = "agro_refresh_token";
       const CURRENT_USER_KEY = "agro_current_user";
@@ -367,7 +368,10 @@
       let requestedTrackingTab = new URLSearchParams(window.location.search).get("tab") || "overview";
 
       const getCurrentUser = () => JSON.parse(localStorage.getItem(CURRENT_USER_KEY) || "null");
-      const getAccessToken = () => localStorage.getItem(ACCESS_TOKEN_KEY);
+      const getAccessToken = () => {
+        if (previewId) { try { return JSON.parse(localStorage.getItem("agro_admin_auth") || "null")?.accessToken; } catch { return null; } }
+        return localStorage.getItem(ACCESS_TOKEN_KEY);
+      };
       const getRefreshToken = () => localStorage.getItem(REFRESH_TOKEN_KEY);
       const onlyDigits = (value) => String(value || "").replace(/\D/g, "");
       const buildUserAddress = (user) =>
@@ -416,7 +420,7 @@
           profile: "Meu Perfil"
         };
         trackingBreadcrumb.innerHTML = `Dashboard / <strong>${titles[target] || "Rastreio"}</strong>`;
-        const nextUrl = `${window.location.pathname}?tab=${requestedTrackingTab}`;
+        const nextUrl = `${window.location.pathname}?tab=${requestedTrackingTab}${previewId ? "&preview=" + encodeURIComponent(previewId) : ""}`;
         window.history.replaceState({}, "", nextUrl);
         if (map && target === "overview") {
           setTimeout(() => map.invalidateSize(), 120);
@@ -849,13 +853,20 @@
 
       const loadDashboard = async () => {
         try {
-          const data = await apiFetch("/api/customer/tracking-dashboard");
+          const data = await apiFetch(previewId ? `/api/admin?action=tracking-preview&id=${encodeURIComponent(previewId)}` : "/api/customer/tracking-dashboard");
           dashboardState = data;
-          selectedTrackingId = data.trackings[0]?.id || null;
+          selectedTrackingId = previewId || data.trackings[0]?.id || null;
           setLoggedInState();
           activateTrackingTab(requestedTrackingTab);
           await renderDashboard();
         } catch (error) {
+          if (previewId) {
+            setLoggedOutState();
+            trackingLoginForm.hidden = true;
+            const notice = document.getElementById("trackingPreviewNotice");
+            notice.textContent = error.message + " Abra novamente a prévia pelo painel administrativo.";
+            return;
+          }
           const refreshed = await refreshSession();
           if (refreshed) {
             return loadDashboard();
@@ -908,6 +919,7 @@
       });
 
       trackingLogoutButton.addEventListener("click", () => {
+        if (previewId) { window.location.href = "./admin.html"; return; }
         clearMapLayers();
         fetch("/api/auth/logout", {
           method: "POST",
@@ -969,6 +981,7 @@
 
       trackingProfileForm.addEventListener("submit", async (event) => {
         event.preventDefault();
+        if (previewId) return;
 
         if (trackingProfileForm.elements.password.value !== trackingProfileForm.elements.passwordConfirm.value) {
           trackingProfileStatus.textContent = "A confirmação da nova senha não confere.";
@@ -1016,8 +1029,17 @@
         }
       });
 
+      if (previewId) {
+        const notice = document.createElement("div");
+        notice.id = "trackingPreviewNotice";
+        notice.className = "tracking-animation-notice";
+        notice.textContent = "Prévia do cliente • Somente leitura • Acesso administrativo";
+        document.querySelector("main").prepend(notice);
+        trackingProfileForm.querySelectorAll("input, button, textarea, select").forEach(input => { input.disabled = true; });
+        trackingLogoutButton.textContent = "Voltar ao painel";
+      }
       const currentUser = getCurrentUser();
-      if (getAccessToken() && currentUser) {
+      if (previewId || (getAccessToken() && currentUser)) {
         activateTrackingTab(requestedTrackingTab);
         loadDashboard();
       } else {

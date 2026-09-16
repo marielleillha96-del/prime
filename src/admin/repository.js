@@ -720,3 +720,21 @@ export const getCustomerTrackingDashboard = async ({ userId, email }) => {
 
   return rows;
 };
+
+export const updateTrackingStatus = async ({ id, status }) => {
+  await ensureAdminSchema();
+  const { rows } = await pool.query(`
+    update public.app_client_tracking
+    set status = $2,
+        alert_message = case when alert_message = status or alert_message = any($3::text[]) or coalesce(alert_message, '') = '' then $2 else alert_message end,
+        updated_at = timezone('utc', now())
+    where id = $1
+    returning *
+  `, [id, status, ["Aguardando nota fiscal", "Em separação", "Em andamento", "Em rota de entrega", "Entregue"]]);
+  return rows[0] || null;
+};
+
+export const findTrackingById = async (id) => {
+  const { rows } = await pool.query("select client_user_id, client_email from public.app_client_tracking where id = $1", [id]);
+  return rows[0] || null;
+};
