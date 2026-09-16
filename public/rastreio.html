@@ -478,15 +478,14 @@
           return null;
         }
 
-        const cepDigits = onlyDigits(rawAddress);
-        const baseCandidates = [
-          rawAddress,
-          `${rawAddress}, Brasil`,
-          rawAddress.replace(/\s{2,}/g, " ")
-        ];
-
-        if (cepDigits.length >= 8) {
-          baseCandidates.push(`${rawAddress.replace(cepDigits, `${cepDigits.slice(0, 5)}-${cepDigits.slice(5, 8)}`)}, Brasil`);
+        const cleanAddress = rawAddress.replace(/\bCEP\s*/gi, "").replace(/,\s*São Paulo\s*-\s*SP$/i, "");
+        const baseCandidates = [cleanAddress, rawAddress];
+        const postalCode = rawAddress.match(/\b\d{5}-?\d{3}\b/);
+        if (postalCode) {
+          try {
+            const postal = await lookupCep(postalCode[0]);
+            baseCandidates.push([postal.logradouro, postal.bairro, postal.localidade, postal.uf, "Brasil"].filter(Boolean).join(", "));
+          } catch (_) { /* Keep searching the supplied address. */ }
         }
 
         const candidates = [...new Set(baseCandidates.map((item) => item.trim()).filter(Boolean))];
@@ -742,10 +741,11 @@
         });
 
         if (startCoords) mapMarkers.push(L.marker(startCoords, { icon: yardIcon }).addTo(map).bindPopup("Base / Pátio"));
-        if (currentCoords) {
+        const driverPosition = currentCoords || startCoords;
+        if (driverPosition && tracking.driver_id) {
           const popup = document.createElement("span");
-          popup.textContent = `Última localização informada: ${tracking.current_location}`;
-          mapMarkers.push(L.marker(currentCoords, { icon: driverIcon }).addTo(map).bindPopup(popup));
+          popup.textContent = currentCoords ? `Última localização informada: ${tracking.current_location}` : "Motorista vinculado à entrega • Base de origem";
+          mapMarkers.push(L.marker(driverPosition, { icon: driverIcon, zIndexOffset: 1000 }).addTo(map).bindPopup(popup));
         }
 
         if (destinationCoords) {
@@ -766,9 +766,14 @@
         const status = String(tracking.status || "").toLowerCase();
         const moving = /andamento|em rota|em transito|em trânsito|a caminho/.test(status) && !/entregue|cancel|aguard|parad/.test(status);
         const origin = currentCoords || startCoords;
+        const issues = [];
+        if (!tracking.driver_id) issues.push("Motorista ainda não vinculado a esta entrega.");
+        if (!destinationCoords) issues.push("Endereço de entrega não localizado no mapa.");
+        if (!origin) issues.push("Endereço de origem não localizado no mapa.");
+        if (issues.length) trackingMapMeta.textContent += " " + issues.join(" ");
         if (moving && origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
           animationNotice.hidden = false;
-          const simulatedMarker = L.marker(origin, {icon: driverIcon}).addTo(map).bindPopup("Em rota · Demonstração");
+          const simulatedMarker = L.marker(origin, {icon: driverIcon, zIndexOffset: 1100}).addTo(map).bindPopup("Em rota · Demonstração");
           mapMarkers.push(simulatedMarker);
           animationPaused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
           animationToggle.textContent = animationPaused ? "Retomar animação" : "Pausar animação";
@@ -854,6 +859,7 @@
       const loadDashboard = async () => {
         try {
           const data = await apiFetch(previewId ? `/api/admin?action=tracking-preview&id=${encodeURIComponent(previewId)}` : "/api/customer/tracking-dashboard");
+          if (previewId) data.trackings = data.trackings.filter(item => item.id === previewId);
           dashboardState = data;
           selectedTrackingId = previewId || data.trackings[0]?.id || null;
           setLoggedInState();

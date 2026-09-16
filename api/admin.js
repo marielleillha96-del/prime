@@ -183,7 +183,7 @@ export default async function handler(req, res) {
       const client = tracking.client_user_id ? await findUserById(tracking.client_user_id) : tracking.client_email ? await findUserByEmailOrCpf(tracking.client_email, "") : null;
       if (!client) return sendJson(req, res, 404, {message: "Este rastreio não possui cliente cadastrado vinculado."});
       const trackings = await getCustomerTrackingDashboard({userId: client.id, email: client.email});
-      return sendJson(req, res, 200, {user: sanitizeUser(client), trackings});
+      return sendJson(req, res, 200, {user: sanitizeUser(client), trackings: trackings.filter(item => item.id === id)});
     }
 
     if (action === "dashboard") {
