@@ -739,11 +739,12 @@
         });
 
         if (startCoords) mapMarkers.push(L.marker(startCoords, { icon: yardIcon }).addTo(map).bindPopup("Base / Pátio"));
-        const driverPosition = currentCoords || startCoords;
+        const delivered = String(tracking.status || "").trim().toLowerCase() === "entregue";
+        const driverPosition = delivered ? destinationCoords : currentCoords || startCoords;
         let driverMarker = null;
         if (driverPosition && tracking.driver_id) {
           const popup = document.createElement("span");
-          popup.textContent = currentCoords ? `Última localização informada: ${reportedLocation(tracking)}` : "Motorista vinculado à entrega • Base de origem";
+          popup.textContent = delivered ? "Entrega concluída • Destino final" : currentCoords ? `Última localização informada: ${reportedLocation(tracking)}` : "Motorista vinculado à entrega • Base de origem";
           driverMarker = L.marker(driverPosition, { icon: driverIcon, zIndexOffset: 1100 }).addTo(map).bindPopup(popup);
           mapMarkers.push(driverMarker);
         }
@@ -783,10 +784,14 @@
             const delta = previous === null ? 0 : Math.min(timestamp - previous, 100);
             previous = timestamp;
             if (!animationPaused && !document.hidden) {
-              progress = Math.min(1, progress + delta / 300000);
+              progress = Math.min(0.5, progress + delta / 300000);
               simulatedMarker.setLatLng(origin.map((coordinate, index) => coordinate + (destinationCoords[index] - coordinate) * progress));
             }
-            animationFrame = progress < 1 ? requestAnimationFrame(animate) : null;
+            if (progress >= 0.5) {
+              simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
+              simulatedMarker.bindPopup("Em rota · Demonstrando • Aguardando atualização do status");
+            }
+            animationFrame = progress < 0.5 ? requestAnimationFrame(animate) : null;
           };
           animationFrame = requestAnimationFrame(animate);
         }

@@ -6245,3 +6245,8 @@ h1, h2, h3 { letter-spacing: -0.025em; }
 .admin-tracking-status-form select { padding: 12px; border: 1px solid #c7d5df; border-radius: 8px; background: #fff; color: #16324a; width: 100%; }
 .admin-tracking-status-form .admin-status { flex-basis: 100%; }
 .admin-tracking-status-form input { padding: 12px; border: 1px solid #c7d5df; border-radius: 8px; background: #fff; color: #16324a; width: 100%; }
+
+/* Slow, non-flashing pulse for the demonstration's midpoint stop. */
+.tracking-map-driver-marker.is-demo-waiting { animation: tracking-demo-pulse 2.4s ease-in-out infinite; }
+@keyframes tracking-demo-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .tracking-map-driver-marker.is-demo-waiting { animation: none; } }
