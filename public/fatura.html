@@ -88,7 +88,8 @@
     <a class="floating-whatsapp" href="https://wa.me/5511959245807" aria-label="Falar no WhatsApp">WA</a>
 
     <script src="./mobile-access.js"></script>
-    <script>
+    <script type="module">
+      import { pixReceiverName } from "./shared/pix.js";
       const invoiceRoot = document.getElementById("invoiceRoot");
 
       const formatCurrency = (value) =>
@@ -121,6 +122,7 @@
       };
 
       const renderInvoice = (invoice) => {
+          const receiverName = pixReceiverName(invoice.ironPixCode || invoice.pixCode);
           const statusInfo = getStatusInfo(invoice.paidAt ? "paid" : invoice.status);
           const qrImage =
           invoice.ironPixImage ||
@@ -168,6 +170,10 @@
 
                 ${qrImage ? `<div class="invoice-qr"><img src="${qrImage}" alt="QR Code Pix" /></div>` : '<div class="invoice-empty">QR Code indisponível no momento.</div>'}
 
+                <div class="invoice-receiver">
+                  <span>Recebedor informado no código Pix</span>
+                  <strong id="pixReceiverName"></strong>
+                </div>
                 <div class="invoice-copy-group">
                   <label for="pixCopyField">Pix copia e cola</label>
                   <textarea id="pixCopyField" readonly>${invoice.ironPixCode || invoice.pixCode || ""}</textarea>
@@ -221,6 +227,7 @@
         `;
 
         const refreshButton = document.getElementById("refreshInvoiceButton");
+        document.getElementById("pixReceiverName").textContent = receiverName || "Não informado no código Pix";
         const copyPixButton = document.getElementById("copyPixButton");
         const pixCopyField = document.getElementById("pixCopyField");
 
