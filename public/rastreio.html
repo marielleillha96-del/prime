@@ -128,7 +128,7 @@
                     </div>
                     <div class="tracking-map-card__meta" id="trackingMapMeta">Sem rastreio carregado.</div>
                   </div>
-                  <p class="tracking-animation-notice" id="trackingAnimationNotice" hidden>Simulação do deslocamento — não representa a posição real do motorista. <button type="button" id="trackingAnimationToggle">Pausar animação</button></p>
+                  <p class="tracking-animation-notice" id="trackingAnimationNotice" hidden><strong>Em rota</strong> <span class="tracking-demo-badge">Demonstração</span> <button type="button" id="trackingAnimationToggle">Pausar animação</button></p>
                   <div class="tracking-map" id="trackingMap"></div>
                 </div>
               </div>
@@ -764,7 +764,7 @@
         const origin = currentCoords || startCoords;
         if (moving && origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
           animationNotice.hidden = false;
-          const simulatedMarker = L.marker(origin, {icon: driverIcon}).addTo(map).bindPopup("Simulação do deslocamento");
+          const simulatedMarker = L.marker(origin, {icon: driverIcon}).addTo(map).bindPopup("Em rota · Demonstração");
           mapMarkers.push(simulatedMarker);
           animationPaused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
           animationToggle.textContent = animationPaused ? "Retomar animação" : "Pausar animação";

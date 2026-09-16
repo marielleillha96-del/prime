@@ -6238,3 +6238,5 @@ h1, h2, h3 { letter-spacing: -0.025em; }
 @media(max-width: 640px) { .tracking-delivery-grid { grid-template-columns: 1fr; } }
 .tracking-animation-notice { padding: 12px 18px; margin: 0; background: #eaf4ee; color: #155439; font-size: .8rem; line-height: 1.6; }
 .tracking-animation-notice button { margin-left: 10px; padding: 6px 10px; border: 1px solid #97b9a5; border-radius: 6px; background: #fff; color: #155439; cursor: pointer; }
+
+.tracking-demo-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border: 1px solid #97b9a5; border-radius: 999px; color: #155439; background: #fff; font-size: .7rem; font-weight: 600; vertical-align: middle; }
