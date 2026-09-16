@@ -740,10 +740,12 @@
 
         if (startCoords) mapMarkers.push(L.marker(startCoords, { icon: yardIcon }).addTo(map).bindPopup("Base / Pátio"));
         const driverPosition = currentCoords || startCoords;
+        let driverMarker = null;
         if (driverPosition && tracking.driver_id) {
           const popup = document.createElement("span");
           popup.textContent = currentCoords ? `Última localização informada: ${reportedLocation(tracking)}` : "Motorista vinculado à entrega • Base de origem";
-          mapMarkers.push(L.marker(driverPosition, { icon: driverIcon, zIndexOffset: 1000 }).addTo(map).bindPopup(popup));
+          driverMarker = L.marker(driverPosition, { icon: driverIcon, zIndexOffset: 1100 }).addTo(map).bindPopup(popup);
+          mapMarkers.push(driverMarker);
         }
 
         if (destinationCoords) {
@@ -771,8 +773,9 @@
         if (issues.length) trackingMapMeta.textContent += " " + issues.join(" ");
         if (moving && origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
           animationNotice.hidden = false;
-          const simulatedMarker = L.marker(origin, {icon: driverIcon, zIndexOffset: 1100}).addTo(map).bindPopup("Em rota · Demonstrando");
-          mapMarkers.push(simulatedMarker);
+          const simulatedMarker = driverMarker || L.marker(origin, {icon: driverIcon, zIndexOffset: 1100}).addTo(map);
+          simulatedMarker.bindPopup("Em rota · Demonstrando");
+          if (!driverMarker) mapMarkers.push(simulatedMarker);
           animationPaused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
           let progress = 0, previous = null;
           const animate = timestamp => {
@@ -780,10 +783,10 @@
             const delta = previous === null ? 0 : Math.min(timestamp - previous, 100);
             previous = timestamp;
             if (!animationPaused && !document.hidden) {
-              progress = (progress + delta / 60000) % 1;
+              progress = Math.min(1, progress + delta / 300000);
               simulatedMarker.setLatLng(origin.map((coordinate, index) => coordinate + (destinationCoords[index] - coordinate) * progress));
             }
-            animationFrame = requestAnimationFrame(animate);
+            animationFrame = progress < 1 ? requestAnimationFrame(animate) : null;
           };
           animationFrame = requestAnimationFrame(animate);
         }
