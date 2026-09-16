@@ -688,6 +688,8 @@
     </div>
 
     <script type="module">
+      import {clientLink} from "./shared/public-links.js";
+      const invoiceLink = invoice => clientLink("fatura", invoice.publicToken, window.location.origin);
       import {parseBRL, formatBRL, fullAddress, amountWords} from "./shared/contract-utils.js";
       const storageKey = "agro_admin_auth";
       const loginSection = document.getElementById("adminLogin");
@@ -1489,7 +1491,7 @@
                     <p>R$ ${Number(invoice.amount || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2 })} • ${dueDate}</p>
                     <p>${invoice.publicToken || "-"} • ${createdAt}</p>
                     <div class="admin-list-item__actions">
-                      <a class="button button-secondary admin-card-action" href="${invoice.paymentUrl || "#"}" target="_blank" rel="noreferrer">Abrir link</a>
+                      <a class="button button-secondary admin-card-action" href="${invoiceLink(invoice)}" target="_blank" rel="noreferrer">Abrir link</a>
                       <button class="button button-secondary admin-card-action" type="button" data-copy-invoice-link="${invoice.id}">Copiar link</button>
                       <button class="button button-primary admin-card-action" type="button" data-sync-invoice="${invoice.id}">Sincronizar</button>
                     </div>
@@ -1506,7 +1508,7 @@
           if (copyButton) {
             copyButton.addEventListener("click", async () => {
               try {
-                await navigator.clipboard.writeText(invoice.paymentUrl || "");
+                await navigator.clipboard.writeText(invoiceLink(invoice));
                 copyButton.textContent = "Copiado";
                 setTimeout(() => {
                   copyButton.textContent = "Copiar link";
@@ -1661,7 +1663,7 @@
                 const statusInfo = contractStatusInfo(contract.status);
                 const deliveryDate = contract.deliveryDate ? formatContractDate(contract.deliveryDate) : "Sem data";
                 const createdAt = contract.createdAt ? new Date(contract.createdAt).toLocaleString("pt-BR") : "-";
-                const publicUrl = `${window.location.origin}/contrato?token=${contract.publicToken}`;
+                const publicUrl = clientLink("contrato", contract.publicToken, window.location.origin);
 
                 return `
                   <article class="admin-list-item">
@@ -1685,7 +1687,7 @@
           if (copyButton) {
             copyButton.addEventListener("click", async () => {
               try {
-                await navigator.clipboard.writeText(`${window.location.origin}/contrato?token=${contract.publicToken}`);
+                await navigator.clipboard.writeText(clientLink("contrato", contract.publicToken, window.location.origin));
                 copyButton.textContent = "Copiado";
                 setTimeout(() => {
                   copyButton.textContent = "Copiar link";
@@ -2324,7 +2326,7 @@
           if (response?.contract) {
             currentAdminData.contracts = [response.contract, ...(currentAdminData.contracts || [])];
             renderContracts(currentAdminData.contracts);
-            await navigator.clipboard.writeText(`${window.location.origin}/contrato?token=${response.contract.publicToken}`).catch(() => {});
+            await navigator.clipboard.writeText(clientLink("contrato", response.contract.publicToken, window.location.origin)).catch(() => {});
           }
 
           loadDashboard().catch((error) => {
@@ -2372,7 +2374,7 @@
           });
 
           if (response?.invoice?.paymentUrl) {
-            await navigator.clipboard.writeText(response.invoice.paymentUrl).catch(() => {});
+            await navigator.clipboard.writeText(invoiceLink(response.invoice)).catch(() => {});
           }
         } catch (error) {
           setStatus(invoiceStatus, error.message, true);

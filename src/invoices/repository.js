@@ -1,3 +1,4 @@
+import { clientLink } from "../../public/shared/public-links.js";
 import { randomUUID } from "crypto";
 
 import { pool } from "../auth/db.js";
@@ -85,7 +86,7 @@ const serializeInvoice = (row) => {
     sigiloStatus: row.sigilo_status,
     pixCode: row.pix_code,
     pixImage: row.pix_image,
-    paymentUrl: row.payment_url,
+    paymentUrl: row.public_token ? clientLink("fatura", row.public_token, process.env.APP_URL) : row.payment_url,
     callbackUrl: row.callback_url,
     sigiloDetails: row.sigilo_details || null,
     sigiloPayload: row.sigilo_payload || null,

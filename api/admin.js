@@ -1,3 +1,4 @@
+import { publicOrigin } from "../public/shared/public-links.js";
 import { parseBRL, fullAddress, amountWords } from "../public/shared/contract-utils.js";
 import { createUser, deleteUserById, findUserByEmailOrCpf, findUserById, saveRefreshToken, updateUser } from "../src/auth/repository.js";
 import { comparePassword, signAccessToken, signRefreshToken } from "../src/auth/security.js";
@@ -25,7 +26,7 @@ import { onlyDigits, sanitizeUser } from "../src/auth/utils.js";
 import { hashPassword } from "../src/auth/security.js";
 import { resolveIronCallbackUrl } from "../src/config/ironpay.js";
 
-const appUrl = process.env.APP_URL || "http://localhost:3000";
+const appUrl = publicOrigin(process.env.APP_URL);
 const ironCallbackUrl = resolveIronCallbackUrl({
   appUrl,
   appDomain: process.env.APP_DOMAIN || "localhost",

@@ -1,3 +1,4 @@
+import { publicOrigin } from "./public/shared/public-links.js";
 import dotenv from "dotenv";
 import express from "express";
 import crypto from "crypto";
@@ -60,7 +61,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const publicDir = path.join(__dirname, "public");
 const port = Number(process.env.PORT || 3000);
-const appUrl = process.env.APP_URL || `http://localhost:${port}`;
+const appUrl = publicOrigin(process.env.APP_URL || `http://localhost:${port}`);
 const appDomain = process.env.APP_DOMAIN || "localhost";
 const allowedOrigins = (process.env.CORS_ORIGIN || appUrl)
   .split(",")
