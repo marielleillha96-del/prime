@@ -128,7 +128,7 @@
                     </div>
                     <div class="tracking-map-card__meta" id="trackingMapMeta">Sem rastreio carregado.</div>
                   </div>
-                  <p class="tracking-animation-notice" id="trackingAnimationNotice" hidden><strong>Em rota</strong> <span class="tracking-demo-badge">Demonstração</span> <button type="button" id="trackingAnimationToggle">Pausar animação</button></p>
+                  <p class="tracking-animation-notice" id="trackingAnimationNotice" hidden><strong>Em rota</strong> <span class="tracking-demo-badge">Demonstrando</span></p>
                   <div class="tracking-map" id="trackingMap"></div>
                 </div>
               </div>
@@ -359,11 +359,6 @@
       let animationFrame = null;
       let animationPaused = false;
       const animationNotice = document.getElementById("trackingAnimationNotice");
-      const animationToggle = document.getElementById("trackingAnimationToggle");
-      animationToggle.addEventListener("click", () => {
-        animationPaused = !animationPaused;
-        animationToggle.textContent = animationPaused ? "Retomar animação" : "Pausar animação";
-      });
       let profilePhotoBase64 = "";
       let requestedTrackingTab = new URLSearchParams(window.location.search).get("tab") || "overview";
 
@@ -521,7 +516,6 @@
         animationFrame = null;
         animationNotice.hidden = true;
         animationPaused = false;
-        animationToggle.textContent = "Pausar animação";
         mapMarkers.forEach((marker) => marker.remove());
         mapMarkers = [];
         if (mapRoute) {
@@ -775,10 +769,9 @@
         if (issues.length) trackingMapMeta.textContent += " " + issues.join(" ");
         if (moving && origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
           animationNotice.hidden = false;
-          const simulatedMarker = L.marker(origin, {icon: driverIcon, zIndexOffset: 1100}).addTo(map).bindPopup("Em rota · Demonstração");
+          const simulatedMarker = L.marker(origin, {icon: driverIcon, zIndexOffset: 1100}).addTo(map).bindPopup("Em rota · Demonstrando");
           mapMarkers.push(simulatedMarker);
           animationPaused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          animationToggle.textContent = animationPaused ? "Retomar animação" : "Pausar animação";
           let progress = 0, previous = null;
           const animate = timestamp => {
             if (request !== mapRequest) return;
