@@ -508,10 +508,9 @@
       const ensureMap = () => {
         if (!map) {
           map = L.map("trackingMap", { zoomControl: true }).setView([-23.5505, -46.6333], 6);
-          L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+          L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 19,
-            subdomains: "abcd",
-            attribution: "&copy; OpenStreetMap &copy; CARTO"
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }).addTo(map);
         }
       };
@@ -689,13 +688,16 @@
         `;
       };
 
+      const waitingAtYard = tracking => String(tracking.status || "").toLowerCase().includes("aguardando nota fiscal");
+      const yardAddress = tracking => tracking.yard_address || "Rua Professor Zeferino Vaz, 107 - Vila Arapuá, São Paulo - SP, CEP 04258-000";
+      const reportedLocation = tracking => waitingAtYard(tracking) ? `No pátio — ${tracking.yard_name || "PRIME LEILÕES"}: ${yardAddress(tracking)}` : tracking.current_location;
       const renderMap = async (tracking, user) => {
         ensureMap();
         clearMapLayers();
         const request = mapRequest;
 
-        const startAddress = [tracking.yard_address, tracking.yard_city, tracking.yard_state].filter(Boolean).join(", ");
-        const currentAddress = tracking.current_location || "";
+        const startAddress = yardAddress(tracking);
+        const currentAddress = waitingAtYard(tracking) ? startAddress : tracking.current_location || "";
         const profileAddress = buildUserAddress(user);
         const destinationAddress = tracking.destination_address || profileAddress || "Destino final não informado";
 
@@ -744,7 +746,7 @@
         const driverPosition = currentCoords || startCoords;
         if (driverPosition && tracking.driver_id) {
           const popup = document.createElement("span");
-          popup.textContent = currentCoords ? `Última localização informada: ${tracking.current_location}` : "Motorista vinculado à entrega • Base de origem";
+          popup.textContent = currentCoords ? `Última localização informada: ${reportedLocation(tracking)}` : "Motorista vinculado à entrega • Base de origem";
           mapMarkers.push(L.marker(driverPosition, { icon: driverIcon, zIndexOffset: 1000 }).addTo(map).bindPopup(popup));
         }
 
@@ -815,7 +817,7 @@
           ["Previsão de entrega", delivery],
           ["Motorista", tracking.driver_name],
           ["Pátio de origem", tracking.yard_name],
-          ["Última localização informada", tracking.current_location],
+          ["Última localização informada", reportedLocation(tracking)],
           ["Atualização do rastreio", updated]
         ];
         const list = document.getElementById("trackingDeliveryDetails");
@@ -825,7 +827,7 @@
           dt.textContent = label; dd.textContent = value || "Não informado";
           row.append(dt, dd); list.append(row);
         }
-        trackingMapMeta.textContent = `Última localização informada: ${tracking.current_location || "Não informada"} • Atualização do rastreio: ${updated}. Linha tracejada: ligação entre os endereços.`;
+        trackingMapMeta.textContent = `Última localização informada: ${reportedLocation(tracking) || "Não informada"} • Atualização do rastreio: ${updated}. Linha tracejada: ligação entre os endereços.`;
         await renderMap(tracking, user);
       };
 

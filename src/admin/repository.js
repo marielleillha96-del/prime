@@ -721,16 +721,17 @@ export const getCustomerTrackingDashboard = async ({ userId, email }) => {
   return rows;
 };
 
-export const updateTrackingStatus = async ({ id, status }) => {
+export const updateTrackingStatus = async ({ id, status, currentLocation }) => {
   await ensureAdminSchema();
   const { rows } = await pool.query(`
     update public.app_client_tracking
     set status = $2,
+        current_location = case when $4::text is null then current_location else nullif($4, '') end,
         alert_message = case when alert_message = status or alert_message = any($3::text[]) or coalesce(alert_message, '') = '' then $2 else alert_message end,
         updated_at = timezone('utc', now())
     where id = $1
     returning *
-  `, [id, status, ["Aguardando nota fiscal", "Em separação", "Em andamento", "Em rota de entrega", "Entregue"]]);
+  `, [id, status, ["Aguardando nota fiscal", "Em separação", "Em andamento", "Em rota de entrega", "Entregue"], currentLocation ?? null]);
   return rows[0] || null;
 };
 

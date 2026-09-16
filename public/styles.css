@@ -6244,3 +6244,4 @@ h1, h2, h3 { letter-spacing: -0.025em; }
 .admin-tracking-status-form label { display: grid; gap: 6px; flex: 1 1 200px; }
 .admin-tracking-status-form select { padding: 12px; border: 1px solid #c7d5df; border-radius: 8px; background: #fff; color: #16324a; width: 100%; }
 .admin-tracking-status-form .admin-status { flex-basis: 100%; }
+.admin-tracking-status-form input { padding: 12px; border: 1px solid #c7d5df; border-radius: 8px; background: #fff; color: #16324a; width: 100%; }

@@ -1434,20 +1434,22 @@
                 <label><span>Alterar status</span><select name="status" aria-label="Novo status do rastreio">
                   ${["Aguardando nota fiscal", "Em separação", "Em andamento", "Em rota de entrega", "Entregue"].map(status => `<option ${status === tracking.status ? "selected" : ""}>${status}</option>`).join("")}
                 </select></label>
-                <button class="button button-primary" type="submit">Salvar status</button>
+                <label><span>Localização informada (endereço ou cidade)</span><input name="currentLocation" type="text" maxlength="500" placeholder="Informe o local atual" /></label>
+                <button class="button button-primary" type="submit">Salvar rastreio</button>
                 <p class="admin-status" role="status"></p>
               </form>
             </article>
           `
         );
         trackingsList.querySelectorAll("[data-update-tracking]").forEach(form => {
+          form.elements.currentLocation.value = trackings.find(item => item.id === form.dataset.updateTracking)?.current_location || "";
           form.addEventListener("submit", async event => {
             event.preventDefault();
             const button = form.querySelector("button"), message = form.querySelector(".admin-status");
             button.disabled = true;
             setStatus(message, "Salvando status...");
             try {
-              const result = await adminFetch("/api/admin?action=trackings", {method: "PUT", body: JSON.stringify({id: form.dataset.updateTracking, status: form.elements.status.value})});
+              const result = await adminFetch("/api/admin?action=trackings", {method: "PUT", body: JSON.stringify({id: form.dataset.updateTracking, status: form.elements.status.value, currentLocation: form.elements.currentLocation.value})});
               const index = currentAdminData.trackings.findIndex(item => item.id === result.tracking.id);
               if (index >= 0) currentAdminData.trackings[index] = {...currentAdminData.trackings[index], ...result.tracking};
               renderTrackings(currentAdminData.trackings);
