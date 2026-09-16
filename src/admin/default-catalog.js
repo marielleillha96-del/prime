@@ -15,7 +15,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/mercedes-benz-1313-1977-1977/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Caminhões",
     "galleryCount": 1,
     "description": "Carroceria basculante\nConfiguração: toco\nSistema hidráulico\nDocumentação 100%, conforme o anúncio"
@@ -36,7 +36,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/volkswagen-23-220-2003-2003/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Caminhões",
     "galleryCount": 1,
     "description": "Revisado\nMotor Cummins Série C\nPneus em bom estado\nCarroceria de 8,50 metros"
@@ -57,7 +57,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/scania-p-360-2013-2013/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Caminhões",
     "galleryCount": 1,
     "description": "Configuração: 6x2 original\nCâmbio manual\nQuilometragem: 750 mil km\nBomba para caçamba"
@@ -77,7 +77,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/mercedes-benz-1113-1981-1981/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Caminhões",
     "galleryCount": 1,
     "description": "Turbo\nHidráulico\nFreio a ar\nConsta baú no documento"
@@ -97,7 +97,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/gm-s10-2009-2010/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "ADVANTAGE S"
@@ -118,7 +118,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/chevrolet-s10-2025-2025/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "2.8 16V TURBO\nDIESEL\nHIGH COUNTRY\nCD 4X4 AUTOMÁTICO"
@@ -138,7 +138,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/chevrolet-s10-2010-2011/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "2.4 MPFI EXECUTIVE\n4X2 CD 8V FLEX\n4P MANUAL"
@@ -159,7 +159,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/toyota-hilux-2022-2023/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "2.8 D-4D TURBO DIESEL\nCD SRX 4X4 AUTOMÁTICO"
@@ -180,7 +180,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/ford-ranger-2018-2019/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "3.2 LIMITED\n4X4 CD\n20V DIESEL\n4P AUTOMÁTICO"
@@ -200,7 +200,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/ford-ranger-2013-2014/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "3.2 XLT\n4X4 CD\n20V DIESEL\n4P AUTOMÁTICO"
@@ -221,7 +221,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/mitsubishi-l200-triton-2022-2023/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "2.4 16V TURBO\nDIESEL SPORT\nHPE CD 4P 4X4\nAUTOMÁTICO"
@@ -241,7 +241,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/mitsubishi-l200-triton-2012-2013/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "3.2 GL 4X4CD 16V\nTURBO INTERCOLER\nDIESEL 4P MANUAL"
@@ -262,7 +262,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/toyota-corolla-cross-2023-2024/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "SUVs",
     "galleryCount": 1,
     "description": "2.0 VVT-IE\nFLEX XRE\nDIRECT SHIFT"
@@ -282,7 +282,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/fiat-strada-2022-2023/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "1.3 FIREFLY FLEX\nFREEDOM CS MANUAL"
@@ -302,7 +302,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/jeep-renegade-2022-2023/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "SUVs",
     "galleryCount": 1,
     "description": "1.3 T270 TURBO\nFLEX LONGITUDE AT6"
@@ -322,7 +322,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/jeep-renegade-2015-2016/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "SUVs",
     "galleryCount": 1,
     "description": "1.8 16V FLEX\nSPORT 4P AUTOMÁTICO"
@@ -342,7 +342,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/jeep-compass-2018-2018/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "SUVs",
     "galleryCount": 1,
     "description": "2.0 16V FLEX\nLONGITUDE AUTOMÁTICO"
@@ -363,7 +363,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/jeep-compass-2022-2022/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "SUVs",
     "galleryCount": 1,
     "description": "1.3 T270 TURBO\nHÍBRIDO S 4XE AT6"
@@ -383,7 +383,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/fiat-strada-2015-2015/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "ADVENTURE CD"
@@ -403,7 +403,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/fiat-strada-2011-2011/01.jpeg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "ADVENTURE FLEX"
@@ -433,7 +433,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/catalogo-assets/toyota-hilux-3-0-srv-4x4-cd/09.jpg",
       "/catalogo-assets/toyota-hilux-3-0-srv-4x4-cd/10.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 10,
     "description": "16V TURBO INTERCOOLER\nDIESEL\nAUTOMÁTICO\n2009/2010"
@@ -461,7 +461,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1785193591/w1izw9hqtpozoisyz5wu.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1785193591/ds1lhmw7ltuixmol3m9q.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 8,
     "description": "✅ Ano: 2012\n✅ Horas de trilha: 1.200 h\n✅ Horas de motor: 1.600 h\n✅ Peneira fixa\n✅ Rodados duplos\n✅ Nunca colheu milho"
@@ -487,7 +487,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1785194791/muxr2tuheydn4vqugesn.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1785194792/cqwfte18poup9yeaos6e.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "Ano 2021\nHoras 3.459\nTransmissão Power-quad \nPiloto automático/GPS STARFIRE 6000 + GS3\nBarramento hidráulico e 3° ponto \nOriginal sem reforma"
@@ -510,7 +510,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1785194690/arvam14vaymjbtz23e17.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1785194691/qtxftxyiyvodrzu80ig3.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 4,
     "description": "Ano 2003\nTração 4x4\nTransmissão power-quad tm\nBarramento hidráulica"
@@ -538,7 +538,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1785193386/vzzr6qmbiiudk3lrika9.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1785193387/tkf7uewg9if9z9wbj7vq.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 8,
     "description": "Ano – 2022\n✅ Modelo: JCB 4CX\n✅ Único dono\n✅ Motor novo\n✅ 17.350 horas\n✅ Funcionando perfeitamente, pronta para entrar em operação.\n💳 Financiamento disponível junto ao Banco BV Financeira, com condições facilitadas."
@@ -561,7 +561,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784898785/qwlfxrzagqcchitahle7.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784898786/pkigq6ccvbmwkqmtkcep.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 4,
     "description": "HORAS: 206 - ANO 2023\nTodo original \n150cv"
@@ -585,7 +585,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784898439/yznrajke6rnstyf7084a.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784898441/iolpgcwd96kvdcsjxir6.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 5,
     "description": "✅Ano 2011\n✅ 4X4 \n✅ 7 MIL HORAS\nContrapeso dianteiro e traseiro\nBom de mecânica, motor, caixa e hidráulico. \nCom procedência\nNota fiscal e toda a documentação para financiamento.\nVale a pena conferir"
@@ -610,7 +610,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784898348/bknyamvnzrjrcye3ovgm.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784898349/p6f0qjvbtytsudaowdkj.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "✅Trator Massey Ferguson 275✅\n\n✅Ano 1995\n✅Motor de 75 cv\n✅Câmbio 3 alavanca\n\nBem calçado de pneus.\nHidráulico e tomada de força ok\n\nBom de mecânica"
@@ -636,7 +636,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784898048/bwsrqbdjwwzmogd5czo9.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784898049/giaze6ld9iorjhtj4jil.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 7,
     "description": "78cv | Ano 2021 | 1.970h originais\nTransmissão 12x12 PowrReverse™️\nMotor 4cc turbo intercooler\nTDP eletro-hidráulico | 2 VCR\nCarregadeira autonivelante com joystick"
@@ -659,7 +659,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784745410/cyfay7vcpyrnngah8pht.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784745411/eahqng1dfwposi1t6azb.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 3,
     "description": "Equipamento novo, nunca usado, em estado impecável e pronto para o trabalho.\n* Espaçamento: 270 mm\n* 100% funcional\n* Estrutura reforçada"
@@ -686,7 +686,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784745210/lmqcava2c5jf2or3hfwk.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784745210/hwnbhjt3jk82fspqvng6.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 8,
     "description": null
@@ -711,7 +711,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784744934/ehzsthkgf3qwqsqt1rof.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784744935/urhb0ojutwby60onqmla.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "Pá carregadeira \nMarca Volvo\nModelo L70F\nAno 2021 e 2022\nMáquinas extra!"
@@ -738,7 +738,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784558224/cdjjy3qvdqjhurpd5ca3.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784558225/t3pzzzwnyscbjsl56uin.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 7,
     "description": "CARRETA AGRÍCOLA BASCULANTE 6 TONELADAS\nEquipamento em excelente estado de conservação, revisado e pronto para o trabalho. Ideal para transporte de grãos, silagem e adubo, garantindo praticidade e eficiência no dia a dia da propriedade.\nEspecificações: • Capacidade de carga: 6 toneladas / 7 m³\n* 2 eixos separados (maior estabilidade)\n* Rodado aro 16\n* Medidas: 3.500 x 2.000 x 1.000 mm\n* Estrutura reforçada\n* Sistema hidráulico funcionando perfeitamente\nVALOR À VISTA: R$ 28.000,00"
@@ -766,7 +766,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557706/wk1juhzevypxkgd41veq.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557707/kr24rvslaeewvrtxkdal.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 8,
     "description": null
@@ -791,7 +791,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557639/wuf9rtm0etb4suqlzgd9.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557640/ssrviuw7vf4eikoauzzu.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "Pá carregadeira  Marca Volvo Modelo L70F Ano 2021 e 2022 Máquinas extra!   Valor 380.000 R$  à vista, ou financiamento pelo plano safra"
@@ -818,7 +818,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557577/kmrms5mxldlja1g4cdyx.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557577/odqe1aydgwjkrsp9059w.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 8,
     "description": "trator Massey Ferguson 4275  4x4-Ano:2013 \nTração Central 4x4\nBarramento hidráulico/TDP/02 VCR's\n4.771 horas"
@@ -840,7 +840,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557475/fqfzipk5nogsso8lwsnf.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557476/rigm0wlnkrhubchlacg1.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 3,
     "description": "🟩TRATOR NEW HOLLAND 7630🟩\n\nTOTALMENTE REVISADO MECANICA, MOTOR,HIDRAULICA,ELETRICA, BOM PNEUS TUDO REVISADO.\n\nTrator NewHoland 7630, Ano 2001, Com Super Redutor, Dualpower, Revisado Somente Com Peças Originais NewHoland, Tem Nota Fiscal de Origem, Ótimo Estado de Conservação"
@@ -866,7 +866,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557401/yl9j8mikmekdtnpukudr.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557401/vrrq69fyxkjiglnuganr.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 7,
     "description": "Original e revisada.\nCom garantia e procedência.\nTRATOR MASSEY FERGUSON 290 ANO 1980\nREALIZAMOS FINANCIAMETOS"
@@ -890,7 +890,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557330/t55658op4gybbdpmppsp.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557330/v1zatu3ydm7daqgk8h47.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 5,
     "description": "✅Ano 2005 \n✅Pneus bons \n✅Revisado funciona perfeitamente \n✅Conjunto frontal de concha"
@@ -914,7 +914,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557204/hbo2qtmdc5bvmw1ysh0v.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557205/kt5b1vyn6txd34pi7srd.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 5,
     "description": "DAMOS GARANTIA DE MOTOR E CÂMBIO\n1 ANO(75cv)Ano 2006-Horas 8.000"
@@ -939,7 +939,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557049/k5scp8mg3hl6wtntbx2i.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784557050/jjvpsrrscxj7zte6ad77.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "Ano:2015\nMotor 4cc/bomba injetora Bosch\nBarramento hidráulico/TDP/02 VCR's\n100% operacional \nSuper Redutor De Velocidade"
@@ -964,7 +964,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784556977/gfoo3ujz7vxxxcoxwfuj.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784556977/rqfe1iow4xyyxis2kkmq.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "TRATOR MASSEY FERGUSON 292-ANO 2008-LAMINA\n\nO VALOR DO TRATOR 💲 VALORR$95.000.00\nREALIZAMOS FINANCIAMENTO"
@@ -989,7 +989,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784556472/stmaaenolumqamilxzn7.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784556473/m8z3qsxjcfsqebb7yjx4.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 5,
     "description": "A 750 Ano: 2018\n2.300 horas"
@@ -1015,7 +1015,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784556356/aq6hd5qm6ub35ix7ilvb.jpg",
       "https://res.cloudinary.com/dihm0krca/image/upload/v1784556357/siuehf8o2y09ibgq4b7z.jpg"
     ],
-    "whatsapp": "5511959245807",
+    "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 7,
     "description": "MASSEY FERGUSON 4290 – 2015 | CABINADO\nTrator em excelente estado de conservação, pronto para o trabalho!\nPrincipais características: • Cabine fechada (mais conforto e segurança)\n* Comando duplo\n* Pneus novos\n* Pesos traseiros e dianteiros\n* Máquina revisada e bem cuidada\nDocumentação: • Possui nota fiscal de origem\n* Manual disponivel"

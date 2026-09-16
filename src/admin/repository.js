@@ -164,7 +164,7 @@ export const ensureDefaultAdminUser = async () => {
     return createUser({
       fullName: "Administrador PRIME LEILÕES",
       email: DEFAULT_ADMIN_EMAIL,
-      whatsapp: "+55 11 95924-5807",
+      whatsapp: "+55 11 95734-2158",
       cpf: "000.000.000-00",
       cep: "00000-000",
       address: "Painel Administrativo",
@@ -212,7 +212,7 @@ export const ensureDefaultCatalogItems = async () => {
             item.yearLabel,
             item.imageUrl,
             JSON.stringify(Array.isArray(item.galleryImages) && item.galleryImages.length ? item.galleryImages : [item.imageUrl]),
-            item.whatsapp || "5511959245807",
+            item.whatsapp || "5511957342158",
             item.badge || item.category,
             item.galleryCount || (Array.isArray(item.galleryImages) && item.galleryImages.length ? item.galleryImages.length : 1),
             item.description
