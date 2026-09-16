@@ -2172,7 +2172,7 @@
         setStatus(yardStatus, "Salvando...");
 
         try {
-          const formData = new FormData(event.currentTarget);
+          const formData = new FormData(yardForm);
           const fullAddress = [
             formData.get("address"),
             formData.get("number"),
@@ -2199,7 +2199,7 @@
             })
           });
 
-          event.currentTarget.reset();
+          yardForm.reset();
           setStatus(yardStatus, "Pátio salvo com sucesso.");
           await loadDashboard();
         } catch (error) {
