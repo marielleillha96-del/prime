@@ -111,8 +111,8 @@ export const renderAcquisitionContractHtml = (contract) => {
 
         <p class="contract-lead">
           Pelo presente instrumento particular, de um lado <strong>${escapeHtml(contract.sellerName)}</strong>,
-          inscrita no CNPJ sob o nº <strong>01.934.111/0001-38</strong>, com endereço comercial em
-          <strong>RUA DOUTOR RENATO PAES DE BARROS, 618, SALA 07, ITAIM BIBI, SÃO PAULO - SP, CEP 04530-000</strong>,
+          inscrita no CNPJ sob o nº <strong>32.081.982/0001-80</strong>, com endereço comercial em
+          <strong>RUA PROFESSOR ZEFERINO VAZ, 107, VILA ARAPUÁ, SÃO PAULO - SP, CEP 04258-000</strong>,
           doravante denominada VENDEDORA, e de outro lado <strong>${escapeHtml(contract.clientName || "CLIENTE")}</strong>,
           inscrito no CPF sob o nº <strong>${escapeHtml(contract.clientCpf || "-")}</strong>,
           residente e domiciliado em <strong>${escapeHtml(contract.clientAddress || "-")}</strong>,

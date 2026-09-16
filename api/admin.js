@@ -36,7 +36,7 @@ const getTodayInSaoPaulo = () =>
     day: "2-digit"
   }).format(new Date());
 
-const contractSellerName = "SURI NEGOCIACOES E INTERMEDIACOES LTDA – ME";
+const contractSellerName = "PRIME LEILÕES";
 
 const normalizeInvoicePayload = (invoice) => {
   if (!invoice) {
