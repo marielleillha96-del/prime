@@ -483,8 +483,10 @@
                       </label>
                       <div id="contractInstallments" class="admin-form__full admin-form--grid hidden">
                         <label><span>VALOR DA ENTRADA</span><input id="contractDownPayment" type="text" inputmode="decimal" placeholder="R$ 0,00" /></label>
+                        <label><span>DATA DO PAGAMENTO DA ENTRADA</span><input id="contractDownPaymentDate" type="date" /></label>
                         <label><span>QUANTIDADE DE PARCELAS</span><input id="contractInstallmentCount" type="number" min="1" max="600" step="1" /></label>
                         <label><span>VALOR DE CADA PARCELA</span><input id="contractInstallmentValue" type="text" inputmode="decimal" placeholder="R$ 0,00" /></label>
+                        <label><span>DIA DE VENCIMENTO DAS PARCELAS</span><input id="contractInstallmentDay" type="number" min="1" max="31" step="1" placeholder="Ex.: 10" /></label>
                       </div>
                       <label>
                         <span>DATA DE ENTREGA</span>
@@ -1559,10 +1561,12 @@
       const downPayment = document.getElementById("contractDownPayment");
       const installmentCount = document.getElementById("contractInstallmentCount");
       const installmentValue = document.getElementById("contractInstallmentValue");
+      const downPaymentDate = document.getElementById("contractDownPaymentDate");
+      const installmentDay = document.getElementById("contractInstallmentDay");
       const syncPaymentFields = () => {
         const enabled = contractPaymentNotes.value === "installments";
         installmentFields.classList.toggle("hidden", !enabled);
-        [downPayment, installmentCount, installmentValue].forEach(input => { input.required = enabled; input.disabled = !enabled; });
+        [downPayment, installmentCount, installmentValue, downPaymentDate, installmentDay].forEach(input => { input.required = enabled; input.disabled = !enabled; });
       };
       contractPaymentNotes.addEventListener("change", syncPaymentFields);
       syncPaymentFields();
@@ -1570,7 +1574,10 @@
         if (contractPaymentNotes.value === "cash") return "Pagamento à vista.";
         const entry = parseBRL(downPayment.value), count = Number(installmentCount.value), each = parseBRL(installmentValue.value);
         if (!Number.isFinite(entry) || entry <= 0 || !Number.isInteger(count) || count < 1 || count > 600 || !Number.isFinite(each) || each <= 0) throw new Error("Informe entrada, quantidade de parcelas e valor de cada parcela válidos.");
-        return `Entrada de ${formatBRL(entry)} e saldo em ${count} parcelas de ${formatBRL(each)} cada.`;
+        const day = Number(installmentDay.value);
+        if (!downPaymentDate.value || !downPaymentDate.validity.valid || !Number.isInteger(day) || day < 1 || day > 31) throw new Error("Informe a data da entrada e o dia de vencimento das parcelas (1 a 31).");
+        const entryDate = downPaymentDate.value.split("-").reverse().join("/");
+        return `Entrada de ${formatBRL(entry)}, com pagamento em ${entryDate}, e saldo em ${count} parcelas de ${formatBRL(each)} cada, com vencimento no dia ${day} de cada mês.`;
       };
       [contractAmountValue, downPayment, installmentValue].forEach(input => {
         input.addEventListener("blur", () => {
