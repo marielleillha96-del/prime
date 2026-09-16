@@ -6229,3 +6229,12 @@ h1, h2, h3 { letter-spacing: -0.025em; }
 .invoice-receiver { padding: 16px 18px; margin: 18px 0; border: 1px solid #dce6e4; border-radius: 10px; background: #f3f8f5; }
 .invoice-receiver span { display: block; color: #52677a; font-size: .75rem; margin-bottom: 7px; }
 .invoice-receiver strong { color: #041e42; font-size: .95rem; overflow-wrap: anywhere; }
+
+.tracking-delivery-details { margin-bottom: 22px; }
+.tracking-delivery-details h2 { color: #041e42; font-size: 1.2rem; }
+.tracking-delivery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; margin-bottom: 0; }
+.tracking-delivery-grid dt { font-size: .73rem; color: #62758a; margin-bottom: 6px; }
+.tracking-delivery-grid dd { margin: 0; color: #16324a; font-size: .9rem; line-height: 1.6; overflow-wrap: anywhere; }
+@media(max-width: 640px) { .tracking-delivery-grid { grid-template-columns: 1fr; } }
+.tracking-animation-notice { padding: 12px 18px; margin: 0; background: #eaf4ee; color: #155439; font-size: .8rem; line-height: 1.6; }
+.tracking-animation-notice button { margin-left: 10px; padding: 6px 10px; border: 1px solid #97b9a5; border-radius: 6px; background: #fff; color: #155439; cursor: pointer; }

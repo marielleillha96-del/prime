@@ -119,6 +119,7 @@
                   </article>
                 </div>
 
+                <article class="tracking-card tracking-delivery-details"><h2>Dados da entrega</h2><dl id="trackingDeliveryDetails" class="tracking-delivery-grid"></dl></article>
                 <div class="tracking-map-card">
                   <div class="tracking-map-card__head">
                     <div>
@@ -127,6 +128,7 @@
                     </div>
                     <div class="tracking-map-card__meta" id="trackingMapMeta">Sem rastreio carregado.</div>
                   </div>
+                  <p class="tracking-animation-notice" id="trackingAnimationNotice" hidden>Simulação do deslocamento — não representa a posição real do motorista. <button type="button" id="trackingAnimationToggle">Pausar animação</button></p>
                   <div class="tracking-map" id="trackingMap"></div>
                 </div>
               </div>
@@ -352,6 +354,15 @@
       let map;
       let mapMarkers = [];
       let mapRoute;
+      let mapRequest = 0;
+      let animationFrame = null;
+      let animationPaused = false;
+      const animationNotice = document.getElementById("trackingAnimationNotice");
+      const animationToggle = document.getElementById("trackingAnimationToggle");
+      animationToggle.addEventListener("click", () => {
+        animationPaused = !animationPaused;
+        animationToggle.textContent = animationPaused ? "Retomar animação" : "Pausar animação";
+      });
       let profilePhotoBase64 = "";
       let requestedTrackingTab = new URLSearchParams(window.location.search).get("tab") || "overview";
 
@@ -360,7 +371,7 @@
       const getRefreshToken = () => localStorage.getItem(REFRESH_TOKEN_KEY);
       const onlyDigits = (value) => String(value || "").replace(/\D/g, "");
       const buildUserAddress = (user) =>
-        [user?.address, user?.number, user?.district, user?.city, user?.state, user?.cep]
+        [user?.address, user?.number, user?.complement, user?.district, user?.city, user?.state, user?.cep]
           .map((value) => String(value || "").trim())
           .filter(Boolean)
           .join(", ");
@@ -503,6 +514,12 @@
       };
 
       const clearMapLayers = () => {
+        mapRequest += 1;
+        cancelAnimationFrame(animationFrame);
+        animationFrame = null;
+        animationNotice.hidden = true;
+        animationPaused = false;
+        animationToggle.textContent = "Pausar animação";
         mapMarkers.forEach((marker) => marker.remove());
         mapMarkers = [];
         if (mapRoute) {
@@ -672,26 +689,22 @@
       const renderMap = async (tracking, user) => {
         ensureMap();
         clearMapLayers();
+        const request = mapRequest;
 
         const startAddress = [tracking.yard_address, tracking.yard_city, tracking.yard_state].filter(Boolean).join(", ");
-        const currentAddress =
-          tracking.current_location ||
-          tracking.yard_address ||
-          "Rua Professor Zeferino Vaz, 107 - Vila Arapuá, São Paulo - SP, CEP 04258-000";
+        const currentAddress = tracking.current_location || "";
         const profileAddress = buildUserAddress(user);
         const destinationAddress = tracking.destination_address || profileAddress || "Destino final não informado";
 
         const [startCoords, currentCoords, destinationCoords] = await Promise.all([
           geocodeAddress(startAddress || "Rua Professor Zeferino Vaz, 107 - Vila Arapuá, São Paulo - SP, CEP 04258-000"),
-          geocodeAddress(currentAddress),
+          currentAddress ? geocodeAddress(currentAddress) : Promise.resolve(null),
           geocodeAddress(destinationAddress)
         ]);
 
-        const fallback = [-23.1896, -45.8841];
-        const points = [startCoords || fallback, currentCoords || fallback];
-        if (destinationCoords) {
-          points.push(destinationCoords);
-        }
+        if (request !== mapRequest) return;
+        const points = [startCoords, currentCoords, destinationCoords].filter(Boolean);
+        if (!points.length) { map.setView([-23.5505, -46.6333], 6); return; }
 
         const initials = String(tracking.driver_name || "AMI")
           .split(" ")
@@ -724,9 +737,12 @@
           iconAnchor: [10, 10]
         });
 
-        const yardMarker = L.marker(points[0], { icon: yardIcon }).addTo(map).bindPopup("Base / Pátio");
-        const currentMarker = L.marker(points[1], { icon: driverIcon }).addTo(map).bindPopup(tracking.driver_name || "Local atual");
-        mapMarkers.push(yardMarker, currentMarker);
+        if (startCoords) mapMarkers.push(L.marker(startCoords, { icon: yardIcon }).addTo(map).bindPopup("Base / Pátio"));
+        if (currentCoords) {
+          const popup = document.createElement("span");
+          popup.textContent = `Última localização informada: ${tracking.current_location}`;
+          mapMarkers.push(L.marker(currentCoords, { icon: driverIcon }).addTo(map).bindPopup(popup));
+        }
 
         if (destinationCoords) {
           const destinationMarker = L.marker(destinationCoords, { icon: destinationIcon })
@@ -736,12 +752,35 @@
         }
 
         mapRoute = L.polyline(points, {
-          color: "#f27f63",
+          color: "#007c32",
+          dashArray: "8 10",
           weight: 6,
           opacity: 0.95
         }).addTo(map);
 
-        map.fitBounds(L.latLngBounds(points), { padding: [40, 40] });
+        map.fitBounds(L.latLngBounds(points), { padding: [40, 40], maxZoom: 14 });
+        const status = String(tracking.status || "").toLowerCase();
+        const moving = /andamento|em rota|em transito|em trânsito|a caminho/.test(status) && !/entregue|cancel|aguard|parad/.test(status);
+        const origin = currentCoords || startCoords;
+        if (moving && origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
+          animationNotice.hidden = false;
+          const simulatedMarker = L.marker(origin, {icon: driverIcon}).addTo(map).bindPopup("Simulação do deslocamento");
+          mapMarkers.push(simulatedMarker);
+          animationPaused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          animationToggle.textContent = animationPaused ? "Retomar animação" : "Pausar animação";
+          let progress = 0, previous = null;
+          const animate = timestamp => {
+            if (request !== mapRequest) return;
+            const delta = previous === null ? 0 : Math.min(timestamp - previous, 100);
+            previous = timestamp;
+            if (!animationPaused && !document.hidden) {
+              progress = (progress + delta / 60000) % 1;
+              simulatedMarker.setLatLng(origin.map((coordinate, index) => coordinate + (destinationCoords[index] - coordinate) * progress));
+            }
+            animationFrame = requestAnimationFrame(animate);
+          };
+          animationFrame = requestAnimationFrame(animate);
+        }
       };
 
       const renderOverview = async (tracking, user) => {
@@ -751,7 +790,33 @@
         trackingProgressValue.textContent = `${progress}%`;
         trackingAlertText.textContent = String(tracking.alert_message || tracking.status || "Aguardando atualização").toUpperCase();
         trackingItemTitle.textContent = tracking.item_name || "Rastreio";
-        trackingMapMeta.textContent = `${tracking.tracking_code || "-"} • Atual: ${tracking.current_location || "Local sob atualização"} • Destino: ${destinationAddress}`;
+        const date = tracking.updated_at ? new Date(tracking.updated_at) : null;
+        const updated = date && !Number.isNaN(date.getTime()) ? date.toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"}) + " (Brasília)" : "Não informada";
+        const delivery = tracking.expected_delivery_date ? String(tracking.expected_delivery_date).slice(0,10).split("-").reverse().join("/") : "A confirmar";
+        const details = [
+          ["Cliente", tracking.client_name || user.fullName],
+          ["E-mail", tracking.client_email || user.email],
+          ["Telefone", user.whatsapp],
+          ["Endereço do cliente", buildUserAddress(user)],
+          ["Endereço de entrega", destinationAddress],
+          ["Veículo", tracking.item_name],
+          ["Ano", tracking.item_year],
+          ["Categoria", tracking.item_category],
+          ["Código de rastreio", tracking.tracking_code],
+          ["Previsão de entrega", delivery],
+          ["Motorista", tracking.driver_name],
+          ["Pátio de origem", tracking.yard_name],
+          ["Última localização informada", tracking.current_location],
+          ["Atualização do rastreio", updated]
+        ];
+        const list = document.getElementById("trackingDeliveryDetails");
+        list.replaceChildren();
+        for (const [label, value] of details) {
+          const row = document.createElement("div"), dt = document.createElement("dt"), dd = document.createElement("dd");
+          dt.textContent = label; dd.textContent = value || "Não informado";
+          row.append(dt, dd); list.append(row);
+        }
+        trackingMapMeta.textContent = `Última localização informada: ${tracking.current_location || "Não informada"} • Atualização do rastreio: ${updated}. Linha tracejada: ligação entre os endereços.`;
         await renderMap(tracking, user);
       };
 
@@ -763,6 +828,7 @@
 
         const selectedTracking = trackings.find((item) => item.id === selectedTrackingId) || trackings[0];
         if (!selectedTracking) {
+          document.getElementById("trackingDeliveryDetails").replaceChildren();
           trackingItemTitle.textContent = "Nenhum rastreio disponível";
           trackingMapMeta.textContent = "Sua conta ainda não possui rastreios vinculados.";
           trackingAlertText.textContent = "AGUARDANDO VÍNCULO DE RASTREIO";
@@ -842,6 +908,7 @@
       });
 
       trackingLogoutButton.addEventListener("click", () => {
+        clearMapLayers();
         fetch("/api/auth/logout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
