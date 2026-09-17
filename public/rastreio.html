@@ -131,7 +131,11 @@
                     <div class="tracking-map-card__meta" id="trackingMapMeta">Sem rastreio carregado.</div>
                   </div>
                   <p class="tracking-animation-notice" id="trackingAnimationNotice" hidden><strong>Em rota</strong> <span class="tracking-demo-badge">Demonstrando</span></p>
-                  <div class="tracking-map" id="trackingMap"></div>
+                  <div class="tracking-navigation-map">
+                    <div class="tracking-navigation-toolbar"><span id="trackingRouteLabel">Preparando trajeto…</span><button type="button" id="trackingRecenter">Ver percurso</button></div>
+                    <div class="tracking-map" id="trackingMap"></div>
+                    <div class="tracking-navigation-caption">Origem <span>● ━━━ ⚑</span> Destino</div>
+                  </div>
                 </div>
               </div>
 
@@ -357,6 +361,38 @@
       let map;
       let mapMarkers = [];
       let mapRoute;
+      let routeBounds = null;
+      document.getElementById("trackingRecenter").addEventListener("click", () => {
+        if (map && routeBounds) map.fitBounds(routeBounds, {padding: [55, 75], maxZoom: 15});
+      });
+      const roadRouteCache = new Map();
+      const fetchRoadRoute = async (origin, destination) => {
+        const key = [origin, destination].map(point => `${point[1]},${point[0]}`).join(";");
+        if (roadRouteCache.has(key)) return roadRouteCache.get(key);
+        try {
+          const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${key}?overview=full&geometries=geojson&steps=false`, {signal: AbortSignal.timeout(8000)});
+          if (!response.ok) return null;
+          const data = await response.json();
+          const coordinates = data.routes?.[0]?.geometry?.coordinates;
+          if (data.code !== "Ok" || !Array.isArray(coordinates) || coordinates.length < 2 || !coordinates.every(point => Array.isArray(point) && Number.isFinite(point[0]) && Number.isFinite(point[1]))) return null;
+          const route = coordinates.map(([lng, lat]) => [lat, lng]);
+          if (roadRouteCache.size >= 20) roadRouteCache.clear();
+          roadRouteCache.set(key, route);
+          return route;
+        } catch (_) { return null; }
+      };
+      const routeInterpolator = coordinates => {
+        const lengths = [0];
+        for (let i = 1; i < coordinates.length; i++) lengths.push(lengths[i - 1] + L.latLng(coordinates[i - 1]).distanceTo(L.latLng(coordinates[i])));
+        const total = lengths[lengths.length - 1];
+        return progress => {
+          const distance = total * progress;
+          let i = 1;
+          while (i < lengths.length - 1 && lengths[i] < distance) i++;
+          const fraction = (distance - lengths[i - 1]) / (lengths[i] - lengths[i - 1] || 1);
+          return coordinates[i - 1].map((value, axis) => value + (coordinates[i][axis] - value) * fraction);
+        };
+      };
       let mapRequest = 0;
       let animationFrame = null;
       let animationPaused = false;
@@ -517,6 +553,8 @@
         cancelAnimationFrame(animationFrame);
         animationFrame = null;
         animationNotice.hidden = true;
+        routeBounds = null;
+        document.getElementById("trackingRouteLabel").textContent = "Preparando trajeto…";
         animationPaused = false;
         mapMarkers.forEach((marker) => marker.remove());
         mapMarkers = [];
@@ -756,14 +794,19 @@
           mapMarkers.push(destinationMarker);
         }
 
-        mapRoute = L.polyline(points, {
-          color: "#007c32",
-          dashArray: "8 10",
-          weight: 6,
-          opacity: 0.95
-        }).addTo(map);
-
-        map.fitBounds(L.latLngBounds(points), { padding: [40, 40], maxZoom: 14 });
+        const routeOrigin = currentCoords || startCoords;
+        const roadRoute = routeOrigin && destinationCoords ? await fetchRoadRoute(routeOrigin, destinationCoords) : null;
+        if (request !== mapRequest) return;
+        const routePoints = roadRoute || [routeOrigin, destinationCoords].filter(Boolean);
+        const routeLabel = document.getElementById("trackingRouteLabel");
+        routeLabel.textContent = roadRoute ? "Trajeto sugerido pelas vias" : "Ligação ilustrativa entre endereços";
+        if (roadRoute) trackingMapMeta.textContent = trackingMapMeta.textContent.replace("Linha tracejada: ligação entre os endereços.", "Trajeto sugerido pelas vias, sem dados de trânsito ao vivo.");
+        mapRoute = L.layerGroup([
+          L.polyline(routePoints, {color: "#063d57", weight: 13, opacity: .95, lineCap: "round"}),
+          L.polyline(routePoints, {color: "#32d4f5", weight: 7, opacity: 1, lineCap: "round", dashArray: roadRoute ? undefined : "8 10"})
+        ]).addTo(map);
+        routeBounds = L.latLngBounds([...points, ...routePoints]);
+        map.fitBounds(routeBounds, {padding: [55, 75], maxZoom: 15});
         const status = String(tracking.status || "").toLowerCase();
         const moving = /andamento|em rota|em transito|em trânsito|a caminho/.test(status) && !/entregue|cancel|aguard|parad/.test(status);
         const origin = currentCoords || startCoords;
@@ -778,14 +821,15 @@
           simulatedMarker.bindPopup("Em rota · Demonstrando");
           if (!driverMarker) mapMarkers.push(simulatedMarker);
           animationPaused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          const interpolate = routeInterpolator(routePoints);
           let progress = 0, previous = null;
           const animate = timestamp => {
             if (request !== mapRequest) return;
             const delta = previous === null ? 0 : Math.min(timestamp - previous, 100);
             previous = timestamp;
             if (!animationPaused && !document.hidden) {
-              progress = Math.min(0.5, progress + delta / 300000);
-              simulatedMarker.setLatLng(origin.map((coordinate, index) => coordinate + (destinationCoords[index] - coordinate) * progress));
+              progress = Math.min(0.5, progress + delta / 600000);
+              simulatedMarker.setLatLng(interpolate(progress));
             }
             if (progress >= 0.5) {
               simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");

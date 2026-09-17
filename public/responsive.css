@@ -87,3 +87,24 @@ input, select, textarea { max-width: 100%; }
   .about-story-copy, .about-story-media { min-width: 0; }
   .about-story-copy h2 { overflow-wrap: anywhere; font-size: clamp(1.6rem, 6vw, 2.6rem); }
 }
+
+/* Navigation-inspired delivery map; photo and controls retain their real colors. */
+.tracking-navigation-map { position: relative; isolation: isolate; background: #172838; overflow: hidden; border-radius: 0 0 18px 18px; }
+.tracking-navigation-map .tracking-map { height: 560px; background: #172838; }
+.tracking-navigation-map .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) saturate(.55) brightness(.8) contrast(.9); }
+.tracking-navigation-toolbar { position: absolute; top: 16px; left: 16px; right: 16px; z-index: 500; display: flex; justify-content: space-between; align-items: center; gap: 12px; pointer-events: none; }
+.tracking-navigation-toolbar > * { pointer-events: auto; background: #102333; color: #72e5ff; border: 1px solid #36546b; border-radius: 12px; padding: 12px 16px; font-size: .8rem; box-shadow: 0 5px 20px #0003; }
+.tracking-navigation-toolbar button { cursor: pointer; color: #fff; font-weight: 600; }
+.tracking-navigation-caption { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 500; background: #102333ed; padding: 10px 18px; border: 1px solid #36546b; border-radius: 12px; color: #dbeefa; font-size: .75rem; white-space: nowrap; pointer-events: none; }
+.tracking-navigation-caption span { color: #32d4f5; padding: 0 16px; }
+.tracking-navigation-map .leaflet-top.leaflet-left { top: 76px; }
+.tracking-navigation-map .leaflet-control-zoom a { background: #102333; color: #e6f7ff; border-color: #36546b; }
+.tracking-navigation-map .tracking-map-driver-marker { border-color: #32d4f5; box-shadow: 0 0 0 5px #32d4f533, 0 6px 22px #0008; padding: 3px; }
+.tracking-navigation-map .tracking-map-destination-marker { width: 26px; height: 26px; margin: -3px; border: 3px solid #fff; border-radius: 6px; background: conic-gradient(#fff 25%, #152332 0 50%, #fff 0 75%, #152332 0) 0 0 / 10px 10px; box-shadow: 0 3px 12px #0006; }
+.tracking-navigation-map .tracking-map-yard-marker { background: #32d4f5; }
+@media (max-width: 640px) {
+ .tracking-navigation-map .tracking-map { height: 470px; }
+ .tracking-navigation-toolbar { top: 12px; left: 10px; right: 10px; gap: 8px; }
+ .tracking-navigation-toolbar > * { padding: 10px; font-size: .7rem; }
+ .tracking-navigation-toolbar span { max-width: 62%; }
+}
