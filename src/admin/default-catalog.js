@@ -1,5 +1,310 @@
 export const DEFAULT_CATALOG_ITEMS = [
   {
+    "title": "TOYOTA HILUX 2011/2011",
+    "slug": "toyota-hilux-2011-2011",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "relacionados",
+      "destaques"
+    ],
+    "price": 25000,
+    "location": "Sob consulta",
+    "yearLabel": "2011/2011",
+    "imageUrl": "/catalogo-assets/toyota-hilux-2011-2011/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/toyota-hilux-2011-2011/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "CD 4X4\nSR MANUAL\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "FIAT TORO 2024/2025",
+    "slug": "fiat-toro-2024-2025",
+    "category": "Picapes",
+    "sections": [
+      "catalogo",
+      "relacionados",
+      "destaques"
+    ],
+    "price": 35000,
+    "location": "Sob consulta",
+    "yearLabel": "2024/2025",
+    "imageUrl": "/catalogo-assets/fiat-toro-2024-2025/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/fiat-toro-2024-2025/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Picapes",
+    "galleryCount": 1,
+    "description": "VOLC T270 AT6\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "CHEVROLET ONIX 2016/2016",
+    "slug": "chevrolet-onix-2016-2016",
+    "category": "Carros",
+    "sections": [
+      "catalogo",
+      "relacionados",
+      "destaques"
+    ],
+    "price": 20000,
+    "location": "Sob consulta",
+    "yearLabel": "2016/2016",
+    "imageUrl": "/catalogo-assets/chevrolet-onix-2016-2016/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/chevrolet-onix-2016-2016/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Carros",
+    "galleryCount": 1,
+    "description": "1.0MT LT\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "CHEVROLET VECTRA 2008/2008",
+    "slug": "chevrolet-vectra-2008-2008",
+    "category": "Carros",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 14500,
+    "location": "Sob consulta",
+    "yearLabel": "2008/2008",
+    "imageUrl": "/catalogo-assets/chevrolet-vectra-2008-2008/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/chevrolet-vectra-2008-2008/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Carros",
+    "galleryCount": 1,
+    "description": "SD EXPRESSION\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "RENAULT SANDERO 2011/2012",
+    "slug": "renault-sandero-2011-2012",
+    "category": "Carros",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 14500,
+    "location": "Sob consulta",
+    "yearLabel": "2011/2012",
+    "imageUrl": "/catalogo-assets/renault-sandero-2011-2012/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/renault-sandero-2011-2012/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Carros",
+    "galleryCount": 1,
+    "description": "PR1616VA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "VOLKSWAGEN GOL 2010/2011",
+    "slug": "volkswagen-gol-2010-2011",
+    "category": "Carros",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 14000,
+    "location": "Sob consulta",
+    "yearLabel": "2010/2011",
+    "imageUrl": "/catalogo-assets/volkswagen-gol-2010-2011/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/volkswagen-gol-2010-2011/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Carros",
+    "galleryCount": 1,
+    "description": "MOTOR 1.0\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "FIAT PALIO 2008/2008",
+    "slug": "fiat-palio-2008-2008",
+    "category": "Carros",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 10000,
+    "location": "Sob consulta",
+    "yearLabel": "2008/2008",
+    "imageUrl": "/catalogo-assets/fiat-palio-2008-2008/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/fiat-palio-2008-2008/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Carros",
+    "galleryCount": 1,
+    "description": "ELX FLEX\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "CHEVROLET PRISMA 2014/2015",
+    "slug": "chevrolet-prisma-2014-2015",
+    "category": "Carros",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 7500,
+    "location": "Sob consulta",
+    "yearLabel": "2014/2015",
+    "imageUrl": "/catalogo-assets/chevrolet-prisma-2014-2015/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/chevrolet-prisma-2014-2015/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Carros",
+    "galleryCount": 1,
+    "description": "1.4AT LTZ\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "HONDA CG 160 TITAN 2019/2019",
+    "slug": "honda-cg-160-titan-2019-2019",
+    "category": "Motos",
+    "sections": [
+      "catalogo",
+      "relacionados",
+      "destaques"
+    ],
+    "price": 7500,
+    "location": "Sob consulta",
+    "yearLabel": "2019/2019",
+    "imageUrl": "/catalogo-assets/honda-cg-160-titan-2019-2019/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/honda-cg-160-titan-2019-2019/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Motos",
+    "galleryCount": 1,
+    "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "HONDA NXR BROS 160 ESDD 2018/2019",
+    "slug": "honda-nxr-bros-160-esdd-2018-2019",
+    "category": "Motos",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 8000,
+    "location": "Sob consulta",
+    "yearLabel": "2018/2019",
+    "imageUrl": "/catalogo-assets/honda-nxr-bros-160-esdd-2018-2019/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/honda-nxr-bros-160-esdd-2018-2019/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Motos",
+    "galleryCount": 1,
+    "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "HONDA XRE 300 2023/2024",
+    "slug": "honda-xre-300-2023-2024",
+    "category": "Motos",
+    "sections": [
+      "catalogo",
+      "relacionados",
+      "destaques"
+    ],
+    "price": 12500,
+    "location": "Sob consulta",
+    "yearLabel": "2023/2024",
+    "imageUrl": "/catalogo-assets/honda-xre-300-2023-2024/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/honda-xre-300-2023-2024/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Motos",
+    "galleryCount": 1,
+    "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "HONDA BIZ 125 2019/2019",
+    "slug": "honda-biz-125-2019-2019",
+    "category": "Motos",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 6000,
+    "location": "Sob consulta",
+    "yearLabel": "2019/2019",
+    "imageUrl": "/catalogo-assets/honda-biz-125-2019-2019/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/honda-biz-125-2019-2019/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Motos",
+    "galleryCount": 1,
+    "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "FIAT FIORINO 2009/2010",
+    "slug": "fiat-fiorino-2009-2010",
+    "category": "Utilitários",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 15000,
+    "location": "Sob consulta",
+    "yearLabel": "2009/2010",
+    "imageUrl": "/catalogo-assets/fiat-fiorino-2009-2010/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/fiat-fiorino-2009-2010/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Utilitários",
+    "galleryCount": 1,
+    "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "FIAT UNO MILLE ECONOMY 2011/2011",
+    "slug": "fiat-uno-mille-economy-2011-2011",
+    "category": "Carros",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 7100,
+    "location": "Sob consulta",
+    "yearLabel": "2011/2011",
+    "imageUrl": "/catalogo-assets/fiat-uno-mille-economy-2011-2011/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/fiat-uno-mille-economy-2011-2011/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Carros",
+    "galleryCount": 1,
+    "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
+    "title": "FIAT UNO MILLE ECONOMY 2010/2011",
+    "slug": "fiat-uno-mille-economy-2010-2011",
+    "category": "Carros",
+    "sections": [
+      "catalogo",
+      "relacionados"
+    ],
+    "price": 6500,
+    "location": "Sob consulta",
+    "yearLabel": "2010/2011",
+    "imageUrl": "/catalogo-assets/fiat-uno-mille-economy-2010-2011/01.jpeg",
+    "galleryImages": [
+      "/catalogo-assets/fiat-uno-mille-economy-2010-2011/01.jpeg"
+    ],
+    "whatsapp": "5511957342158",
+    "badge": "Carros",
+    "galleryCount": 1,
+    "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
+  },
+  {
     "title": "Mercedes-Benz 1313 1977/1977",
     "slug": "mercedes-benz-1313-1977-1977",
     "category": "Caminhões",
@@ -18,7 +323,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Caminhões",
     "galleryCount": 1,
-    "description": "Carroceria basculante\nConfiguração: toco\nSistema hidráulico\nDocumentação 100%, conforme o anúncio"
+    "description": "Carroceria basculante\nConfiguração: toco\nSistema hidráulico\nDocumentação 100%, conforme o anúncio\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Volkswagen 23-220 2003/2003",
@@ -39,7 +344,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Caminhões",
     "galleryCount": 1,
-    "description": "Revisado\nMotor Cummins Série C\nPneus em bom estado\nCarroceria de 8,50 metros"
+    "description": "Revisado\nMotor Cummins Série C\nPneus em bom estado\nCarroceria de 8,50 metros\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Scania P-360 2013/2013",
@@ -60,7 +365,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Caminhões",
     "galleryCount": 1,
-    "description": "Configuração: 6x2 original\nCâmbio manual\nQuilometragem: 750 mil km\nBomba para caçamba"
+    "description": "Configuração: 6x2 original\nCâmbio manual\nQuilometragem: 750 mil km\nBomba para caçamba\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Mercedes-Benz 1113 1981/1981",
@@ -80,7 +385,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Caminhões",
     "galleryCount": 1,
-    "description": "Turbo\nHidráulico\nFreio a ar\nConsta baú no documento"
+    "description": "Turbo\nHidráulico\nFreio a ar\nConsta baú no documento\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "GM S10 2009/2010",
@@ -100,7 +405,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
-    "description": "ADVANTAGE S"
+    "description": "ADVANTAGE S\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "CHEVROLET S10 2025/2025",
@@ -121,7 +426,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
-    "description": "2.8 16V TURBO\nDIESEL\nHIGH COUNTRY\nCD 4X4 AUTOMÁTICO"
+    "description": "2.8 16V TURBO\nDIESEL\nHIGH COUNTRY\nCD 4X4 AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "CHEVROLET S10 2010/2011",
@@ -141,7 +446,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
-    "description": "2.4 MPFI EXECUTIVE\n4X2 CD 8V FLEX\n4P MANUAL"
+    "description": "2.4 MPFI EXECUTIVE\n4X2 CD 8V FLEX\n4P MANUAL\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "TOYOTA HILUX 2022/2023",
@@ -162,7 +467,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
-    "description": "2.8 D-4D TURBO DIESEL\nCD SRX 4X4 AUTOMÁTICO"
+    "description": "2.8 D-4D TURBO DIESEL\nCD SRX 4X4 AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "FORD RANGER 2018/2019",
@@ -183,7 +488,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
-    "description": "3.2 LIMITED\n4X4 CD\n20V DIESEL\n4P AUTOMÁTICO"
+    "description": "3.2 LIMITED\n4X4 CD\n20V DIESEL\n4P AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "FORD RANGER 2013/2014",
@@ -203,7 +508,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
-    "description": "3.2 XLT\n4X4 CD\n20V DIESEL\n4P AUTOMÁTICO"
+    "description": "3.2 XLT\n4X4 CD\n20V DIESEL\n4P AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "MITSUBISHI L200 TRITON 2022/2023",
@@ -224,7 +529,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
-    "description": "2.4 16V TURBO\nDIESEL SPORT\nHPE CD 4P 4X4\nAUTOMÁTICO"
+    "description": "2.4 16V TURBO\nDIESEL SPORT\nHPE CD 4P 4X4\nAUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "MITSUBISHI L200 TRITON 2012/2013",
@@ -244,7 +549,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
-    "description": "3.2 GL 4X4CD 16V\nTURBO INTERCOLER\nDIESEL 4P MANUAL"
+    "description": "3.2 GL 4X4CD 16V\nTURBO INTERCOLER\nDIESEL 4P MANUAL\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "TOYOTA COROLLA CROSS 2023/2024",
@@ -265,7 +570,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "SUVs",
     "galleryCount": 1,
-    "description": "2.0 VVT-IE\nFLEX XRE\nDIRECT SHIFT"
+    "description": "2.0 VVT-IE\nFLEX XRE\nDIRECT SHIFT\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "FIAT STRADA 2022/2023",
@@ -285,7 +590,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
-    "description": "1.3 FIREFLY FLEX\nFREEDOM CS MANUAL"
+    "description": "1.3 FIREFLY FLEX\nFREEDOM CS MANUAL\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "JEEP RENEGADE 2022/2023",
@@ -305,7 +610,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "SUVs",
     "galleryCount": 1,
-    "description": "1.3 T270 TURBO\nFLEX LONGITUDE AT6"
+    "description": "1.3 T270 TURBO\nFLEX LONGITUDE AT6\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "JEEP RENEGADE 2015/2016",
@@ -325,7 +630,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "SUVs",
     "galleryCount": 1,
-    "description": "1.8 16V FLEX\nSPORT 4P AUTOMÁTICO"
+    "description": "1.8 16V FLEX\nSPORT 4P AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "JEEP COMPASS 2018/2018",
@@ -345,7 +650,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "SUVs",
     "galleryCount": 1,
-    "description": "2.0 16V FLEX\nLONGITUDE AUTOMÁTICO"
+    "description": "2.0 16V FLEX\nLONGITUDE AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "JEEP COMPASS 2022/2022",
@@ -366,7 +671,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "SUVs",
     "galleryCount": 1,
-    "description": "1.3 T270 TURBO\nHÍBRIDO S 4XE AT6"
+    "description": "1.3 T270 TURBO\nHÍBRIDO S 4XE AT6\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "FIAT STRADA 2015/2015",
@@ -386,7 +691,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
-    "description": "ADVENTURE CD"
+    "description": "ADVENTURE CD\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "FIAT STRADA 2011/2011",
@@ -406,7 +711,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 1,
-    "description": "ADVENTURE FLEX"
+    "description": "ADVENTURE FLEX\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "TOYOTA HILUX 3.0 SRV 4X4 CD",
@@ -436,7 +741,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Picapes",
     "galleryCount": 10,
-    "description": "16V TURBO INTERCOOLER\nDIESEL\nAUTOMÁTICO\n2009/2010"
+    "description": "16V TURBO INTERCOOLER\nDIESEL\nAUTOMÁTICO\n2009/2010\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Colheitadeira New Holland TC 5090",
@@ -464,7 +769,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 8,
-    "description": "✅ Ano: 2012\n✅ Horas de trilha: 1.200 h\n✅ Horas de motor: 1.600 h\n✅ Peneira fixa\n✅ Rodados duplos\n✅ Nunca colheu milho"
+    "description": "✅ Ano: 2012\n✅ Horas de trilha: 1.200 h\n✅ Horas de motor: 1.600 h\n✅ Peneira fixa\n✅ Rodados duplos\n✅ Nunca colheu milho\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Jonh deere 6150j",
@@ -490,7 +795,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
-    "description": "Ano 2021\nHoras 3.459\nTransmissão Power-quad \nPiloto automático/GPS STARFIRE 6000 + GS3\nBarramento hidráulico e 3° ponto \nOriginal sem reforma"
+    "description": "Ano 2021\nHoras 3.459\nTransmissão Power-quad \nPiloto automático/GPS STARFIRE 6000 + GS3\nBarramento hidráulico e 3° ponto \nOriginal sem reforma\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "JONH DEERE 7505 (140cv)",
@@ -513,7 +818,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 4,
-    "description": "Ano 2003\nTração 4x4\nTransmissão power-quad tm\nBarramento hidráulica"
+    "description": "Ano 2003\nTração 4x4\nTransmissão power-quad tm\nBarramento hidráulica\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "RETROESCAVADEIRA JCB 4CX",
@@ -541,7 +846,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 8,
-    "description": "Ano – 2022\n✅ Modelo: JCB 4CX\n✅ Único dono\n✅ Motor novo\n✅ 17.350 horas\n✅ Funcionando perfeitamente, pronta para entrar em operação.\n💳 Financiamento disponível junto ao Banco BV Financeira, com condições facilitadas."
+    "description": "Ano – 2022\n✅ Modelo: JCB 4CX\n✅ Único dono\n✅ Motor novo\n✅ 17.350 horas\n✅ Funcionando perfeitamente, pronta para entrar em operação.\n💳 Financiamento disponível junto ao Banco BV Financeira, com condições facilitadas.\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "•New holland 7630",
@@ -564,7 +869,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 4,
-    "description": "HORAS: 206 - ANO 2023\nTodo original \n150cv"
+    "description": "HORAS: 206 - ANO 2023\nTodo original \n150cv\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "MASSEY FERGUSON 275 CAFEEIRO",
@@ -588,7 +893,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 5,
-    "description": "✅Ano 2011\n✅ 4X4 \n✅ 7 MIL HORAS\nContrapeso dianteiro e traseiro\nBom de mecânica, motor, caixa e hidráulico. \nCom procedência\nNota fiscal e toda a documentação para financiamento.\nVale a pena conferir"
+    "description": "✅Ano 2011\n✅ 4X4 \n✅ 7 MIL HORAS\nContrapeso dianteiro e traseiro\nBom de mecânica, motor, caixa e hidráulico. \nCom procedência\nNota fiscal e toda a documentação para financiamento.\nVale a pena conferir\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Trator Massey Ferguson 275 - 1995",
@@ -613,7 +918,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
-    "description": "✅Trator Massey Ferguson 275✅\n\n✅Ano 1995\n✅Motor de 75 cv\n✅Câmbio 3 alavanca\n\nBem calçado de pneus.\nHidráulico e tomada de força ok\n\nBom de mecânica"
+    "description": "✅Trator Massey Ferguson 275✅\n\n✅Ano 1995\n✅Motor de 75 cv\n✅Câmbio 3 alavanca\n\nBem calçado de pneus.\nHidráulico e tomada de força ok\n\nBom de mecânica\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "John Deere 5078E + Carregadeira JD 562",
@@ -639,7 +944,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 7,
-    "description": "78cv | Ano 2021 | 1.970h originais\nTransmissão 12x12 PowrReverse™️\nMotor 4cc turbo intercooler\nTDP eletro-hidráulico | 2 VCR\nCarregadeira autonivelante com joystick"
+    "description": "78cv | Ano 2021 | 1.970h originais\nTransmissão 12x12 PowrReverse™️\nMotor 4cc turbo intercooler\nTDP eletro-hidráulico | 2 VCR\nCarregadeira autonivelante com joystick\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "GRADE ARADORA TATU 16x28 – 2025",
@@ -662,7 +967,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 3,
-    "description": "Equipamento novo, nunca usado, em estado impecável e pronto para o trabalho.\n* Espaçamento: 270 mm\n* 100% funcional\n* Estrutura reforçada"
+    "description": "Equipamento novo, nunca usado, em estado impecável e pronto para o trabalho.\n* Espaçamento: 270 mm\n* 100% funcional\n* Estrutura reforçada\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Case IH Farmall 110A (118 cv)",
@@ -689,7 +994,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 8,
-    "description": null
+    "description": "RECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Pa-Carregadera Volto L70F",
@@ -714,7 +1019,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
-    "description": "Pá carregadeira \nMarca Volvo\nModelo L70F\nAno 2021 e 2022\nMáquinas extra!"
+    "description": "Pá carregadeira \nMarca Volvo\nModelo L70F\nAno 2021 e 2022\nMáquinas extra!\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "CARRETA AGRÍCOLA BASCULANTE 6 TONELADAS",
@@ -741,7 +1046,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 7,
-    "description": "CARRETA AGRÍCOLA BASCULANTE 6 TONELADAS\nEquipamento em excelente estado de conservação, revisado e pronto para o trabalho. Ideal para transporte de grãos, silagem e adubo, garantindo praticidade e eficiência no dia a dia da propriedade.\nEspecificações: • Capacidade de carga: 6 toneladas / 7 m³\n* 2 eixos separados (maior estabilidade)\n* Rodado aro 16\n* Medidas: 3.500 x 2.000 x 1.000 mm\n* Estrutura reforçada\n* Sistema hidráulico funcionando perfeitamente\nVALOR À VISTA: R$ 28.000,00"
+    "description": "CARRETA AGRÍCOLA BASCULANTE 6 TONELADAS\nEquipamento em excelente estado de conservação, revisado e pronto para o trabalho. Ideal para transporte de grãos, silagem e adubo, garantindo praticidade e eficiência no dia a dia da propriedade.\nEspecificações: • Capacidade de carga: 6 toneladas / 7 m³\n* 2 eixos separados (maior estabilidade)\n* Rodado aro 16\n* Medidas: 3.500 x 2.000 x 1.000 mm\n* Estrutura reforçada\n* Sistema hidráulico funcionando perfeitamente\nVALOR À VISTA: R$ 28.000,00\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Retroescavadeira Cat 416E",
@@ -769,7 +1074,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 8,
-    "description": null
+    "description": "RECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Volvo Modelo L70F Ano 2021",
@@ -794,7 +1099,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
-    "description": "Pá carregadeira  Marca Volvo Modelo L70F Ano 2021 e 2022 Máquinas extra!   Valor 380.000 R$  à vista, ou financiamento pelo plano safra"
+    "description": "Pá carregadeira  Marca Volvo Modelo L70F Ano 2021 e 2022 Máquinas extra!   Valor 380.000 R$  à vista, ou financiamento pelo plano safra\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Massey Ferguson 4275  4x4-Ano:2013",
@@ -821,7 +1126,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 8,
-    "description": "trator Massey Ferguson 4275  4x4-Ano:2013 \nTração Central 4x4\nBarramento hidráulico/TDP/02 VCR's\n4.771 horas"
+    "description": "trator Massey Ferguson 4275  4x4-Ano:2013 \nTração Central 4x4\nBarramento hidráulico/TDP/02 VCR's\n4.771 horas\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "NewHoland 7630, Ano 2001",
@@ -843,7 +1148,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 3,
-    "description": "🟩TRATOR NEW HOLLAND 7630🟩\n\nTOTALMENTE REVISADO MECANICA, MOTOR,HIDRAULICA,ELETRICA, BOM PNEUS TUDO REVISADO.\n\nTrator NewHoland 7630, Ano 2001, Com Super Redutor, Dualpower, Revisado Somente Com Peças Originais NewHoland, Tem Nota Fiscal de Origem, Ótimo Estado de Conservação"
+    "description": "🟩TRATOR NEW HOLLAND 7630🟩\n\nTOTALMENTE REVISADO MECANICA, MOTOR,HIDRAULICA,ELETRICA, BOM PNEUS TUDO REVISADO.\n\nTrator NewHoland 7630, Ano 2001, Com Super Redutor, Dualpower, Revisado Somente Com Peças Originais NewHoland, Tem Nota Fiscal de Origem, Ótimo Estado de Conservação\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "MASSEY FERGUSON 290 4x2 ANO 1980 COM LAMINA",
@@ -869,7 +1174,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 7,
-    "description": "Original e revisada.\nCom garantia e procedência.\nTRATOR MASSEY FERGUSON 290 ANO 1980\nREALIZAMOS FINANCIAMETOS"
+    "description": "Original e revisada.\nCom garantia e procedência.\nTRATOR MASSEY FERGUSON 290 ANO 1980\nREALIZAMOS FINANCIAMETOS\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Massey ferguson 290 (4x4)",
@@ -893,7 +1198,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 5,
-    "description": "✅Ano 2005 \n✅Pneus bons \n✅Revisado funciona perfeitamente \n✅Conjunto frontal de concha"
+    "description": "✅Ano 2005 \n✅Pneus bons \n✅Revisado funciona perfeitamente \n✅Conjunto frontal de concha\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Trator Massey Ferguson 275",
@@ -917,7 +1222,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 5,
-    "description": "DAMOS GARANTIA DE MOTOR E CÂMBIO\n1 ANO(75cv)Ano 2006-Horas 8.000"
+    "description": "DAMOS GARANTIA DE MOTOR E CÂMBIO\n1 ANO(75cv)Ano 2006-Horas 8.000\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "trator Valtra A950 4x4 95cv",
@@ -942,7 +1247,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
-    "description": "Ano:2015\nMotor 4cc/bomba injetora Bosch\nBarramento hidráulico/TDP/02 VCR's\n100% operacional \nSuper Redutor De Velocidade"
+    "description": "Ano:2015\nMotor 4cc/bomba injetora Bosch\nBarramento hidráulico/TDP/02 VCR's\n100% operacional \nSuper Redutor De Velocidade\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "TRATOR MASSEY FERGUSON 292-ANO 2008",
@@ -967,7 +1272,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 6,
-    "description": "TRATOR MASSEY FERGUSON 292-ANO 2008-LAMINA\n\nO VALOR DO TRATOR 💲 VALORR$95.000.00\nREALIZAMOS FINANCIAMENTO"
+    "description": "TRATOR MASSEY FERGUSON 292-ANO 2008-LAMINA\n\nO VALOR DO TRATOR 💲 VALORR$95.000.00\nREALIZAMOS FINANCIAMENTO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "Trator Valtra A750 4x4",
@@ -992,7 +1297,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 5,
-    "description": "A 750 Ano: 2018\n2.300 horas"
+    "description": "A 750 Ano: 2018\n2.300 horas\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   },
   {
     "title": "MASSEY FERGUSON 4290 – 2015",
@@ -1018,6 +1323,6 @@ export const DEFAULT_CATALOG_ITEMS = [
     "whatsapp": "5511957342158",
     "badge": "Máquinas",
     "galleryCount": 7,
-    "description": "MASSEY FERGUSON 4290 – 2015 | CABINADO\nTrator em excelente estado de conservação, pronto para o trabalho!\nPrincipais características: • Cabine fechada (mais conforto e segurança)\n* Comando duplo\n* Pneus novos\n* Pesos traseiros e dianteiros\n* Máquina revisada e bem cuidada\nDocumentação: • Possui nota fiscal de origem\n* Manual disponivel"
+    "description": "MASSEY FERGUSON 4290 – 2015 | CABINADO\nTrator em excelente estado de conservação, pronto para o trabalho!\nPrincipais características: • Cabine fechada (mais conforto e segurança)\n* Comando duplo\n* Pneus novos\n* Pesos traseiros e dianteiros\n* Máquina revisada e bem cuidada\nDocumentação: • Possui nota fiscal de origem\n* Manual disponivel\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
   }
 ];
