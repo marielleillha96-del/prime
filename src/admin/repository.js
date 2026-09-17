@@ -100,6 +100,10 @@ export const ensureAdminSchema = async () => {
 
       alter table public.app_client_tracking
       add column if not exists alert_message text;
+      alter table public.app_client_tracking
+        add column if not exists manual_vehicle_year text,
+        add column if not exists manual_vehicle_description text,
+        add column if not exists manual_vehicle_image text;
 
       create index if not exists app_catalog_items_category_idx on public.app_catalog_items (category);
       create index if not exists app_catalog_items_sections_idx on public.app_catalog_items using gin (sections);
@@ -478,6 +482,9 @@ export const createTracking = async ({
   clientEmail,
   catalogItemId,
   itemName,
+  manualVehicleYear,
+  manualVehicleDescription,
+  manualVehicleImage,
   driverId,
   yardId,
   trackingCode,
@@ -493,9 +500,10 @@ export const createTracking = async ({
     `
       insert into public.app_client_tracking (
         client_user_id, client_name, client_email, catalog_item_id, item_name, driver_id, yard_id,
-        tracking_code, status, alert_message, current_location, expected_delivery_date, notes
+        tracking_code, status, alert_message, current_location, expected_delivery_date, notes,
+        manual_vehicle_year, manual_vehicle_description, manual_vehicle_image
       )
-      values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+      values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
       returning *
     `,
     [
@@ -511,7 +519,10 @@ export const createTracking = async ({
       alertMessage,
       currentLocation,
       expectedDeliveryDate || null,
-      notes
+      notes,
+      catalogItemId ? null : manualVehicleYear || null,
+      catalogItemId ? null : manualVehicleDescription || null,
+      catalogItemId ? null : manualVehicleImage || null
     ]
   );
 
@@ -666,9 +677,10 @@ export const getCustomerTrackingDashboard = async ({ userId, email }) => {
         t.client_user_id,
         t.client_name,
         t.client_email,
-        c.year_label as item_year,
+        coalesce(c.year_label, t.manual_vehicle_year) as item_year,
         c.category as item_category,
-        c.image_url as item_image_url,
+        coalesce(c.image_url, t.manual_vehicle_image) as item_image_url,
+        coalesce(c.description, t.manual_vehicle_description) as item_description,
         c.gallery_images as item_gallery_images,
         t.item_name,
         t.tracking_code,

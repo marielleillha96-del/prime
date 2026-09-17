@@ -295,10 +295,20 @@
                       <span>Cliente cadastrado</span>
                       <select name="clientUserId" id="trackingClientSelect" required></select>
                     </label>
-                    <label>
+                    <label><span>Como informar o veículo</span>
+                      <select id="trackingVehicleMode" name="vehicleMode"><option value="catalog">Selecionar do catálogo</option><option value="manual">Informar manualmente</option></select>
+                    </label>
+                    <label id="trackingCatalogField">
                       <span>Veículo cadastrado</span>
                       <select name="catalogItemId" id="trackingCatalogSelect" required></select>
                     </label>
+                    <div id="trackingManualFields" class="hidden">
+                      <label><span>Marca e modelo do veículo</span><input name="manualVehicleName" type="text" maxlength="200" /></label>
+                      <label><span>Ano</span><input name="manualVehicleYear" type="text" placeholder="2024/2025" maxlength="30" /></label>
+                      <label><span>Dados do veículo</span><textarea name="manualVehicleDescription" placeholder="Versão, cor, placa e outras informações"></textarea></label>
+                      <label><span>Foto do veículo</span><input name="manualVehiclePhoto" type="file" accept="image/jpeg,image/png,image/webp" /></label>
+                      <img id="trackingManualPreview" alt="Prévia da foto do veículo" class="hidden" style="max-width:220px;max-height:160px;object-fit:contain;border-radius:12px" />
+                    </div>
                     <label>
                       <span>Motorista cadastrado</span>
                       <select name="driverId" id="trackingDriverSelect"></select>
@@ -2245,6 +2255,22 @@
         }
       });
 
+      const syncTrackingVehicleMode = () => {
+        const manual = trackingForm.elements.vehicleMode.value === "manual";
+        document.getElementById("trackingCatalogField").classList.toggle("hidden", manual);
+        document.getElementById("trackingManualFields").classList.toggle("hidden", !manual);
+        trackingForm.elements.catalogItemId.required = !manual;
+        trackingForm.elements.manualVehicleName.required = manual;
+      };
+      document.getElementById("trackingVehicleMode").addEventListener("change", syncTrackingVehicleMode);
+      let trackingPhotoPreviewUrl;
+      trackingForm.elements.manualVehiclePhoto.addEventListener("change", () => {
+        if (trackingPhotoPreviewUrl) URL.revokeObjectURL(trackingPhotoPreviewUrl);
+        const file = trackingForm.elements.manualVehiclePhoto.files[0];
+        const preview = document.getElementById("trackingManualPreview");
+        preview.classList.toggle("hidden", !file);
+        if(file) { trackingPhotoPreviewUrl = URL.createObjectURL(file); preview.src = trackingPhotoPreviewUrl; }
+      });
       trackingForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         setStatus(trackingStatus, "Salvando...");
@@ -2258,7 +2284,10 @@
             currentAdminData.yards.find((yard) => yard.id === formData.get("yardId"));
           const destinationAddress = buildClientAddress(client);
 
-          if (!client || !item) {
+          const manual = formData.get("vehicleMode") === "manual";
+          const manualName = String(formData.get("manualVehicleName") || "").trim();
+          const photo = formData.get("manualVehiclePhoto");
+          if (!client || (manual ? !manualName : !item)) {
             throw new Error("Selecione um cliente e um veículo válidos.");
           }
 
@@ -2268,8 +2297,11 @@
               clientUserId: client.id,
               clientName: client.full_name,
               clientEmail: client.email,
-              catalogItemId: item.id,
-              itemName: item.title,
+              catalogItemId: manual ? null : item.id,
+              itemName: manual ? manualName : item.title,
+              manualVehicleYear: manual ? formData.get("manualVehicleYear") : null,
+              manualVehicleDescription: manual ? formData.get("manualVehicleDescription") : null,
+              manualVehicleImage: manual && photo?.size ? await resizeImage(photo) : null,
               driverId: formData.get("driverId") || null,
               yardId: formData.get("yardId") || null,
               trackingCode: formData.get("trackingCode"),
@@ -2284,6 +2316,8 @@
           });
 
           trackingForm.reset();
+          syncTrackingVehicleMode();
+          document.getElementById("trackingManualPreview").classList.add("hidden");
           renderTrackingSelects();
           syncTrackingDestination();
           setStatus(trackingStatus, "Rastreio salvo com sucesso.");
