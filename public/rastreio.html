@@ -395,6 +395,12 @@
       };
       let mapRequest = 0;
       let animationFrame = null;
+      let saveAnimationProgress = () => {};
+      const trackingAnimationMemory = new Map();
+      window.addEventListener("pagehide", () => saveAnimationProgress());
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) saveAnimationProgress();
+      });
       let animationPaused = false;
       const animationNotice = document.getElementById("trackingAnimationNotice");
       let profilePhotoBase64 = "";
@@ -549,6 +555,8 @@
       };
 
       const clearMapLayers = () => {
+        saveAnimationProgress();
+        saveAnimationProgress = () => {};
         mapRequest += 1;
         cancelAnimationFrame(animationFrame);
         animationFrame = null;
@@ -815,21 +823,46 @@
         if (!destinationCoords) issues.push("Endereço de entrega não localizado no mapa.");
         if (!origin) issues.push("Endereço de origem não localizado no mapa.");
         if (issues.length) trackingMapMeta.textContent += " " + issues.join(" ");
+        // Progress belongs to the delivery and route, never to its status.
+        const progressKey = `prime_tracking_demo_v2:${tracking.id}`;
+        const routeKey = JSON.stringify([routeOrigin, destinationCoords]);
+        let savedProgress = trackingAnimationMemory.get(progressKey);
+        if (!savedProgress) {
+          try { savedProgress = JSON.parse(localStorage.getItem(progressKey) || "null"); } catch {}
+        }
+        let progress = savedProgress?.routeKey === routeKey && Number.isFinite(savedProgress.progress)
+          ? Math.max(0, Math.min(0.5, savedProgress.progress)) : 0;
+        const interpolate = routePoints.length >= 2 ? routeInterpolator(routePoints) : null;
+        if (!delivered && !waitingAtYard(tracking) && driverMarker && interpolate && progress > 0) {
+          driverMarker.setLatLng(interpolate(progress));
+          animationNotice.hidden = false;
+          driverMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
+        }
         if (moving && origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
           animationNotice.hidden = false;
           const simulatedMarker = driverMarker || L.marker(origin, {icon: driverIcon, zIndexOffset: 1100}).addTo(map);
           simulatedMarker.bindPopup("Em rota · Demonstrando");
           if (!driverMarker) mapMarkers.push(simulatedMarker);
           animationPaused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          const interpolate = routeInterpolator(routePoints);
-          let progress = 0, previous = null;
+          let previous = null, lastSaved = 0;
+          saveAnimationProgress = () => {
+            const state = {routeKey, progress};
+            trackingAnimationMemory.set(progressKey, state);
+            try { localStorage.setItem(progressKey, JSON.stringify(state)); } catch {}
+          };
+          simulatedMarker.setLatLng(interpolate(progress));
+          simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
           const animate = timestamp => {
             if (request !== mapRequest) return;
             const delta = previous === null ? 0 : Math.min(timestamp - previous, 100);
             previous = timestamp;
             if (!animationPaused && !document.hidden) {
-              progress = Math.min(0.5, progress + delta / 600000);
+              progress = Math.min(0.5, progress + delta / 7200000);
               simulatedMarker.setLatLng(interpolate(progress));
+            }
+            if (timestamp - lastSaved >= 5000 || progress >= 0.5) {
+              saveAnimationProgress();
+              lastSaved = timestamp;
             }
             if (progress >= 0.5) {
               simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
