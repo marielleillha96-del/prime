@@ -491,13 +491,13 @@
                       </label>
                       <label>
                         <span>OBSERVAÇÃO DO PAGAMENTO</span>
-                        <select name="paymentNotes" id="contractPaymentNotes"><option value="cash">À vista</option><option value="installments">Parcelado com entrada</option></select>
+                        <select name="paymentNotes" id="contractPaymentNotes"><option value="cash">À vista</option><option value="installments">Parcelado com entrada</option><option value="annual">Plano Safra - Parcelamento Anual</option></select>
                       </label>
                       <div id="contractInstallments" class="admin-form__full admin-form--grid hidden">
                         <label><span>VALOR DA ENTRADA</span><input id="contractDownPayment" type="text" inputmode="decimal" placeholder="R$ 0,00" /></label>
                         <label><span>DATA DO PAGAMENTO DA ENTRADA</span><input id="contractDownPaymentDate" type="date" /></label>
-                        <label><span>QUANTIDADE DE PARCELAS</span><input id="contractInstallmentCount" type="number" min="1" max="600" step="1" /></label>
-                        <label><span>VALOR DE CADA PARCELA</span><input id="contractInstallmentValue" type="text" inputmode="decimal" placeholder="R$ 0,00" /></label>
+                        <label><span id="contractInstallmentCountLabel">QUANTIDADE DE PARCELAS</span><input id="contractInstallmentCount" type="number" min="1" max="600" step="1" /></label>
+                        <label><span id="contractInstallmentValueLabel">VALOR DE CADA PARCELA</span><input id="contractInstallmentValue" type="text" inputmode="decimal" placeholder="R$ 0,00" /></label>
                         <label><span>DIA DE VENCIMENTO DAS PARCELAS</span><input id="contractInstallmentDay" type="number" min="1" max="31" step="1" placeholder="Ex.: 10" /></label>
                       </div>
                       <label>
@@ -1605,9 +1605,15 @@
       const downPaymentDate = document.getElementById("contractDownPaymentDate");
       const installmentDay = document.getElementById("contractInstallmentDay");
       const syncPaymentFields = () => {
-        const enabled = contractPaymentNotes.value === "installments";
+        const annual = contractPaymentNotes.value === "annual";
+        const enabled = annual || contractPaymentNotes.value === "installments";
         installmentFields.classList.toggle("hidden", !enabled);
-        [downPayment, installmentCount, installmentValue, downPaymentDate, installmentDay].forEach(input => { input.required = enabled; input.disabled = !enabled; });
+        [downPayment, installmentCount, installmentValue, downPaymentDate].forEach(input => { input.required = enabled; input.disabled = !enabled; });
+        installmentDay.required = enabled && !annual;
+        installmentDay.disabled = !enabled || annual;
+        installmentDay.closest("label").classList.toggle("hidden", annual);
+        document.getElementById("contractInstallmentCountLabel").textContent = annual ? "QUANTIDADE DE PARCELAS ANUAIS (1 POR ANO)" : "QUANTIDADE DE PARCELAS";
+        document.getElementById("contractInstallmentValueLabel").textContent = annual ? "VALOR DE CADA PARCELA ANUAL" : "VALOR DE CADA PARCELA";
       };
       contractPaymentNotes.addEventListener("change", syncPaymentFields);
       syncPaymentFields();
@@ -1615,9 +1621,12 @@
         if (contractPaymentNotes.value === "cash") return "Pagamento à vista.";
         const entry = parseBRL(downPayment.value), count = Number(installmentCount.value), each = parseBRL(installmentValue.value);
         if (!Number.isFinite(entry) || entry <= 0 || !Number.isInteger(count) || count < 1 || count > 600 || !Number.isFinite(each) || each <= 0) throw new Error("Informe entrada, quantidade de parcelas e valor de cada parcela válidos.");
+        const annual = contractPaymentNotes.value === "annual";
+        if (!downPaymentDate.value || !downPaymentDate.validity.valid) throw new Error("Informe a data do pagamento da entrada.");
+        const entryDate = downPaymentDate.value.split("-").reverse().join("/");
+        if (annual) return `Plano Safra - Parcelamento Anual. Entrada de ${formatBRL(entry)}, com pagamento em ${entryDate}, e saldo em ${count} ${count === 1 ? "parcela anual" : "parcelas anuais"} de ${formatBRL(each)} cada, sendo uma parcela por ano, durante ${count} ${count === 1 ? "ano" : "anos"}.`;
         const day = Number(installmentDay.value);
         if (!downPaymentDate.value || !downPaymentDate.validity.valid || !Number.isInteger(day) || day < 1 || day > 31) throw new Error("Informe a data da entrada e o dia de vencimento das parcelas (1 a 31).");
-        const entryDate = downPaymentDate.value.split("-").reverse().join("/");
         return `Entrada de ${formatBRL(entry)}, com pagamento em ${entryDate}, e saldo em ${count} parcelas de ${formatBRL(each)} cada, com vencimento no dia ${day} de cada mês.`;
       };
       [contractAmountValue, downPayment, installmentValue].forEach(input => {
