@@ -323,13 +323,10 @@
                     </label>
                     <label>
                       <span>Status</span>
-                      <select name="status">
-                        <option value="Aguardando nota fiscal">Aguardando nota fiscal</option>
-                        <option value="Em separação">Em separação</option>
-                        <option value="Em andamento">Em andamento</option>
-                        <option value="Em rota de entrega">Em rota de entrega</option>
-                        <option value="Entregue">Entregue</option>
-                      </select>
+                      <input name="status" list="trackingStatusSuggestions" maxlength="120" value="Aguardando nota fiscal" required />
+                      <datalist id="trackingStatusSuggestions">
+                        <option value="Aguardando nota fiscal"></option><option value="Em separação"></option><option value="Em andamento"></option><option value="Em rota de entrega"></option><option value="Entregue"></option>
+                      </datalist>
                     </label>
                     <label>
                       <span>Alerta</span>
@@ -360,6 +357,8 @@
                     </label>
                     <div class="admin-form__full admin-form__actions">
                       <button class="button button-primary" type="submit">Salvar rastreio</button>
+                <button class="button button-secondary" type="button" data-motion="pause">Pausar motorista</button>
+                <button class="button button-secondary" type="button" data-motion="resume">Continuar andando</button>
                       <p class="admin-status" id="trackingStatus"></p>
                     </div>
                   </form>
@@ -1420,6 +1419,7 @@
         );
       };
 
+      const escapeTrackingText = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
       const renderTrackings = (trackings) => {
         renderSimpleList(
           overviewTrackings,
@@ -1427,7 +1427,7 @@
           (tracking) => `
             <article class="admin-list-item">
               <strong>${tracking.tracking_code} • ${tracking.client_name}</strong>
-              <span>${tracking.status || "-"}</span>
+              <span>${escapeTrackingText(tracking.status || "-")}</span>
               <p>${tracking.item_name || "-"} • ${tracking.current_location || "Sem local atual"}</p>
             </article>
           `
@@ -1439,15 +1439,13 @@
           (tracking) => `
             <article class="admin-list-item">
               <strong>${tracking.tracking_code} • ${tracking.client_name}</strong>
-              <span>${tracking.status || "-"}</span>
+              <span>${escapeTrackingText(tracking.status || "-")}</span>
               <p>${tracking.item_name || "-"} • ${tracking.current_location || "Sem local atual"}</p>
-              <p>Alerta: ${tracking.alert_message || tracking.status || "-"}</p>
+              <p>Alerta: ${escapeTrackingText(tracking.alert_message || tracking.status || "-")}</p>
               <p>${tracking.driver_name || "Sem motorista"} • ${tracking.yard_name || "Sem pátio"}</p>
               <a class="button button-secondary" href="./rastreio.html?preview=${encodeURIComponent(tracking.id)}" target="_blank" rel="noopener">Ver como cliente</a>
               <form class="admin-tracking-status-form" data-update-tracking="${tracking.id}">
-                <label><span>Alterar status</span><select name="status" aria-label="Novo status do rastreio">
-                  ${["Aguardando nota fiscal", "Em separação", "Em andamento", "Em rota de entrega", "Entregue"].map(status => `<option ${status === tracking.status ? "selected" : ""}>${status}</option>`).join("")}
-                </select></label>
+                <label><span>Alterar status</span><input name="status" list="trackingStatusSuggestions" maxlength="120" required aria-label="Novo status do rastreio" placeholder="Selecione ou escreva um status" /></label>
                 <label><span>Localização informada (endereço ou cidade)</span><input name="currentLocation" type="text" maxlength="500" placeholder="Informe o local atual" /></label>
                 <button class="button button-primary" type="submit">Salvar rastreio</button>
                 <p class="admin-status" role="status"></p>
@@ -1456,7 +1454,20 @@
           `
         );
         trackingsList.querySelectorAll("[data-update-tracking]").forEach(form => {
-          form.elements.currentLocation.value = trackings.find(item => item.id === form.dataset.updateTracking)?.current_location || "";
+          const tracking = trackings.find(item => item.id === form.dataset.updateTracking);
+          form.elements.currentLocation.value = tracking?.current_location || "";
+          form.elements.status.value = tracking?.status || "";
+          form.querySelector('[data-motion="pause"]').disabled = tracking?.animation_paused === true;
+          form.querySelector('[data-motion="resume"]').disabled = tracking?.animation_paused === false;
+          form.querySelectorAll("[data-motion]").forEach(button => button.addEventListener("click", async () => {
+            const controls = [...form.querySelectorAll("button")];
+            controls.forEach(control => control.disabled = true);
+            try {
+              const result = await adminFetch("/api/admin?action=trackings", {method:"PUT", body:JSON.stringify({id:tracking.id, status:tracking.status, animationPaused:button.dataset.motion === "pause"})});
+              Object.assign(tracking, result.tracking);
+              renderTrackings(currentAdminData.trackings);
+            } catch(error) { setStatus(form.querySelector(".admin-status"), error.message, true); controls.forEach(control => control.disabled = false); }
+          }));
           form.addEventListener("submit", async event => {
             event.preventDefault();
             const button = form.querySelector("button"), message = form.querySelector(".admin-status");

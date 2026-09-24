@@ -101,6 +101,7 @@ export const ensureAdminSchema = async () => {
       alter table public.app_client_tracking
       add column if not exists alert_message text;
       alter table public.app_client_tracking
+        add column if not exists animation_paused boolean,
         add column if not exists manual_vehicle_year text,
         add column if not exists manual_vehicle_description text,
         add column if not exists manual_vehicle_image text;
@@ -263,6 +264,7 @@ export const getAdminDashboardData = async () => {
         t.item_name,
         t.tracking_code,
         t.status,
+        t.animation_paused,
         t.alert_message,
         t.current_location,
         t.expected_delivery_date,
@@ -685,6 +687,7 @@ export const getCustomerTrackingDashboard = async ({ userId, email }) => {
         t.item_name,
         t.tracking_code,
         t.status,
+        t.animation_paused,
         t.alert_message,
         t.current_location,
         t.expected_delivery_date,
@@ -733,17 +736,18 @@ export const getCustomerTrackingDashboard = async ({ userId, email }) => {
   return rows;
 };
 
-export const updateTrackingStatus = async ({ id, status, currentLocation }) => {
+export const updateTrackingStatus = async ({ id, status, currentLocation, animationPaused }) => {
   await ensureAdminSchema();
   const { rows } = await pool.query(`
     update public.app_client_tracking
     set status = $2,
+        animation_paused = coalesce($5::boolean, animation_paused),
         current_location = case when $4::text is null then current_location else nullif($4, '') end,
         alert_message = case when alert_message = status or alert_message = any($3::text[]) or coalesce(alert_message, '') = '' then $2 else alert_message end,
         updated_at = timezone('utc', now())
     where id = $1
     returning *
-  `, [id, status, ["Aguardando nota fiscal", "Em separação", "Em andamento", "Em rota de entrega", "Entregue"], currentLocation ?? null]);
+  `, [id, status, ["Aguardando nota fiscal", "Em separação", "Em andamento", "Em rota de entrega", "Entregue"], currentLocation ?? null, animationPaused ?? null]);
   return rows[0] || null;
 };
 

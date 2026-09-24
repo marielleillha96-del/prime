@@ -647,7 +647,7 @@
                       </div>
                       <div class="tracking-vehicle-card__copy">
                         <strong>${tracking.item_name || "Veículo"}</strong>
-                        <span>Status: ${(tracking.alert_message || tracking.status || "Sem status").toUpperCase()}</span>
+                        <span>Status: ${escapeTrackingText((tracking.alert_message || tracking.status || "Sem status").toUpperCase())}</span>
                       </div>
                       <div class="tracking-vehicle-card__arrow">&gt;</div>
                     </div>
@@ -730,16 +730,17 @@
         `;
       };
 
+      const escapeTrackingText = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
       const waitingAtYard = tracking => String(tracking.status || "").toLowerCase().includes("aguardando nota fiscal");
       const yardAddress = tracking => tracking.yard_address || "Rua Professor Zeferino Vaz, 107 - Vila Arapuá, São Paulo - SP, CEP 04258-000";
-      const reportedLocation = tracking => waitingAtYard(tracking) ? `No pátio — ${tracking.yard_name || "PRIME LEILÕES"}: ${yardAddress(tracking)}` : tracking.current_location;
+      const reportedLocation = tracking => tracking.current_location || `No pátio — ${tracking.yard_name || "PRIME LEILÕES"}: ${yardAddress(tracking)}`;
       const renderMap = async (tracking, user) => {
         ensureMap();
         clearMapLayers();
         const request = mapRequest;
 
         const startAddress = yardAddress(tracking);
-        const currentAddress = waitingAtYard(tracking) ? startAddress : tracking.current_location || "";
+        const currentAddress = tracking.current_location || startAddress;
         const profileAddress = buildUserAddress(user);
         const destinationAddress = tracking.destination_address || profileAddress || "Destino final não informado";
 
@@ -831,32 +832,35 @@
           try { savedProgress = JSON.parse(localStorage.getItem(progressKey) || "null"); } catch {}
         }
         let progress = savedProgress?.routeKey === routeKey && Number.isFinite(savedProgress.progress)
-          ? Math.max(0, Math.min(0.5, savedProgress.progress)) : 0;
+          ? Math.max(0, Math.min(1, savedProgress.progress)) : 0;
+        if (delivered) progress = 1;
         const interpolate = routePoints.length >= 2 ? routeInterpolator(routePoints) : null;
-        if (!delivered && !waitingAtYard(tracking) && driverMarker && interpolate && progress > 0) {
+        if (!delivered && driverMarker && interpolate && progress > 0) {
           driverMarker.setLatLng(interpolate(progress));
           animationNotice.hidden = false;
           driverMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
         }
-        if (moving && origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
+        const mayAnimate = !delivered && (tracking.animation_paused === false || moving || progress > 0);
+        saveAnimationProgress = () => {
+          const state = {routeKey, progress};
+          trackingAnimationMemory.set(progressKey, state);
+          try { localStorage.setItem(progressKey, JSON.stringify(state)); } catch {}
+        };
+        saveAnimationProgress();
+        if (mayAnimate && origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
           animationNotice.hidden = false;
           const simulatedMarker = driverMarker || L.marker(origin, {icon: driverIcon, zIndexOffset: 1100}).addTo(map);
           simulatedMarker.bindPopup("Em rota · Demonstrando");
           if (!driverMarker) mapMarkers.push(simulatedMarker);
-          animationPaused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          animationPaused = tracking.animation_paused === true || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
           let previous = null, lastSaved = 0;
-          saveAnimationProgress = () => {
-            const state = {routeKey, progress};
-            trackingAnimationMemory.set(progressKey, state);
-            try { localStorage.setItem(progressKey, JSON.stringify(state)); } catch {}
-          };
           simulatedMarker.setLatLng(interpolate(progress));
           simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
           const animate = timestamp => {
             if (request !== mapRequest) return;
             const delta = previous === null ? 0 : Math.min(timestamp - previous, 100);
             previous = timestamp;
-            if (!animationPaused && !document.hidden) {
+            if (!animationPaused && !document.hidden && progress < 0.5) {
               progress = Math.min(0.5, progress + delta / 7200000);
               simulatedMarker.setLatLng(interpolate(progress));
             }
@@ -1127,6 +1131,19 @@
         trackingProfileForm.querySelectorAll("input, button, textarea, select").forEach(input => { input.disabled = true; });
         trackingLogoutButton.textContent = "Voltar ao painel";
       }
+      let refreshingTracking = false;
+      setInterval(async () => {
+        if (refreshingTracking || document.hidden || !getAccessToken() || !dashboardState) return;
+        refreshingTracking = true;
+        try {
+          const data = await apiFetch(previewId ? `/api/admin?action=tracking-preview&id=${encodeURIComponent(previewId)}` : "/api/customer/tracking-dashboard");
+          if (previewId) data.trackings = data.trackings.filter(item => item.id === previewId);
+          if (JSON.stringify(data.trackings) !== JSON.stringify(dashboardState.trackings)) {
+            dashboardState = data;
+            await renderDashboard();
+          }
+        } catch {} finally { refreshingTracking = false; }
+      }, 10000);
       const currentUser = getCurrentUser();
       if (previewId || (getAccessToken() && currentUser)) {
         activateTrackingTab(requestedTrackingTab);

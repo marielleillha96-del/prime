@@ -416,12 +416,12 @@ export default async function handler(req, res) {
 
     if (action === "trackings") {
       if (req.method === "PUT") {
-        const { id, status, currentLocation } = await readJsonBody(req);
-        const allowed = ["Aguardando nota fiscal", "Em separação", "Em andamento", "Em rota de entrega", "Entregue"];
-        if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(id || "")) || !allowed.includes(status)) {
+        const { id, status: rawStatus, currentLocation, animationPaused } = await readJsonBody(req);
+        const status = typeof rawStatus === "string" ? rawStatus.trim() : "";
+        if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(id || "")) || !status || status.length > 120 || (animationPaused !== undefined && typeof animationPaused !== "boolean")) {
           return sendJson(req, res, 400, { message: "Informe um rastreio e status válidos." });
         }
-        const tracking = await updateTrackingStatus({ id, status, currentLocation: currentLocation === undefined ? undefined : String(currentLocation).trim().slice(0, 500) });
+        const tracking = await updateTrackingStatus({ id, status, animationPaused, currentLocation: currentLocation === undefined ? undefined : String(currentLocation).trim().slice(0, 500) });
         if (!tracking) return sendJson(req, res, 404, { message: "Rastreio não encontrado." });
         return sendJson(req, res, 200, { tracking });
       }

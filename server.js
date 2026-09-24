@@ -29,7 +29,8 @@ import {
   getAdminDashboardData,
   listPublicCatalogItems,
   updateCatalogItem,
-  updateDriver
+  updateDriver,
+  updateTrackingStatus
 } from "./src/admin/repository.js";
 import {
   createInvoice,
@@ -971,6 +972,17 @@ app.post("/api/admin/yards", adminRequired, async (req, res) => {
     console.error(error);
     return res.status(500).json({ message: "Erro ao cadastrar pátio." });
   }
+});
+
+app.put(["/api/admin", "/api/admin/trackings"], adminRequired, async (req, res) => {
+  try {
+    const {id, status: rawStatus, currentLocation, animationPaused} = req.body;
+    const status = typeof rawStatus === "string" ? rawStatus.trim() : "";
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(id || "")) || !status || status.length > 120 || (animationPaused !== undefined && typeof animationPaused !== "boolean")) return res.status(400).json({message:"Informe um rastreio e status válidos."});
+    const tracking = await updateTrackingStatus({id,status,animationPaused,currentLocation:currentLocation === undefined ? undefined : String(currentLocation).trim().slice(0,500)});
+    if(!tracking) return res.status(404).json({message:"Rastreio não encontrado."});
+    res.json({tracking});
+  } catch(error) { res.status(500).json({message:"Não foi possível atualizar o rastreio."}); }
 });
 
 app.post("/api/admin/trackings", adminRequired, async (req, res) => {
