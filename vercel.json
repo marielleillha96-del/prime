@@ -3,8 +3,7 @@
   "trailingSlash": false,
   "functions": {
     "api/**/*.js": {
-      "maxDuration": 10,
-      "includeFiles": "supabase/004_tracking_animation.sql"
+      "maxDuration": 10
     }
   },
   "rewrites": [

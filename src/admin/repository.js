@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { TRACKING_ANIMATION_SCHEMA } from "./tracking-animation-schema.js";
 import { pool } from "../auth/db.js";
 import { comparePassword, hashPassword } from "../auth/security.js";
 import { createUser, findUserByEmailOrCpf, updateUserPasswordAndRole } from "../auth/repository.js";
@@ -107,7 +107,7 @@ export const ensureAdminSchema = async () => {
         add column if not exists manual_vehicle_description text,
         add column if not exists manual_vehicle_image text;
 
-      ${readFileSync(new URL("../../supabase/004_tracking_animation.sql", import.meta.url), "utf8")}
+      ${TRACKING_ANIMATION_SCHEMA}
 
       create index if not exists app_catalog_items_category_idx on public.app_catalog_items (category);
       create index if not exists app_catalog_items_sections_idx on public.app_catalog_items using gin (sections);
