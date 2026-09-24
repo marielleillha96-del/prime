@@ -183,7 +183,9 @@ export default async function handler(req, res) {
       if (!tracking) return sendJson(req, res, 404, {message: "Rastreio não encontrado."});
       const client = tracking.client_user_id ? await findUserById(tracking.client_user_id) : tracking.client_email ? await findUserByEmailOrCpf(tracking.client_email, "") : null;
       if (!client) return sendJson(req, res, 404, {message: "Este rastreio não possui cliente cadastrado vinculado."});
-      const trackings = await getCustomerTrackingDashboard({userId: client.id, email: client.email});
+      const trackings = await getCustomerTrackingDashboard({userId: client.id, email: client.email, motionOnly: getQueryParam(req, "motion") === "1"});
+      res.setHeader("Cache-Control", "private, no-store, max-age=0");
+      if (getQueryParam(req, "motion") === "1") return sendJson(req, res, 200, {trackings: trackings.filter(item => item.id === id)});
       return sendJson(req, res, 200, {user: sanitizeUser(client), trackings: trackings.filter(item => item.id === id)});
     }
 

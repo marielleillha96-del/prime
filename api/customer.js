@@ -52,9 +52,12 @@ export default async function handler(req, res) {
   try {
     const trackings = await getCustomerTrackingDashboard({
       userId: user.id,
-      email: user.email
+      email: user.email,
+      motionOnly: getQueryParam(req, "motion") === "1"
     });
 
+    res.setHeader("Cache-Control", "private, no-store, max-age=0");
+    if (getQueryParam(req, "motion") === "1") return sendJson(req, res, 200, {trackings});
     return sendJson(req, res, 200, {
       user: sanitizeUser(user),
       trackings

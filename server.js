@@ -1102,9 +1102,12 @@ app.get("/api/customer/tracking-dashboard", authRequired, async (req, res) => {
   try {
     const trackings = await getCustomerTrackingDashboard({
       userId: req.user.id,
-      email: req.user.email
+      email: req.user.email,
+      motionOnly: req.query.motion === "1"
     });
 
+    res.setHeader("Cache-Control", "private, no-store, max-age=0");
+    if (req.query.motion === "1") return res.json({trackings});
     return res.json({
       user: sanitizeUser(req.user),
       trackings

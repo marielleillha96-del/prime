@@ -674,9 +674,17 @@ export const findPublicTrackingByCode = async (trackingCode) => {
   return rows[0] || null;
 };
 
-export const getCustomerTrackingDashboard = async ({ userId, email }) => {
+export const getCustomerTrackingDashboard = async ({ userId, email, motionOnly = false }) => {
   await ensureAdminSchema();
 
+  if (motionOnly) {
+    const {rows} = await pool.query(`select id, animation_paused, animation_progress,
+      animation_running_since, now() as animation_server_time, updated_at
+      from public.app_client_tracking
+      where ($1::uuid is not null and client_user_id = $1::uuid)
+         or ($2::text is not null and lower(coalesce(client_email, '')) = lower($2::text))`, [userId || null, email || null]);
+    return rows;
+  }
   const values = [userId || null, email || null];
   const { rows } = await pool.query(
     `

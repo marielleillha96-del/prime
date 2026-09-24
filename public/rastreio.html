@@ -411,6 +411,7 @@
       };
       const trackingStateSignature = trackings => JSON.stringify(trackings.map(({animation_server_time, animation_received_at, ...tracking}) => tracking));
       let animationPaused = false;
+      let applyTrackingMotion = () => {};
       const animationNotice = document.getElementById("trackingAnimationNotice");
       let profilePhotoBase64 = "";
       let requestedTrackingTab = new URLSearchParams(window.location.search).get("tab") || "overview";
@@ -489,7 +490,7 @@
           headers.Authorization = `Bearer ${accessToken}`;
         }
 
-        const response = await fetch(url, { ...options, headers });
+        const response = await fetch(url, { cache: "no-store", ...options, headers });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) {
           throw new Error(data.message || "Erro ao carregar dados.");
@@ -565,6 +566,7 @@
 
       const clearMapLayers = () => {
         mapRequest += 1;
+        applyTrackingMotion = () => {};
         cancelAnimationFrame(animationFrame);
         animationFrame = null;
         animationNotice.hidden = true;
@@ -839,28 +841,34 @@
           animationNotice.hidden = false;
           driverMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
         }
-        const mayAnimate = !delivered && (tracking.animation_paused === false || moving || progress > 0);
-        if (mayAnimate && origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
-          animationNotice.hidden = false;
+        if (origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
           const simulatedMarker = driverMarker || L.marker(origin, {icon: driverIcon, zIndexOffset: 1100}).addTo(map);
-          simulatedMarker.bindPopup("Em rota · Demonstrando");
           if (!driverMarker) mapMarkers.push(simulatedMarker);
-          animationPaused = tracking.animation_paused === true || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          simulatedMarker.setLatLng(interpolate(progress));
-          simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
-          const animate = timestamp => {
-            if (request !== mapRequest) return;
-            if (!animationPaused && !document.hidden && progress < 0.5) {
-              progress = trackingTimeline(tracking);
-              simulatedMarker.setLatLng(interpolate(progress));
-            }
-            if (progress >= 0.5) {
-              simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
-              simulatedMarker.bindPopup("Em rota · Demonstrando • Aguardando atualização do status");
-            }
-            animationFrame = progress < 0.5 ? requestAnimationFrame(animate) : null;
+          simulatedMarker.bindPopup("Em rota · Demonstrando");
+          const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+          const paintMotion = () => {
+            progress = trackingTimeline(tracking);
+            simulatedMarker.setLatLng(interpolate(progress));
+            animationNotice.hidden = progress >= 1 || !(progress > 0 || tracking.animation_running_since || tracking.animation_paused !== null && tracking.animation_paused !== undefined);
+            simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.toggle("is-demo-waiting", !animationNotice.hidden);
           };
-          animationFrame = requestAnimationFrame(animate);
+          const animate = () => {
+            animationFrame = null;
+            if (request !== mapRequest) return;
+            if (!document.hidden) paintMotion();
+            if (!animationPaused && !reducedMotion.matches && tracking.animation_running_since && progress < 0.5) animationFrame = requestAnimationFrame(animate);
+          };
+          applyTrackingMotion = next => {
+            if (next.id !== tracking.id || request !== mapRequest) return;
+            if (Date.parse(next.updated_at) < Date.parse(tracking.updated_at)) return;
+            Object.assign(tracking, next);
+            animationPaused = tracking.animation_paused === true;
+            cancelAnimationFrame(animationFrame);
+            animationFrame = null;
+            paintMotion();
+            if (!animationPaused && !reducedMotion.matches && tracking.animation_running_since && progress < 0.5) animationFrame = requestAnimationFrame(animate);
+          };
+          applyTrackingMotion(tracking);
         }
       };
 
@@ -1117,6 +1125,24 @@
         trackingProfileForm.querySelectorAll("input, button, textarea, select").forEach(input => { input.disabled = true; });
         trackingLogoutButton.textContent = "Voltar ao painel";
       }
+      let refreshingMotion = false;
+      const refreshTrackingMotion = async () => {
+        if (refreshingMotion || document.hidden || !getAccessToken() || !dashboardState) return;
+        refreshingMotion = true;
+        try {
+          const url = previewId ? `/api/admin?action=tracking-preview&id=${encodeURIComponent(previewId)}&motion=1` : "/api/customer/tracking-dashboard?motion=1";
+          const data = stampTimelines(await apiFetch(url, {signal: AbortSignal.timeout(8000)}));
+          for (const next of data.trackings) {
+            const current = dashboardState.trackings.find(item => item.id === next.id);
+            if (!current || Date.parse(next.updated_at) < Date.parse(current.updated_at)) continue;
+            applyTrackingMotion(next);
+            Object.assign(current, next);
+          }
+        } catch {} finally { refreshingMotion = false; }
+      };
+      setInterval(refreshTrackingMotion, 1000);
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshTrackingMotion(); });
+      window.addEventListener("focus", refreshTrackingMotion);
       let refreshingTracking = false;
       setInterval(async () => {
         if (refreshingTracking || document.hidden || !getAccessToken() || !dashboardState) return;
