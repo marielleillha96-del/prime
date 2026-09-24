@@ -357,8 +357,6 @@
                     </label>
                     <div class="admin-form__full admin-form__actions">
                       <button class="button button-primary" type="submit">Salvar rastreio</button>
-                <button class="button button-secondary" type="button" data-motion="pause">Pausar motorista</button>
-                <button class="button button-secondary" type="button" data-motion="resume">Continuar andando</button>
                       <p class="admin-status" id="trackingStatus"></p>
                     </div>
                   </form>
@@ -1448,6 +1446,7 @@
                 <label><span>Alterar status</span><input name="status" list="trackingStatusSuggestions" maxlength="120" required aria-label="Novo status do rastreio" placeholder="Selecione ou escreva um status" /></label>
                 <label><span>Localização informada (endereço ou cidade)</span><input name="currentLocation" type="text" maxlength="500" placeholder="Informe o local atual" /></label>
                 <button class="button button-primary" type="submit">Salvar rastreio</button>
+                <button class="button button-secondary" type="button" data-motion="${tracking.animation_paused === true ? "resume" : "pause"}">${tracking.animation_paused === true ? "Continuar andando" : "Pausar motorista"}</button>
                 <p class="admin-status" role="status"></p>
               </form>
             </article>
@@ -1457,15 +1456,15 @@
           const tracking = trackings.find(item => item.id === form.dataset.updateTracking);
           form.elements.currentLocation.value = tracking?.current_location || "";
           form.elements.status.value = tracking?.status || "";
-          form.querySelector('[data-motion="pause"]').disabled = tracking?.animation_paused === true;
-          form.querySelector('[data-motion="resume"]').disabled = tracking?.animation_paused === false;
           form.querySelectorAll("[data-motion]").forEach(button => button.addEventListener("click", async () => {
             const controls = [...form.querySelectorAll("button")];
             controls.forEach(control => control.disabled = true);
             try {
               const result = await adminFetch("/api/admin?action=trackings", {method:"PUT", body:JSON.stringify({id:tracking.id, status:tracking.status, animationPaused:button.dataset.motion === "pause"})});
               Object.assign(tracking, result.tracking);
-              renderTrackings(currentAdminData.trackings);
+              button.dataset.motion = result.tracking.animation_paused === true ? "resume" : "pause";
+              button.textContent = result.tracking.animation_paused === true ? "Continuar andando" : "Pausar motorista";
+              controls.forEach(control => control.disabled = false);
             } catch(error) { setStatus(form.querySelector(".admin-status"), error.message, true); controls.forEach(control => control.disabled = false); }
           }));
           form.addEventListener("submit", async event => {
