@@ -395,12 +395,21 @@
       };
       let mapRequest = 0;
       let animationFrame = null;
-      let saveAnimationProgress = () => {};
-      const trackingAnimationMemory = new Map();
-      window.addEventListener("pagehide", () => saveAnimationProgress());
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) saveAnimationProgress();
-      });
+      // Server timestamps avoid depending on the clock or storage of each device.
+      const trackingTimeline = tracking => {
+        const stored = Math.max(0, Math.min(1, Number(tracking.animation_progress) || 0));
+        const serverNow = Date.parse(tracking.animation_server_time);
+        const started = Date.parse(tracking.animation_running_since);
+        const received = tracking.animation_received_at ?? performance.now();
+        const elapsed = Number.isFinite(serverNow) && Number.isFinite(started)
+          ? Math.max(0, serverNow - started + performance.now() - received) : 0;
+        return stored >= 0.5 ? stored : Math.min(0.5, stored + elapsed / 7200000);
+      };
+      const stampTimelines = data => {
+        data.trackings.forEach(tracking => { tracking.animation_received_at = performance.now(); });
+        return data;
+      };
+      const trackingStateSignature = trackings => JSON.stringify(trackings.map(({animation_server_time, animation_received_at, ...tracking}) => tracking));
       let animationPaused = false;
       const animationNotice = document.getElementById("trackingAnimationNotice");
       let profilePhotoBase64 = "";
@@ -555,8 +564,6 @@
       };
 
       const clearMapLayers = () => {
-        saveAnimationProgress();
-        saveAnimationProgress = () => {};
         mapRequest += 1;
         cancelAnimationFrame(animationFrame);
         animationFrame = null;
@@ -824,15 +831,7 @@
         if (!destinationCoords) issues.push("Endereço de entrega não localizado no mapa.");
         if (!origin) issues.push("Endereço de origem não localizado no mapa.");
         if (issues.length) trackingMapMeta.textContent += " " + issues.join(" ");
-        // Progress belongs to the delivery and route, never to its status.
-        const progressKey = `prime_tracking_demo_v2:${tracking.id}`;
-        const routeKey = JSON.stringify([routeOrigin, destinationCoords]);
-        let savedProgress = trackingAnimationMemory.get(progressKey);
-        if (!savedProgress) {
-          try { savedProgress = JSON.parse(localStorage.getItem(progressKey) || "null"); } catch {}
-        }
-        let progress = savedProgress?.routeKey === routeKey && Number.isFinite(savedProgress.progress)
-          ? Math.max(0, Math.min(1, savedProgress.progress)) : 0;
+        let progress = trackingTimeline(tracking);
         if (delivered) progress = 1;
         const interpolate = routePoints.length >= 2 ? routeInterpolator(routePoints) : null;
         if (!delivered && driverMarker && interpolate && progress > 0) {
@@ -841,32 +840,19 @@
           driverMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
         }
         const mayAnimate = !delivered && (tracking.animation_paused === false || moving || progress > 0);
-        saveAnimationProgress = () => {
-          const state = {routeKey, progress};
-          trackingAnimationMemory.set(progressKey, state);
-          try { localStorage.setItem(progressKey, JSON.stringify(state)); } catch {}
-        };
-        saveAnimationProgress();
         if (mayAnimate && origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
           animationNotice.hidden = false;
           const simulatedMarker = driverMarker || L.marker(origin, {icon: driverIcon, zIndexOffset: 1100}).addTo(map);
           simulatedMarker.bindPopup("Em rota · Demonstrando");
           if (!driverMarker) mapMarkers.push(simulatedMarker);
           animationPaused = tracking.animation_paused === true || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          let previous = null, lastSaved = 0;
           simulatedMarker.setLatLng(interpolate(progress));
           simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
           const animate = timestamp => {
             if (request !== mapRequest) return;
-            const delta = previous === null ? 0 : Math.min(timestamp - previous, 100);
-            previous = timestamp;
             if (!animationPaused && !document.hidden && progress < 0.5) {
-              progress = Math.min(0.5, progress + delta / 7200000);
+              progress = trackingTimeline(tracking);
               simulatedMarker.setLatLng(interpolate(progress));
-            }
-            if (timestamp - lastSaved >= 5000 || progress >= 0.5) {
-              saveAnimationProgress();
-              lastSaved = timestamp;
             }
             if (progress >= 0.5) {
               simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
@@ -947,7 +933,7 @@
         try {
           const data = await apiFetch(previewId ? `/api/admin?action=tracking-preview&id=${encodeURIComponent(previewId)}` : "/api/customer/tracking-dashboard");
           if (previewId) data.trackings = data.trackings.filter(item => item.id === previewId);
-          dashboardState = data;
+          dashboardState = stampTimelines(data);
           selectedTrackingId = previewId || data.trackings[0]?.id || null;
           setLoggedInState();
           activateTrackingTab(requestedTrackingTab);
@@ -1138,8 +1124,8 @@
         try {
           const data = await apiFetch(previewId ? `/api/admin?action=tracking-preview&id=${encodeURIComponent(previewId)}` : "/api/customer/tracking-dashboard");
           if (previewId) data.trackings = data.trackings.filter(item => item.id === previewId);
-          if (JSON.stringify(data.trackings) !== JSON.stringify(dashboardState.trackings)) {
-            dashboardState = data;
+          if (trackingStateSignature(data.trackings) !== trackingStateSignature(dashboardState.trackings)) {
+            dashboardState = stampTimelines(data);
             await renderDashboard();
           }
         } catch {} finally { refreshingTracking = false; }

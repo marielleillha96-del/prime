@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { pool } from "../auth/db.js";
 import { comparePassword, hashPassword } from "../auth/security.js";
 import { createUser, findUserByEmailOrCpf, updateUserPasswordAndRole } from "../auth/repository.js";
@@ -105,6 +106,8 @@ export const ensureAdminSchema = async () => {
         add column if not exists manual_vehicle_year text,
         add column if not exists manual_vehicle_description text,
         add column if not exists manual_vehicle_image text;
+
+      ${readFileSync(new URL("../../supabase/004_tracking_animation.sql", import.meta.url), "utf8")}
 
       create index if not exists app_catalog_items_category_idx on public.app_catalog_items (category);
       create index if not exists app_catalog_items_sections_idx on public.app_catalog_items using gin (sections);
@@ -265,6 +268,9 @@ export const getAdminDashboardData = async () => {
         t.tracking_code,
         t.status,
         t.animation_paused,
+        t.animation_progress,
+        t.animation_running_since,
+        now() as animation_server_time,
         t.alert_message,
         t.current_location,
         t.expected_delivery_date,
@@ -688,6 +694,9 @@ export const getCustomerTrackingDashboard = async ({ userId, email }) => {
         t.tracking_code,
         t.status,
         t.animation_paused,
+        t.animation_progress,
+        t.animation_running_since,
+        now() as animation_server_time,
         t.alert_message,
         t.current_location,
         t.expected_delivery_date,
