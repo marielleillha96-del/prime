@@ -18,6 +18,10 @@ export const ensureAdminSchema = async () => {
       add column if not exists role text not null default 'customer';
 
       alter table public.app_users
+        add column if not exists is_active boolean not null default true,
+        add column if not exists owner_id uuid references public.app_users(id);
+      create index if not exists app_users_owner_idx on public.app_users(owner_id);
+      alter table public.app_users
       add column if not exists photo_url text;
 
       create index if not exists app_users_role_idx on public.app_users (role);
@@ -102,6 +106,7 @@ export const ensureAdminSchema = async () => {
       alter table public.app_client_tracking
       add column if not exists alert_message text;
       alter table public.app_client_tracking
+        add column if not exists owner_id uuid references public.app_users(id),
         add column if not exists animation_paused boolean,
         add column if not exists manual_vehicle_year text,
         add column if not exists manual_vehicle_description text,
@@ -109,6 +114,7 @@ export const ensureAdminSchema = async () => {
 
       ${TRACKING_ANIMATION_SCHEMA}
 
+      create index if not exists app_client_tracking_owner_idx on public.app_client_tracking(owner_id);
       create index if not exists app_catalog_items_category_idx on public.app_catalog_items (category);
       create index if not exists app_catalog_items_sections_idx on public.app_catalog_items using gin (sections);
       create index if not exists app_drivers_status_idx on public.app_drivers (status);
@@ -233,17 +239,18 @@ export const ensureDefaultCatalogItems = async () => {
   return defaultCatalogPromise;
 };
 
-export const getAdminDashboardData = async () => {
+export const getAdminDashboardData = async (ownerId = null) => {
   await ensureAdminSchema();
   await ensureContractSchema();
   await ensureDefaultCatalogItems();
 
   const [users, catalogItems, drivers, yards, trackings, contracts, contractsTotal] = await Promise.all([
     pool.query(`
-      select id, full_name, email, whatsapp, cpf, address, number, complement, district, cep, city, state, role, created_at
+      select id, full_name, email, whatsapp, cpf, address, number, complement, district, cep, city, state, role, created_at, owner_id, (select full_name from public.app_users owner where owner.id=app_users.owner_id) as owner_name
       from public.app_users
+      where role='customer' and ($1::uuid is null or owner_id=$1)
       order by created_at desc
-    `),
+    `, [ownerId]),
     pool.query(`
       select id, title, slug, category, sections, price, location, year_label, image_url, gallery_images, badge, gallery_count, description, is_published, created_at
       from public.app_catalog_items
@@ -262,6 +269,8 @@ export const getAdminDashboardData = async () => {
     pool.query(`
       select
         t.id,
+        t.owner_id,
+        (select full_name from public.app_users owner where owner.id=t.owner_id) as owner_name,
         t.client_name,
         t.client_email,
         t.item_name,
@@ -281,10 +290,11 @@ export const getAdminDashboardData = async () => {
       from public.app_client_tracking t
       left join public.app_drivers d on d.id = t.driver_id
       left join public.app_yards y on y.id = t.yard_id
+      where ($1::uuid is null or t.owner_id=$1)
       order by t.created_at desc
-    `),
-    listContracts({ limit: 5 }),
-    countContracts()
+    `, [ownerId]),
+    listContracts({ limit: 5, ownerId }),
+    countContracts(ownerId)
   ]);
 
   return {
@@ -484,7 +494,14 @@ export const createYard = async ({
   return rows[0];
 };
 
+export const updateYard = async (id, {name,city,state,address,contactName,contactPhone,capacityInfo,notes}) => {
+  await ensureAdminSchema();
+  const {rows}=await pool.query(`update public.app_yards set name=$2,city=$3,state=$4,address=$5,contact_name=$6,contact_phone=$7,capacity_info=$8,notes=$9 where id=$1 returning *`,[id,name,city,state,address,contactName,contactPhone,capacityInfo,notes]);
+  return rows[0] || null;
+};
+
 export const createTracking = async ({
+  ownerId = null,
   clientUserId,
   clientName,
   clientEmail,
@@ -509,9 +526,9 @@ export const createTracking = async ({
       insert into public.app_client_tracking (
         client_user_id, client_name, client_email, catalog_item_id, item_name, driver_id, yard_id,
         tracking_code, status, alert_message, current_location, expected_delivery_date, notes,
-        manual_vehicle_year, manual_vehicle_description, manual_vehicle_image
+        manual_vehicle_year, manual_vehicle_description, manual_vehicle_image, owner_id
       )
-      values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+      values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
       returning *
     `,
     [
@@ -530,7 +547,8 @@ export const createTracking = async ({
       notes,
       catalogItemId ? null : manualVehicleYear || null,
       catalogItemId ? null : manualVehicleDescription || null,
-      catalogItemId ? null : manualVehicleImage || null
+      catalogItemId ? null : manualVehicleImage || null,
+      ownerId
     ]
   );
 

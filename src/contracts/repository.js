@@ -13,6 +13,7 @@ const serializeContract = (row) => {
 
   return {
     id: row.id,
+    ownerId: row.owner_id,
     contractType: row.contract_type,
     publicToken: row.public_token,
     clientUserId: row.client_user_id,
@@ -141,6 +142,8 @@ export const ensureContractSchema = async () => {
         created_at timestamptz not null default timezone('utc', now()),
         updated_at timestamptz not null default timezone('utc', now())
       );
+      alter table public.app_contracts add column if not exists owner_id uuid references public.app_users(id);
+      create index if not exists app_contracts_owner_idx on public.app_contracts(owner_id);
 
       alter table public.app_contracts add column if not exists vehicle_description text;
       alter table public.app_contracts add column if not exists seller_signature_hash text;
@@ -190,6 +193,7 @@ export const ensureContractSchema = async () => {
 export const createContractToken = () => `con_${randomUUID().replace(/-/g, "").slice(0, 18)}`;
 
 export const createContract = async ({
+  ownerId = null,
   contractType = "acquisition",
   publicToken,
   clientUserId = null,
@@ -221,13 +225,13 @@ export const createContract = async ({
         contract_type, public_token, client_user_id, client_name, client_email, client_cpf, client_address,
         vehicle_name, vehicle_model, vehicle_year, amount_value, amount_text, payment_method, payment_notes,
         delivery_date, delivery_address, seller_name, seller_signature_text, seller_signature_style, seller_signed_at,
-        seller_signature_hash, status, vehicle_description
+        seller_signature_hash, status, vehicle_description, owner_id
       )
       values (
         $1,$2,$3,$4,$5,$6,$7,
         $8,$9,$10,$11,$12,$13,$14,
         $15,$16,$17,$18,$19,timezone('utc', now()),
-        $20,$21,$22
+        $20,$21,$22,$23
       )
       returning *
     `,
@@ -253,14 +257,14 @@ export const createContract = async ({
       sellerSignatureStyle,
       sellerSignatureHash,
       status,
-      vehicleDescription
+      vehicleDescription, ownerId
     ]
   );
 
   return serializeContract(rows[0]);
 };
 
-export const listContracts = async ({ limit = null } = {}) => {
+export const listContracts = async ({ limit = null, ownerId = null } = {}) => {
   await ensureContractSchema();
 
   const limitClause = limit ? `limit ${Number(limit)}` : "";
@@ -268,17 +272,18 @@ export const listContracts = async ({ limit = null } = {}) => {
     `
       select *
       from public.app_contracts
+      where ($1::uuid is null or owner_id=$1)
       order by created_at desc
       ${limitClause}
-    `
+    `, [ownerId]
   );
 
   return rows.map(serializeContract);
 };
 
-export const countContracts = async () => {
+export const countContracts = async (ownerId = null) => {
   await ensureContractSchema();
-  const { rows } = await pool.query(`select count(*)::int as total from public.app_contracts`);
+  const { rows } = await pool.query(`select count(*)::int as total from public.app_contracts where ($1::uuid is null or owner_id=$1)`, [ownerId]);
   return rows[0]?.total || 0;
 };
 

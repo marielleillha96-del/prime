@@ -1,3 +1,4 @@
+import adminApiHandler from "./api/admin.js";
 import { publicOrigin } from "./public/shared/public-links.js";
 import dotenv from "dotenv";
 import express from "express";
@@ -277,6 +278,18 @@ app.post("/api/auth/login", async (req, res) => {
     console.error(error);
     return res.status(500).json({ message: "Erro ao fazer login." });
   }
+});
+
+// Keep local and serverless staff permissions identical.
+app.use("/api/admin", (req,res) => {
+  const parts=req.path.split("/").filter(Boolean);
+  const action=parts[0] === "invoices" && parts[2] === "sync" ? "invoices-sync" : parts[0];
+  const query=new URLSearchParams(req.originalUrl.split("?")[1] || "");
+  if(action) query.set("action",action);
+  if(parts[1]) query.set("id",parts[1]);
+  req.url="/api/admin?"+query.toString();
+  // Express exposes query as a getter. Use a plain request facade for serverless helpers.
+  return adminApiHandler({method:req.method,headers:req.headers,body:req.body,url:req.url,query:Object.fromEntries(query),socket:req.socket},res);
 });
 
 app.post("/api/admin/session", async (req, res) => {

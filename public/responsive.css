@@ -108,3 +108,9 @@ input, select, textarea { max-width: 100%; }
  .tracking-navigation-toolbar > * { padding: 10px; font-size: .7rem; }
  .tracking-navigation-toolbar span { max-width: 62%; }
 }
+
+/* Employee management */
+#staffForm .admin-form__actions > button { flex: 0 0 auto; min-height: 48px; }
+#staffList .admin-list-item { display: grid; gap: 12px; }
+#staffList input { width: 100%; padding: 12px; border: 1px solid #dce5ed; border-radius: 12px; }
+#adminAccountLabel { color: #607286; font-size: .9rem; margin-top: 8px; }

@@ -106,6 +106,7 @@
                 </span>
                 <span>Contratos</span>
               </button>
+              <button class="admin-tab hidden" type="button" data-tab-target="staff" id="staffTab"><span class="admin-tab__icon" aria-hidden="true">👥</span><span>Usuários</span></button>
             </nav>
 
             <button class="admin-sidebar__logout" type="button" id="adminLogoutButton">Sair</button>
@@ -121,9 +122,24 @@
               <div>
                 <p class="admin-topbar__eyebrow" id="adminCurrentTabLabel">Painel</p>
                 <h1>Painel de Controle</h1>
+                <p id="adminAccountLabel"></p>
               </div>
             </header>
 
+            <div class="admin-tab-panel" data-tab-panel="staff">
+              <section class="admin-section"><article class="admin-card">
+                <span class="eyebrow">Equipe</span><h2>Usuários</h2>
+                <p>Funcionários gerenciam seus próprios clientes, contratos, rastreios e faturas. Veículos, motoristas e pátios são compartilhados.</p>
+                <form id="staffForm" class="admin-form admin-form--grid">
+                  <label><span>Nome do funcionário</span><input name="fullName" required maxlength="150" autocomplete="name" /></label>
+                  <label><span>E-mail de acesso</span><input name="email" type="email" required autocomplete="off" /></label>
+                  <label><span>Senha inicial (mínimo 8 caracteres)</span><input name="password" type="password" minlength="8" required autocomplete="new-password" /></label>
+                  <div class="admin-form__full admin-form__actions"><button type="submit" class="button button-primary">Criar funcionário</button></div>
+                  <p class="admin-status" id="staffStatus" role="status"></p>
+                </form>
+                <h3>Funcionários cadastrados</h3><div id="staffList" class="admin-list"></div>
+              </article></section>
+            </div>
             <div class="admin-tab-panel is-active" data-tab-panel="overview">
               <article class="admin-card admin-card--welcome">
                 <div class="admin-card__head">
@@ -265,6 +281,7 @@
                     <label><span>Capacidade</span><input type="text" name="capacityInfo" /></label>
                     <label><span>Observações</span><textarea name="notes" rows="3"></textarea></label>
                     <button class="button button-primary" type="submit">Salvar pátio</button>
+                    <button class="button button-secondary hidden" type="button" id="cancelYardEdit">Cancelar edição</button>
                     <p class="admin-status" id="yardStatus"></p>
                   </form>
                 </article>
@@ -828,6 +845,7 @@
       };
 
       const tabLabels = {
+        staff: "Usuários",
         overview: "Painel",
         clients: "Clientes",
         vehicles: "Vitrine",
@@ -924,6 +942,7 @@
       };
 
       const activateTab = (target) => {
+        if (target === "staff" && currentAdminData.actor?.role !== "admin") return;
         tabButtons.forEach((button) => {
           button.classList.toggle("is-active", button.dataset.tabTarget === target);
         });
@@ -1025,7 +1044,7 @@
           : '<div class="admin-empty">Nenhum registro encontrado.</div>';
       };
 
-      const customerUsers = () => currentAdminData.users.filter((user) => (user.role || "customer") !== "admin");
+      const customerUsers = () => currentAdminData.users.filter((user) => (user.role || "customer") === "customer");
 
       const buildYardAddress = (yard) => {
         if (!yard) {
@@ -1126,7 +1145,7 @@
           .map(
             (user) => `
               <tr>
-                <td>${user.full_name || "-"}</td>
+                <td>${user.full_name || "-"}${ownerLabel(user)}</td>
                 <td>${user.email || "-"}</td>
                 <td>${user.whatsapp || "-"}</td>
                 <td>${[user.city, user.state].filter(Boolean).join(" / ") || "-"}</td>
@@ -1403,6 +1422,13 @@
         });
       };
 
+      const resetYardEdit = () => {
+        yardForm.reset(); delete yardForm.dataset.editId;
+        ["cep","number","district"].forEach(name=>yardForm.elements[name].closest("label").classList.remove("hidden"));
+        yardForm.elements.address.closest("label").querySelector("span").textContent="Endereço";
+        document.getElementById("cancelYardEdit").classList.add("hidden");
+      };
+      document.getElementById("cancelYardEdit").addEventListener("click",resetYardEdit);
       const renderYards = (yards) => {
         renderSimpleList(
           yardsList,
@@ -1412,9 +1438,17 @@
               <strong>${yard.name}</strong>
               <span>${[yard.city, yard.state].filter(Boolean).join(" / ") || "Sem local"}</span>
               <p>${buildYardAddress(yard) || "Sem endereço"} • ${yard.contact_phone || "Sem telefone"}</p>
+              <button type="button" class="button button-secondary" data-edit-yard="${yard.id}">Editar pátio</button>
             </article>
           `
         );
+        yardsList.querySelectorAll("[data-edit-yard]").forEach(button=>button.addEventListener("click",()=>{
+          const yard=yards.find(item=>item.id===button.dataset.editYard);resetYardEdit();yardForm.dataset.editId=yard.id;
+          for(const [name,column] of Object.entries({name:"name",city:"city",state:"state",address:"address",contactName:"contact_name",contactPhone:"contact_phone",capacityInfo:"capacity_info",notes:"notes"})) yardForm.elements[name].value=yard[column] || "";
+          ["cep","number","district"].forEach(name=>yardForm.elements[name].closest("label").classList.add("hidden"));
+          yardForm.elements.address.closest("label").querySelector("span").textContent="Endereço completo (incluindo número e CEP)";
+          document.getElementById("cancelYardEdit").classList.remove("hidden");yardForm.scrollIntoView({behavior:"smooth",block:"start"});
+        }));
       };
 
       const escapeTrackingText = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
@@ -1424,7 +1458,7 @@
           trackings.slice(0, 4),
           (tracking) => `
             <article class="admin-list-item">
-              <strong>${tracking.tracking_code} • ${tracking.client_name}</strong>
+              <strong>${tracking.tracking_code} • ${tracking.client_name}</strong>${ownerLabel(tracking)}
               <span>${escapeTrackingText(tracking.status || "-")}</span>
               <p>${tracking.item_name || "-"} • ${tracking.current_location || "Sem local atual"}</p>
             </article>
@@ -1436,7 +1470,7 @@
           trackings,
           (tracking) => `
             <article class="admin-list-item">
-              <strong>${tracking.tracking_code} • ${tracking.client_name}</strong>
+              <strong>${tracking.tracking_code} • ${tracking.client_name}</strong>${ownerLabel(tracking)}
               <span>${escapeTrackingText(tracking.status || "-")}</span>
               <p>${tracking.item_name || "-"} • ${tracking.current_location || "Sem local atual"}</p>
               <p>Alerta: ${escapeTrackingText(tracking.alert_message || tracking.status || "-")}</p>
@@ -1507,7 +1541,7 @@
                 return `
                   <article class="admin-list-item">
                     <strong>${invoice.title || "Fatura"}</strong>
-                    <span>${invoice.clientName || "Cliente"} • ${statusInfo.label}</span>
+                    <span>${invoice.clientName || "Cliente"} • ${statusInfo.label}</span>${ownerLabel(invoice)}
                     <p>R$ ${Number(invoice.amount || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2 })} • ${dueDate}</p>
                     <p>${invoice.publicToken || "-"} • ${createdAt}</p>
                     <div class="admin-list-item__actions">
@@ -1696,7 +1730,7 @@
 
                 return `
                   <article class="admin-list-item">
-                    <strong>${contract.clientName || "Contrato"}</strong>
+                    <strong>${contract.clientName || "Contrato"}</strong>${ownerLabel(contract)}
                     <span>${contract.vehicleName || "-"} • ${statusInfo.label}</span>
                     <p>${contract.vehicleModel || "-"} • ${contract.vehicleYear || "-"} • ${deliveryDate}</p>
                     <p>${contract.publicToken || "-"} • ${createdAt}</p>
@@ -1729,16 +1763,54 @@
         });
       };
 
+      let staffUsers = [];
+      const ownerLabel = record => {
+        if (currentAdminData.actor?.role !== "admin") return "";
+        const id = record.owner_id || record.ownerId;
+        const name = record.owner_name || staffUsers.find(user => user.id === id)?.full_name || "Administrador principal";
+        return `<small>Responsável: ${escapeTrackingText(name)}</small>`;
+      };
+      const renderStaff = () => {
+        const target = document.getElementById("staffList");
+        target.replaceChildren();
+        if (!staffUsers.length) { target.textContent = "Nenhum funcionário cadastrado."; return; }
+        for (const user of staffUsers) {
+          const card = document.createElement("article"); card.className = "admin-list-item";
+          const title = document.createElement("strong"); title.textContent = user.full_name;
+          const info = document.createElement("p"); info.textContent = `${user.email} • ${user.is_active ? "Ativo" : "Desativado"}`;
+          const toggle = document.createElement("button"); toggle.type = "button"; toggle.className = "button button-secondary"; toggle.textContent = user.is_active ? "Desativar acesso" : "Ativar acesso";
+          const password = document.createElement("input"); password.type = "password"; password.minLength=8; password.autocomplete="new-password"; password.placeholder="Nova senha (mínimo 8 caracteres)"; password.setAttribute("aria-label",`Nova senha de ${user.full_name}`);
+          const reset = document.createElement("button"); reset.type="button"; reset.className="button button-secondary"; reset.textContent="Alterar senha";
+          const message=document.createElement("p"); message.className="admin-status";message.setAttribute("role","status");
+          const save = async changes => {
+            toggle.disabled=reset.disabled=true;
+            try { const result=await adminFetch("/api/admin?action=staff",{method:"PUT",body:JSON.stringify({id:user.id,...changes})}); Object.assign(user,result.staff); renderStaff(); }
+            catch(error){setStatus(message,error.message,true);toggle.disabled=reset.disabled=false;}
+          };
+          toggle.addEventListener("click",()=>save({isActive:!user.is_active}));
+          reset.addEventListener("click",()=>{if(password.value.length<8){setStatus(message,"Use pelo menos 8 caracteres.",true);return;}save({password:password.value});});
+          card.append(title,info,toggle,password,reset,message);target.append(card);
+        }
+      };
+      document.getElementById("staffForm").addEventListener("submit",async event=>{
+        event.preventDefault();const form=event.currentTarget,button=form.querySelector("button"),message=document.getElementById("staffStatus");button.disabled=true;
+        try{await adminFetch("/api/admin?action=staff",{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(form)))});form.reset();await loadDashboard();setStatus(message,"Funcionário criado. Ele já pode acessar /admin com seu e-mail e senha.");}
+        catch(error){setStatus(message,error.message,true);}finally{button.disabled=false;}
+      });
+
       const renderDashboard = (data) => {
         currentAdminData = {
           ...data,
           invoices: Array.isArray(data.invoices)
             ? data.invoices
-            : currentAdminData.invoices || [],
+            : [],
           contracts: Array.isArray(data.contracts)
             ? data.contracts
-            : currentAdminData.contracts || []
+            : []
         };
+        document.getElementById("adminAccountLabel").textContent = data.actor ? `${data.actor.fullName} • ${data.actor.role === "admin" ? "Administrador" : "Funcionário"}` : "";
+        document.getElementById("staffTab").classList.toggle("hidden", data.actor?.role !== "admin");
+        if (data.actor?.role !== "admin" && document.querySelector('[data-tab-panel="staff"]').classList.contains("is-active")) activateTab("overview");
         renderStats(data);
         renderUsers(data.users);
         renderCatalog(data.catalogItems);
@@ -1754,6 +1826,8 @@
 
       const loadDashboard = async () => {
         const data = await adminFetch("/api/admin/dashboard");
+        staffUsers = data.actor?.role === "admin" ? (await adminFetch("/api/admin?action=staff")).staff : [];
+        renderStaff();
         renderDashboard(data);
       };
 
@@ -2253,12 +2327,13 @@
             .join(", ");
 
           await adminFetch("/api/admin/yards", {
-            method: "POST",
+            method: yardForm.dataset.editId ? "PUT" : "POST",
             body: JSON.stringify({
+              id: yardForm.dataset.editId || undefined,
               name: formData.get("name"),
               city: formData.get("city"),
               state: formData.get("state"),
-              address: fullAddress,
+              address: yardForm.dataset.editId ? String(formData.get("address") || "").trim() : fullAddress,
               contactName: formData.get("contactName"),
               contactPhone: formData.get("contactPhone"),
               capacityInfo: formData.get("capacityInfo"),
@@ -2266,7 +2341,7 @@
             })
           });
 
-          yardForm.reset();
+          resetYardEdit();
           setStatus(yardStatus, "Pátio salvo com sucesso.");
           await loadDashboard();
         } catch (error) {

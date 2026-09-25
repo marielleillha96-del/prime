@@ -1,3 +1,5 @@
+import { pool } from "../../src/auth/db.js";
+import { ensureAdminSchema } from "../../src/admin/repository.js";
 import { verifyAccessToken } from "../../src/auth/security.js";
 import { findUserById } from "../../src/auth/repository.js";
 import { getBearerToken } from "../../src/auth/request.js";
@@ -20,11 +22,14 @@ export const requireAdmin = async (req, res) => {
       return null;
     }
 
-    if (user.role !== "admin") {
+    if (!["admin", "employee"].includes(user.role)) {
       sendJson(req, res, 403, { message: "Acesso restrito ao administrador." });
       return null;
     }
 
+    await ensureAdminSchema();
+    const {rows} = await pool.query('select is_active from public.app_users where id=$1',[user.id]);
+    if (!rows[0]?.is_active) { sendJson(req,res,403,{message:"Acesso desativado."}); return null; }
     return user;
   } catch (error) {
     sendJson(req, res, 401, { message: "Token inválido." });

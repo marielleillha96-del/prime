@@ -19,6 +19,7 @@ export const createUser = async ({
   state,
   photoUrl = null,
   passwordHash,
+  ownerId = null,
   role = "customer"
 }) => {
   const query = `
@@ -36,9 +37,9 @@ export const createUser = async ({
       state,
       photo_url,
       password_hash,
-      role
+      role, owner_id
     )
-    values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+    values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
     returning id, full_name, email, whatsapp, cpf, cep, address, number, district, complement, city, state, photo_url, role, created_at
   `;
 
@@ -56,7 +57,7 @@ export const createUser = async ({
     state,
     photoUrl,
     passwordHash,
-    role
+    role, ownerId
   ]);
 
   return rows[0];

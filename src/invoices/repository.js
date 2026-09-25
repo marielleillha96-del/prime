@@ -61,6 +61,7 @@ const serializeInvoice = (row) => {
 
   return {
     id: row.id,
+    ownerId: row.owner_id,
     publicToken: row.public_token,
     clientUserId: row.client_user_id,
     clientName: row.client_name,
@@ -136,6 +137,8 @@ export const ensureInvoiceSchema = async () => {
         created_at timestamptz not null default timezone('utc', now()),
         updated_at timestamptz not null default timezone('utc', now())
       );
+      alter table public.app_invoices add column if not exists owner_id uuid references public.app_users(id);
+      create index if not exists app_invoices_owner_idx on public.app_invoices(owner_id);
 
       alter table public.app_invoices
         add column if not exists iron_transaction_hash text;
@@ -174,6 +177,7 @@ export const ensureInvoiceSchema = async () => {
 export const createInvoiceToken = () => `inv_${randomUUID().replace(/-/g, "").slice(0, 18)}`;
 
 export const createInvoice = async ({
+  ownerId = null,
   publicToken,
   clientUserId = null,
   clientName,
@@ -214,13 +218,13 @@ export const createInvoice = async ({
         title, amount, due_date, description, status, iron_transaction_hash, iron_offer_hash,
         iron_payment_method, iron_status, iron_pix_code, iron_pix_image, iron_details, iron_payload,
         sigilo_transaction_id, sigilo_order_id, sigilo_payment_method, sigilo_status, pix_code, pix_image,
-        payment_url, callback_url, sigilo_details, sigilo_payload, paid_at
+        payment_url, callback_url, sigilo_details, sigilo_payload, paid_at, owner_id
       )
       values (
         $1,$2,$3,$4,$5,$6,
         $7,$8,$9,$10,$11,$12,$13,
         $14,$15,$16,$17,$18::jsonb,$19::jsonb,$20,$21,$22,$23,$24,$25,$26,
-        $27,$28::jsonb,$29::jsonb,$30
+        $27,$28::jsonb,$29::jsonb,$30,$31
       )
       returning *
     `,
@@ -254,21 +258,22 @@ export const createInvoice = async ({
       callbackUrl,
       JSON.stringify(sigiloDetails || {}),
       JSON.stringify(sigiloPayload || {}),
-      paidAt
+      paidAt, ownerId
     ]
   );
 
   return serializeInvoice(rows[0]);
 };
 
-export const listInvoices = async () => {
+export const listInvoices = async (ownerId = null) => {
   await ensureInvoiceSchema();
 
   const { rows } = await pool.query(`
     select *
     from public.app_invoices
+    where ($1::uuid is null or owner_id=$1)
     order by created_at desc
-  `);
+  `, [ownerId]);
 
   return rows.map(serializeInvoice);
 };

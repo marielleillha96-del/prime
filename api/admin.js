@@ -1,3 +1,5 @@
+import { ownerScope, assertOwned, listStaff, saveStaff } from "../src/admin/staff.js";
+import { pool } from "../src/auth/db.js";
 import { publicOrigin } from "../public/shared/public-links.js";
 import { parseBRL, fullAddress, amountWords } from "../public/shared/contract-utils.js";
 import { createUser, deleteUserById, findUserByEmailOrCpf, findUserById, saveRefreshToken, updateUser } from "../src/auth/repository.js";
@@ -10,15 +12,16 @@ import {
   findTrackingById,
   getCustomerTrackingDashboard,
   createYard,
+  updateYard,
   deleteCatalogItem,
   ensureDefaultAdminUser,
   getAdminDashboardData,
   updateCatalogItem,
   updateDriver
 } from "../src/admin/repository.js";
-import { createContract, createContractToken, listContracts } from "../src/contracts/repository.js";
+import { ensureContractSchema, createContract, createContractToken, listContracts } from "../src/contracts/repository.js";
 import { renderAcquisitionContractHtml } from "../src/contracts/template.js";
-import { createInvoice, createInvoiceToken, findInvoiceById, listInvoices, syncInvoiceWithIron } from "../src/invoices/repository.js";
+import { ensureInvoiceSchema, createInvoice, createInvoiceToken, findInvoiceById, listInvoices, syncInvoiceWithIron } from "../src/invoices/repository.js";
 import { createIronPixPayment, fetchIronTransaction } from "../src/payments/ironpay.js";
 import { requireAdmin } from "./_lib/admin.js";
 import { handleOptions, readJsonBody, sendJson, getQueryParam } from "./_lib/http.js";
@@ -50,6 +53,7 @@ const normalizeInvoicePayload = (invoice) => {
 
   return {
     id: invoice.id,
+    ownerId: invoice.ownerId,
     publicToken: invoice.publicToken,
     clientUserId: invoice.clientUserId,
     clientName: invoice.clientName,
@@ -92,6 +96,7 @@ const normalizeContractPayload = (contract) => {
 
   return {
     id: contract.id,
+    ownerId: contract.ownerId,
     contractType: contract.contractType,
     publicToken: contract.publicToken,
     clientUserId: contract.clientUserId,
@@ -158,10 +163,12 @@ export default async function handler(req, res) {
       }
 
       const admin = await findUserByEmailOrCpf(String(email).trim().toLowerCase(), "");
-      if (!admin || admin.role !== "admin") {
+      if (!admin || !["admin", "employee"].includes(admin.role)) {
         return sendJson(req, res, 401, { message: "Credenciais administrativas inválidas." });
       }
 
+      const active = (await pool.query("select is_active from public.app_users where id=$1",[admin.id])).rows[0]?.is_active;
+      if (!active) return sendJson(req,res,403,{message:"Acesso desativado."});
       const passwordMatches = await comparePassword(password, admin.password_hash);
       if (!passwordMatches) {
         return sendJson(req, res, 401, { message: "Credenciais administrativas inválidas." });
@@ -175,10 +182,23 @@ export default async function handler(req, res) {
       return;
     }
 
+    await Promise.all([ensureContractSchema(), ensureInvoiceSchema()]);
+    const scope = ownerScope(admin);
+    if (action === "staff") {
+      if (admin.role !== "admin") return sendJson(req,res,403,{message:"Somente o administrador pode gerenciar funcionários."});
+      if (req.method === "GET") return sendJson(req,res,200,{staff:await listStaff()});
+      if (!["POST","PUT"].includes(req.method)) return sendJson(req,res,405,{message:"Método não permitido."});
+      const payload=await readJsonBody(req);
+      if (req.method === "POST" && payload.id || req.method === "PUT" && !payload.id) return sendJson(req,res,400,{message:"Operação inválida."});
+      const staff=await saveStaff(payload);
+      return sendJson(req,res,req.method === "POST"?201:200,{staff});
+    }
+
     if (action === "tracking-preview") {
       if (req.method !== "GET") return sendJson(req, res, 405, {message: "Método não permitido."});
       const id = String(getQueryParam(req, "id") || "");
       if (!/^[0-9a-f-]{36}$/i.test(id)) return sendJson(req, res, 400, {message: "Rastreio inválido."});
+      await assertOwned(admin,"trackings",id);
       const tracking = await findTrackingById(id);
       if (!tracking) return sendJson(req, res, 404, {message: "Rastreio não encontrado."});
       const client = tracking.client_user_id ? await findUserById(tracking.client_user_id) : tracking.client_email ? await findUserByEmailOrCpf(tracking.client_email, "") : null;
@@ -194,7 +214,8 @@ export default async function handler(req, res) {
         return sendJson(req, res, 405, { message: "Método não permitido." });
       }
 
-      const data = await getAdminDashboardData();
+      const data = await getAdminDashboardData(scope);
+      data.actor = sanitizeUser(admin);
       return sendJson(req, res, 200, data);
     }
 
@@ -205,6 +226,8 @@ export default async function handler(req, res) {
 
       const { id, fullName, email, whatsapp, cpf, cep, address, number, district, complement, city, state, password } =
         await readJsonBody(req);
+      if (["PUT","DELETE"].includes(req.method)) await assertOwned(admin,"customers",id);
+
 
       if (req.method === "DELETE") {
         if (!id) {
@@ -277,7 +300,8 @@ export default async function handler(req, res) {
         city: city ? String(city).trim() : null,
         state: state ? String(state).trim() : null,
         passwordHash,
-        role: "customer"
+        role: "customer",
+        ownerId: admin.id
       });
 
       return sendJson(req, res, 201, { user: sanitizeUser(user) });
@@ -392,17 +416,19 @@ export default async function handler(req, res) {
     }
 
     if (action === "yards") {
-      if (req.method !== "POST") {
+      if (!["POST", "PUT"].includes(req.method)) {
         return sendJson(req, res, 405, { message: "Método não permitido." });
       }
 
-      const { name, city, state, address, contactName, contactPhone, capacityInfo, notes } = await readJsonBody(req);
+      const { id, name, city, state, address, contactName, contactPhone, capacityInfo, notes } = await readJsonBody(req);
 
       if (!name) {
         return sendJson(req, res, 400, { message: "Nome do pátio é obrigatório." });
       }
 
-      const yard = await createYard({
+      if (req.method === "PUT" && !/^[0-9a-f-]{36}$/i.test(String(id || ""))) return sendJson(req,res,400,{message:"Pátio inválido."});
+      const save = req.method === "PUT" ? payload => updateYard(id,payload) : createYard;
+      const yard = await save({
         name: String(name).trim(),
         city: city ? String(city).trim() : null,
         state: state ? String(state).trim() : null,
@@ -413,7 +439,8 @@ export default async function handler(req, res) {
         notes: notes ? String(notes).trim() : null
       });
 
-      return sendJson(req, res, 201, { yard });
+      if(!yard) return sendJson(req,res,404,{message:"Pátio não encontrado."});
+      return sendJson(req, res, req.method === "POST" ? 201 : 200, { yard });
     }
 
     if (action === "trackings") {
@@ -423,6 +450,7 @@ export default async function handler(req, res) {
         if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(id || "")) || !status || status.length > 120 || (animationPaused !== undefined && typeof animationPaused !== "boolean")) {
           return sendJson(req, res, 400, { message: "Informe um rastreio e status válidos." });
         }
+        await assertOwned(admin,"trackings",id);
         const tracking = await updateTrackingStatus({ id, status, animationPaused, currentLocation: currentLocation === undefined ? undefined : String(currentLocation).trim().slice(0, 500) });
         if (!tracking) return sendJson(req, res, 404, { message: "Rastreio não encontrado." });
         return sendJson(req, res, 200, { tracking });
@@ -454,10 +482,13 @@ export default async function handler(req, res) {
         return sendJson(req, res, 400, { message: "Cliente, item e código de rastreio são obrigatórios." });
       }
 
+      await assertOwned(admin,"customers",clientUserId);
+      const trackingClient = await findUserById(clientUserId);
       const tracking = await createTracking({
+        ownerId: admin.id,
         clientUserId,
-        clientName: String(clientName).trim(),
-        clientEmail: clientEmail ? String(clientEmail).trim().toLowerCase() : null,
+        clientName: trackingClient.full_name,
+        clientEmail: trackingClient.email,
         catalogItemId,
         itemName: String(itemName).trim(),
         manualVehicleYear: String(manualVehicleYear || "").trim(),
@@ -478,7 +509,7 @@ export default async function handler(req, res) {
 
     if (action === "contracts") {
       if (req.method === "GET") {
-        const contracts = await listContracts();
+        const contracts = await listContracts({ownerId:scope});
         return sendJson(req, res, 200, { contracts: contracts.map(normalizeContractPayload) });
       }
 
@@ -503,6 +534,7 @@ export default async function handler(req, res) {
         } = await readJsonBody(req);
 
         const resolvedClientUserId = clientUserId ? String(clientUserId).trim() : null;
+        if (resolvedClientUserId) await assertOwned(admin,"customers",resolvedClientUserId);
         const client = resolvedClientUserId ? await findUserById(resolvedClientUserId) : null;
         const finalClientName = String(clientName || client?.full_name || "").trim();
         const finalClientCpf = String(clientCpf || client?.cpf || "").trim();
@@ -541,6 +573,7 @@ export default async function handler(req, res) {
 
         const publicToken = createContractToken();
         const contract = await createContract({
+          ownerId: admin.id,
           contractType: String(contractType || "acquisition").trim().toLowerCase(),
           publicToken,
           clientUserId: client?.id || resolvedClientUserId,
@@ -572,7 +605,7 @@ export default async function handler(req, res) {
 
     if (action === "invoices") {
       if (req.method === "GET") {
-        const invoices = await listInvoices();
+        const invoices = await listInvoices(scope);
         return sendJson(req, res, 200, { invoices });
       }
 
@@ -583,6 +616,7 @@ export default async function handler(req, res) {
           return sendJson(req, res, 400, { message: "Selecione um cliente, informe o título e o valor da fatura." });
         }
 
+        await assertOwned(admin,"customers",clientUserId);
         const client = await findUserById(String(clientUserId).trim());
 
         if (!client || (client.role || "customer") === "admin") {
@@ -635,6 +669,7 @@ export default async function handler(req, res) {
 
         const paymentUrl = `${appUrl.replace(/\/$/, "")}/fatura?token=${publicToken}`;
         const invoice = await createInvoice({
+          ownerId: admin.id,
           publicToken,
           clientUserId: client.id,
           clientName: client.full_name,
@@ -682,6 +717,7 @@ export default async function handler(req, res) {
         return sendJson(req, res, 400, { message: "ID da fatura não informado." });
       }
 
+      await assertOwned(admin,"invoices",id);
       const invoice = await findInvoiceById(String(id).trim());
       if (!invoice) {
         return sendJson(req, res, 404, { message: "Fatura não encontrada." });
@@ -698,7 +734,9 @@ export default async function handler(req, res) {
 
     return sendJson(req, res, 404, { message: "Rota administrativa não encontrada." });
   } catch (error) {
+    if (error.status) return sendJson(req,res,error.status,{message:error.message});
     console.error(error);
+    if (error.code === "23505") return sendJson(req,res,409,{message:"Já existe um cadastro com estes dados."});
 
     if (action === "session") {
       return sendJson(req, res, 500, { message: "Erro ao acessar o painel admin." });
