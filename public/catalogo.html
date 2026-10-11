@@ -146,6 +146,7 @@
     </nav>
 
     <script src="./mobile-access.js"></script>
+    <script src="./vehicle-whatsapp.js"></script>
     <script src="./catalog-search.js"></script>
     <script>
       const searchInput = document.getElementById("search-input");
@@ -168,13 +169,6 @@
             })
           : "Sob consulta";
 
-      const vehicleWhatsApp = () => "5511957342158";
-      const vehicleWhatsAppUrl = (title) => {
-        const message = title
-          ? `Olá, tenho interesse no veículo ${title} da PRIME LEILÕES.`
-          : "Olá, tenho interesse em um veículo do catálogo da PRIME LEILÕES.";
-        return `https://wa.me/${vehicleWhatsApp()}?text=${encodeURIComponent(message)}`;
-      };
 
       const getItemImage = (item) => {
         const galleryImages = Array.isArray(item.gallery_images) ? item.gallery_images : [];
@@ -202,7 +196,7 @@
                 <div class="price-block"><strong>${formatCurrency(item.price)}</strong></div>
                 <div class="product-card-actions">
                 <a class="product-view-lot" href="./detalhe.html?slug=${encodeURIComponent(item.slug)}">VER LOTE</a>
-                <a class="whatsapp-btn" href="${vehicleWhatsAppUrl(item.title)}" aria-label="Enviar mensagem pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></a>
+                <a class="whatsapp-btn" href="${vehicleWhatsAppUrl(item)}" aria-label="Enviar mensagem pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></a>
                 </div>
               </div>
             </div>
