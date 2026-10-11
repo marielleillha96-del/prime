@@ -1,7 +1,7 @@
 import { ownerScope, assertOwned, listStaff, saveStaff } from "../src/admin/staff.js";
 import { pool } from "../src/auth/db.js";
 import { publicOrigin } from "../public/shared/public-links.js";
-import { parseBRL, fullAddress, amountWords } from "../public/shared/contract-utils.js";
+import { parseBRL, fullAddress, amountWords, deliveryPaymentSummary } from "../public/shared/contract-utils.js";
 import { createUser, deleteUserById, findUserByEmailOrCpf, findUserById, saveRefreshToken, updateUser } from "../src/auth/repository.js";
 import { comparePassword, signAccessToken, signRefreshToken } from "../src/auth/security.js";
 import {
@@ -529,6 +529,7 @@ export default async function handler(req, res) {
           amountText,
           paymentMethod,
           paymentNotes,
+          paymentSchedule,
           deliveryDate,
           deliveryAddress
         } = await readJsonBody(req);
@@ -546,7 +547,14 @@ export default async function handler(req, res) {
         const finalAmountValue = parseBRL(amountValue);
         const finalAmountText = String(amountText || amountWords(finalAmountValue)).trim() || null;
         const finalPaymentMethod = String(paymentMethod || "").trim() || null;
-        const finalPaymentNotes = String(paymentNotes || "").trim() || null;
+        let finalPaymentNotes = String(paymentNotes || "").trim() || null;
+        if (paymentSchedule?.type === "delivery") {
+          try {
+            finalPaymentNotes = deliveryPaymentSummary({ ...paymentSchedule, amountValue: finalAmountValue });
+          } catch (error) {
+            return sendJson(req, res, 400, { message: error.message });
+          }
+        }
         const finalDeliveryAddress = String(deliveryAddress || "").trim() || finalClientAddress;
 
         if (!finalClientName || !finalClientCpf || !finalClientAddress) {

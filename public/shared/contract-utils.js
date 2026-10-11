@@ -7,6 +7,25 @@ export function parseBRL(value) {
  return Number(s);
 }
 export const fullAddress = u => u ? [u.address, u.number, u.complement, u.district, u.city, u.state, u.cep].filter(Boolean).join(", ") : "";
+export function deliveryPaymentSummary({ amountValue, downPayment, downPaymentDate, remainingPayment, remainingPaymentDate }) {
+ const entry = parseBRL(downPayment), remaining = parseBRL(remainingPayment), total = parseBRL(amountValue);
+ if (![entry, remaining, total].every(value => Number.isFinite(value) && value > 0)) {
+  throw new Error('Informe valores válidos para a entrada, o restante na entrega e o total do contrato.');
+ }
+ if (Math.round(entry * 100) + Math.round(remaining * 100) !== Math.round(total * 100)) {
+  throw new Error('A entrada mais o restante na entrega deve ser igual ao valor do contrato.');
+ }
+ const validDate = value => /^\d{4}-\d{2}-\d{2}$/.test(value || '')
+  && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
+ if (!validDate(downPaymentDate) || !validDate(remainingPaymentDate)) {
+  throw new Error('Informe a data da entrada e a data do pagamento do restante na entrega.');
+ }
+ if (remainingPaymentDate < downPaymentDate) {
+  throw new Error('A data do restante na entrega não pode ser anterior à data da entrada.');
+ }
+ const dateBR = value => value.split('-').reverse().join('/');
+ return `Entrada + restante na entrega. Entrada de ${formatBRL(entry)}, com pagamento em ${dateBR(downPaymentDate)}, e restante de ${formatBRL(remaining)}, a ser pago na entrega, em ${dateBR(remainingPaymentDate)}.`;
+}
 const small = ['dezenove','dezoito','dezessete','dezesseis','quinze','catorze','treze','doze','onze','dez','nove','oito','sete','seis','cinco','quatro','três','dois','um','zero'].reverse();
 const tens = ['noventa','oitenta','setenta','sessenta','cinquenta','quarenta','trinta','vinte','',''].reverse();
 const hundreds = ['novecentos','oitocentos','setecentos','seiscentos','quinhentos','quatrocentos','trezentos','duzentos','cento',''].reverse();
