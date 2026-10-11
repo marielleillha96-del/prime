@@ -17,7 +17,7 @@
   }));
   category.addEventListener('change', syncCategory);
   query.addEventListener('input', update);
-  fetch('/api/catalog/items?section=catalogo')
+  fetch('/api/catalog/items?section=catalogo', { cache: 'no-store' })
     .then((response) => { if (!response.ok) throw new Error('Catalog unavailable'); return response.json(); })
     .then((data) => { if (Array.isArray(data.items)) { items = data.items; update(); } })
     .catch(() => { count.textContent = ''; });

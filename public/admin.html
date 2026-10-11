@@ -1922,6 +1922,7 @@
 
       const resetCatalogForm = ({ keepStatus = false } = {}) => {
         editingCatalogId = null;
+        delete catalogForm.elements.slug.dataset.manual;
         catalogForm.reset();
         catalogForm.elements.id.value = "";
         selectedGalleryImages = [];
@@ -2042,8 +2043,17 @@
         });
       };
 
-      catalogForm.elements.title.addEventListener("input", (event) => {
-        catalogForm.elements.slug.value = slugify(event.target.value);
+      const syncCatalogSlug = () => {
+        if (editingCatalogId || catalogForm.elements.slug.dataset.manual) return;
+        const titleSlug = slugify(catalogForm.elements.title.value);
+        const yearSlug = slugify(catalogForm.elements.yearLabel.value);
+        catalogForm.elements.slug.value = yearSlug && !titleSlug.endsWith(yearSlug)
+          ? `${titleSlug}-${yearSlug}` : titleSlug;
+      };
+      catalogForm.elements.title.addEventListener("input", syncCatalogSlug);
+      catalogForm.elements.yearLabel.addEventListener("input", syncCatalogSlug);
+      catalogForm.elements.slug.addEventListener("input", () => {
+        catalogForm.elements.slug.dataset.manual = "true";
       });
 
       catalogOpenCreateButton.addEventListener("click", () => {

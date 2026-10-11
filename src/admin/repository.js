@@ -242,7 +242,6 @@ export const ensureDefaultCatalogItems = async () => {
 export const getAdminDashboardData = async (ownerId = null) => {
   await ensureAdminSchema();
   await ensureContractSchema();
-  await ensureDefaultCatalogItems();
 
   const [users, catalogItems, drivers, yards, trackings, contracts, contractsTotal] = await Promise.all([
     pool.query(`
@@ -325,32 +324,37 @@ export const createCatalogItem = async ({
 }) => {
   await ensureAdminSchema();
 
-  const { rows } = await pool.query(
-    `
-      insert into public.app_catalog_items (
-        title, slug, category, sections, price, location, year_label, image_url, gallery_images, whatsapp, badge, gallery_count, description
-      )
-      values ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10,$11,$12,$13)
-      returning *
-    `,
-    [
-      title,
-      slug,
-      category,
-      sections,
-      price,
-      location,
-      yearLabel,
-      imageUrl,
-      JSON.stringify(Array.isArray(galleryImages) ? galleryImages : []),
-      whatsapp,
-      badge,
-      galleryCount,
-      description
-    ]
-  );
+  const baseSlug = slug;
+  for (let suffix = 1; ; suffix += 1) {
+    const candidateSlug = suffix === 1 ? baseSlug : `${baseSlug}-${suffix}`;
+    const { rows } = await pool.query(
+      `
+        insert into public.app_catalog_items (
+          title, slug, category, sections, price, location, year_label, image_url, gallery_images, whatsapp, badge, gallery_count, description
+        )
+        values ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10,$11,$12,$13)
+        on conflict (slug) do nothing
+        returning *
+      `,
+      [
+        title,
+        candidateSlug,
+        category,
+        sections,
+        price,
+        location,
+        yearLabel,
+        imageUrl,
+        JSON.stringify(Array.isArray(galleryImages) ? galleryImages : []),
+        whatsapp,
+        badge,
+        galleryCount,
+        description
+      ]
+    );
 
-  return rows[0];
+    if (rows[0]) return rows[0];
+  }
 };
 
 export const updateCatalogItem = async (
@@ -563,7 +567,6 @@ export const listPublicCatalogItems = async ({
   limit = null
 } = {}) => {
   await ensureAdminSchema();
-  await ensureDefaultCatalogItems();
 
   const conditions = ["is_published = true"];
   const values = [];
@@ -619,7 +622,6 @@ export const listPublicCatalogItems = async ({
 
 export const findPublicCatalogItemBySlug = async (slug) => {
   await ensureAdminSchema();
-  await ensureDefaultCatalogItems();
 
   const { rows } = await pool.query(
     `

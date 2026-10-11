@@ -361,12 +361,16 @@
         }
 
         try {
-          const detailResponse = await fetch(`/api/catalog/detail?slug=${encodeURIComponent(slug)}`);
+          const detailResponse = await fetch(`/api/catalog/detail?slug=${encodeURIComponent(slug)}`, { cache: "no-store" });
           const detailData = await detailResponse.json();
 
           if (!detailResponse.ok || !detailData.item) {
-            bindThumbs();
-            bindProductCards();
+            detailTitle.textContent = "Veículo indisponível";
+            detailBreadcrumbTitle.textContent = "Veículo indisponível";
+            detailPrice.textContent = "—";
+            detailLocation.textContent = "—";
+            document.querySelector(".detail-actions").hidden = true;
+            showDetailImagePlaceholder("Veículo não encontrado ou removido do catálogo.");
             return;
           }
 
@@ -409,9 +413,9 @@
 
           bindThumbs();
 
-          const relatedResponse = await fetch(`/api/catalog/items?section=relacionados&excludeSlug=${encodeURIComponent(slug)}&limit=4`);
+          const relatedResponse = await fetch(`/api/catalog/items?section=relacionados&excludeSlug=${encodeURIComponent(slug)}&limit=4`, { cache: "no-store" });
           const relatedData = await relatedResponse.json();
-          if (relatedResponse.ok && Array.isArray(relatedData.items) && relatedData.items.length) {
+          if (relatedResponse.ok && Array.isArray(relatedData.items)) {
             detailRelatedGrid.innerHTML = relatedData.items.map(createRelatedCard).join("");
             bindProductCards();
           }

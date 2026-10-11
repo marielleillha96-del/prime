@@ -1052,6 +1052,9 @@ app.post("/api/admin/trackings", adminRequired, async (req, res) => {
 });
 
 const handleCatalogItems = async (req, res) => {
+  res.setHeader("Cache-Control", "no-store, max-age=0");
+  res.setHeader("CDN-Cache-Control", "no-store");
+  res.setHeader("Vercel-CDN-Cache-Control", "no-store");
   try {
     const items = await listPublicCatalogItems({
       section: req.query.section ? String(req.query.section).trim() : null,
@@ -1069,6 +1072,9 @@ const handleCatalogItems = async (req, res) => {
 };
 
 const handleCatalogDetail = async (req, res) => {
+  res.setHeader("Cache-Control", "no-store, max-age=0");
+  res.setHeader("CDN-Cache-Control", "no-store");
+  res.setHeader("Vercel-CDN-Cache-Control", "no-store");
   try {
     const slug = req.query.slug ? String(req.query.slug).trim() : "";
 

@@ -248,10 +248,10 @@
 
       searchInput.addEventListener("input", renderCatalog);
 
-      fetch("/api/catalog/items?section=catalogo")
+      fetch("/api/catalog/items?section=catalogo", { cache: "no-store" })
         .then((response) => response.json())
         .then((data) => {
-          if (Array.isArray(data.items) && data.items.length) {
+          if (Array.isArray(data.items)) {
             catalogItems = data.items;
             renderCatalog();
           } else {

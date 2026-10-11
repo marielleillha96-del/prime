@@ -286,11 +286,13 @@
         });
       };
 
-      fetch("/api/catalog/items?section=destaques&limit=12")
+      fetch("/api/catalog/items?section=destaques&limit=12", { cache: "no-store" })
         .then((response) => response.json())
         .then((data) => {
-          if (Array.isArray(data.items) && data.items.length) {
-            homeFeaturedGrid.innerHTML = data.items.map(createProductCard).join("");
+          if (Array.isArray(data.items)) {
+            homeFeaturedGrid.innerHTML = data.items.length
+              ? data.items.map(createProductCard).join("")
+              : '<div class="catalog-empty">Nenhum veículo em destaque no momento.</div>';
           }
         })
         .catch(() => null)
