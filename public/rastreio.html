@@ -406,7 +406,7 @@
         const received = tracking.animation_received_at ?? performance.now();
         const elapsed = Number.isFinite(serverNow) && Number.isFinite(started)
           ? Math.max(0, serverNow - started + performance.now() - received) : 0;
-        return stored >= 0.5 ? stored : Math.min(0.5, stored + elapsed / 7200000);
+        return tracking.animation_paused === true ? stored : Math.min(1, stored + elapsed / 14400000);
       };
       const stampTimelines = data => {
         data.trackings.forEach(tracking => { tracking.animation_received_at = performance.now(); });
@@ -928,7 +928,7 @@
             animationFrame = null;
             if (request !== mapRequest) return;
             if (!document.hidden) paintMotion();
-            if (!animationPaused && !reducedMotion.matches && tracking.animation_running_since && progress < 0.5) animationFrame = requestAnimationFrame(animate);
+            if (!animationPaused && !reducedMotion.matches && tracking.animation_running_since && progress < 1) animationFrame = requestAnimationFrame(animate);
           };
           applyTrackingMotion = next => {
             if (next.id !== tracking.id || request !== mapRequest) return;
@@ -938,7 +938,7 @@
             cancelAnimationFrame(animationFrame);
             animationFrame = null;
             paintMotion();
-            if (!animationPaused && !reducedMotion.matches && tracking.animation_running_since && progress < 0.5) animationFrame = requestAnimationFrame(animate);
+            if (!animationPaused && !reducedMotion.matches && tracking.animation_running_since && progress < 1) animationFrame = requestAnimationFrame(animate);
           };
           applyTrackingMotion(tracking);
         }
