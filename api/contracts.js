@@ -101,12 +101,24 @@ export default async function handler(req, res) {
         return sendJson(req, res, 200, { contract: normalizeContractPayload(contract) });
       }
 
-      const { signatureStyle } = await readJsonBody(req);
-      const normalizedStyle = ["cursive", "hand", "abbrev-cursive"].includes(String(signatureStyle || ""))
+      const { signatureStyle, signatureImage } = await readJsonBody(req);
+      const normalizedImage = typeof signatureImage === "string"
+        && signatureImage.length <= 300000
+        && /^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(signatureImage)
+        ? signatureImage : null;
+      if (signatureImage && !normalizedImage) {
+        return sendJson(req, res, 400, { message: "A imagem da assinatura é inválida ou muito grande. Limpe e desenhe novamente." });
+      }
+      if (!normalizedImage) {
+        return sendJson(req, res, 400, { message: "Desenhe a assinatura antes de confirmar o contrato." });
+      }
+      const normalizedStyle = normalizedImage
+        ? "drawn"
+        : ["cursive", "hand", "abbrev-cursive"].includes(String(signatureStyle || ""))
         ? String(signatureStyle)
         : "cursive";
 
-      const clientSignatureText = resolveClientSignature(contract.clientName, normalizedStyle);
+      const clientSignatureText = normalizedImage || resolveClientSignature(contract.clientName, normalizedStyle);
       const updatedContract = await signContractByPublicToken(String(token).trim(), {
         clientSignatureStyle: normalizedStyle,
         clientSignatureText

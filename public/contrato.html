@@ -171,7 +171,6 @@
 
       const renderContract = (contract) => {
         const signed = Boolean(contract.clientSignedAt);
-        const signatureName = contract.clientName || "CLIENTE";
 
         contractRoot.innerHTML = `
           <div class="contract-grid">
@@ -205,19 +204,20 @@
                     <form class="contract-sign-form" id="contractSignForm">
                       <div class="contract-sign-preview" aria-live="polite">
                         <span class="contract-sign-preview__eyebrow">Prévia da assinatura</span>
-                        <div class="contract-sign-preview__frame" id="signaturePreviewFrame">
-                          ${renderSignaturePreview(signatureName, "cursive")}
-                        </div>
-                        <small>O nome da pessoa aparece no estilo escolhido abaixo.</small>
+                        <div class="contract-sign-preview__frame contract-sign-preview__placeholder" id="signaturePreviewFrame">Sua assinatura aparecerá aqui</div>
+                        <small id="signaturePreviewHelp">Desenhe sua assinatura para incluí-la na via do contrato.</small>
                       </div>
-                      <fieldset class="contract-sign-options">
-                        <legend>Escolha sua assinatura</legend>
-                        <label><input type="radio" name="signatureStyle" value="cursive" checked /> <span>1 - Nome Completo</span></label>
-                        <label><input type="radio" name="signatureStyle" value="abbrev-cursive" /> <span>2 - Sobrenome Abreviado</span></label>
-                      </fieldset>
+                      <button class="button button-secondary" type="button" id="openDrawSignature">Desenhar assinatura com dedo ou mouse</button>
                       <button class="button button-primary" type="submit">Assinar contrato</button>
                       <p class="contract-note">Ao assinar, o contrato fica disponível para download na via assinada.</p>
                     </form>
+                    <dialog class="contract-sign-dialog" id="drawSignatureDialog" aria-labelledby="drawSignatureTitle">
+                      <div class="contract-sign-dialog__head"><h2 id="drawSignatureTitle">Desenhe sua assinatura</h2><button type="button" class="contract-sign-dialog__close" id="closeDrawSignature" aria-label="Fechar">×</button></div>
+                      <p>Use o dedo nesta tela ou o mouse no computador. Sua assinatura aparecerá no contrato.</p>
+                      <canvas id="drawSignatureCanvas" width="900" height="260" aria-label="Área para desenhar a assinatura"></canvas>
+                      <div class="contract-sign-dialog__actions"><button type="button" class="button button-secondary" id="clearDrawSignature">Limpar e refazer</button><button type="button" class="button button-primary" id="saveDrawSignature">Usar esta assinatura</button></div>
+                      <p class="contract-note" id="drawSignatureStatus" role="status"></p>
+                    </dialog>
                   `
               }
             </aside>
@@ -227,35 +227,75 @@
         const printButton = document.getElementById("printContractButton");
         const signForm = document.getElementById("contractSignForm");
         const signaturePreviewFrame = document.getElementById("signaturePreviewFrame");
+        const drawDialog = document.getElementById("drawSignatureDialog");
+        const drawCanvas = document.getElementById("drawSignatureCanvas");
+        let drawnSignature = "";
 
         printButton?.addEventListener("click", () => window.print());
 
         const updateSignaturePreview = () => {
-          if (!signaturePreviewFrame || !signForm) {
+          if (!signaturePreviewFrame || !signForm) return;
+          if (drawnSignature) {
+            signaturePreviewFrame.innerHTML = `<img class="contract-sign-preview__image" src="${drawnSignature}" alt="Assinatura desenhada do cliente" />`;
+            document.getElementById("signaturePreviewHelp").textContent = "Esta assinatura desenhada será incluída na via do contrato.";
             return;
           }
-
-          const selectedStyle = new FormData(signForm).get("signatureStyle") || "cursive";
-          signaturePreviewFrame.innerHTML = renderSignaturePreview(signatureName, selectedStyle);
+          signaturePreviewFrame.textContent = "Sua assinatura aparecerá aqui";
+          document.getElementById("signaturePreviewHelp").textContent = "Desenhe sua assinatura para incluí-la na via do contrato.";
         };
 
-        signForm?.querySelectorAll('input[name="signatureStyle"]').forEach((input) => {
-          input.addEventListener("change", updateSignaturePreview);
-        });
-
         updateSignaturePreview();
+        document.getElementById("openDrawSignature")?.addEventListener("click", () => drawDialog?.showModal());
+        document.getElementById("closeDrawSignature")?.addEventListener("click", () => drawDialog?.close());
+        drawDialog?.addEventListener("click", event => { if (event.target === drawDialog) drawDialog.close(); });
+        if (drawCanvas) {
+          const context = drawCanvas.getContext("2d");
+          context.lineWidth = 5;
+          context.lineCap = "round";
+          context.lineJoin = "round";
+          context.strokeStyle = "#102a56";
+          let drawing = false;
+          let hasStroke = false;
+          const point = event => {
+            const rect = drawCanvas.getBoundingClientRect();
+            return { x: (event.clientX - rect.left) * drawCanvas.width / rect.width, y: (event.clientY - rect.top) * drawCanvas.height / rect.height };
+          };
+          drawCanvas.addEventListener("pointerdown", event => {
+            event.preventDefault(); drawing = true; hasStroke = true; drawCanvas.setPointerCapture(event.pointerId);
+            const p = point(event); context.beginPath(); context.moveTo(p.x, p.y);
+          });
+          drawCanvas.addEventListener("pointermove", event => {
+            if (!drawing) return;
+            event.preventDefault(); const p = point(event); context.lineTo(p.x, p.y); context.stroke();
+          });
+          const stopDrawing = () => { drawing = false; };
+          drawCanvas.addEventListener("pointerup", stopDrawing);
+          drawCanvas.addEventListener("pointercancel", stopDrawing);
+          document.getElementById("clearDrawSignature")?.addEventListener("click", () => {
+            context.clearRect(0, 0, drawCanvas.width, drawCanvas.height); hasStroke = false; drawnSignature = "";
+            document.getElementById("drawSignatureStatus").textContent = "Área limpa. Faça sua assinatura novamente.";
+            updateSignaturePreview();
+          });
+          document.getElementById("saveDrawSignature")?.addEventListener("click", () => {
+            if (!hasStroke) { document.getElementById("drawSignatureStatus").textContent = "Desenhe sua assinatura antes de confirmar."; return; }
+            drawnSignature = drawCanvas.toDataURL("image/png");
+            updateSignaturePreview(); drawDialog.close();
+          });
+        }
 
         signForm?.addEventListener("submit", async (event) => {
           event.preventDefault();
 
-          const formData = new FormData(signForm);
+          if (!drawnSignature) {
+            document.getElementById("drawSignatureStatus").textContent = "Desenhe e confirme sua assinatura antes de assinar o contrato.";
+            drawDialog?.showModal();
+            return;
+          }
           try {
             const response = await fetch(`/api/contracts?action=sign&token=${encodeURIComponent(contract.publicToken)}`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                signatureStyle: formData.get("signatureStyle")
-              })
+              body: JSON.stringify({ signatureStyle: "drawn", signatureImage: drawnSignature })
             });
             const data = await response.json();
 

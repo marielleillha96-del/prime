@@ -86,7 +86,13 @@ export const renderAcquisitionContractHtml = (contract) => {
           buildSignatureText(contract.clientName, contract.clientSignatureStyle || "cursive")
       : "ASSINATURA DIGITAL DO CLIENTE"
   );
-  const clientSignatureStyleClass = getSignatureClass(contract.clientSignatureStyle || "cursive");
+  const hasDrawnSignature = contract.clientSignedAt
+    && contract.clientSignatureStyle === "drawn"
+    && /^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(String(contract.clientSignatureText || ""));
+  const clientSignatureMarkup = hasDrawnSignature
+    ? `<img class="contract-signature__image" src="${escapeHtml(contract.clientSignatureText)}" alt="Assinatura manuscrita do comprador" />`
+    : clientSignatureText;
+  const clientSignatureStyleClass = hasDrawnSignature ? "signature-style-drawn" : getSignatureClass(contract.clientSignatureStyle || "cursive");
   const sellerSignatureStyleClass = getSignatureClass("hand");
   const sellerSignatureHash = formatSignatureHash(contract.sellerSignatureHash, `sig_${String(contract.publicToken || "seller").slice(-8)}`);
   const clientSignatureHash = contract.clientSignedAt
@@ -207,7 +213,7 @@ export const renderAcquisitionContractHtml = (contract) => {
 
           <div class="contract-signature">
             <div class="contract-signature__line ${clientSignatureStyleClass}">
-              ${clientSignatureText}
+              ${clientSignatureMarkup}
             </div>
             <strong>${escapeHtml(contract.clientName || "CLIENTE")}</strong>
             <span>COMPRADOR</span>
